@@ -42,11 +42,11 @@ button, input { font: inherit; color: inherit; }
 [hidden] { display: none !important; }
 body.pub .solo-priv, body:not(.pub) .solo-pub, body:not(.con-j) .modo-j { display: none !important; }
 .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-#dash-root { max-width: 1240px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 48px) 64px; }
+#dash-root { max-width: 1080px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 48px) 64px; }
 :focus-visible { outline: 2px solid var(--blu); outline-offset: 2px; }
 
 /* barra in alto */
-.top { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; padding: 18px 0; border-bottom: 1px solid var(--linea); margin-bottom: 40px; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; padding: 18px 0; border-bottom: 1px solid var(--linea); margin-bottom: 28px; }
 .marca { font-family: var(--serif); font-size: 22px; font-weight: 500; letter-spacing: -.01em; }
 .marca small { font-family: var(--sans); font-size: 14px; font-weight: 400; color: var(--grigio); margin-left: 8px; }
 .top nav { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -60,8 +60,10 @@ body.pub .solo-priv, body:not(.pub) .solo-pub, body:not(.con-j) .modo-j { displa
 .seg { display: inline-flex; padding: 3px; border-radius: 999px; border: 1px solid var(--linea-forte); background: var(--pannello); }
 .seg-b { border: 0; background: transparent; padding: 6px 14px; border-radius: 999px; font-size: 14px; color: var(--grigio); cursor: pointer; }
 .seg-b[aria-pressed="true"] { background: var(--inchiostro); color: var(--carta); }
-.frase, .frase-esito { font-family: var(--serif); font-size: clamp(24px, 3.4vw, 38px); line-height: 1.35; margin: 0; letter-spacing: -.01em; max-width: 34ch; }
+.intro { font-size: 16px; line-height: 1.6; color: var(--grigio); margin: 0 0 18px; max-width: 68ch; }
+.frase, .frase-esito { font-family: var(--serif); font-size: clamp(22px, 2.8vw, 32px); line-height: 1.35; margin: 0; letter-spacing: -.01em; max-width: 34ch; }
 .frase-esito { color: var(--grigio); margin-top: 6px; }
+.avviso { font-size: 14.5px; color: var(--ambra); margin: 8px 0 0; }
 .campo { display: inline-flex; align-items: baseline; gap: 4px; border-bottom: 2px solid var(--blu); padding: 0 2px; cursor: text; white-space: nowrap; }
 .campo:focus-within { background: var(--blu-velo); border-radius: 4px 4px 0 0; }
 .campo input { font-family: var(--serif); font-size: inherit; border: 0; background: transparent; padding: 0; outline: none; color: var(--blu); }
@@ -69,32 +71,34 @@ body.pub .solo-priv, body:not(.pub) .solo-pub, body:not(.con-j) .modo-j { displa
 .campo input[type=date] { width: auto; min-width: 7ch; }
 .campo input[type=date]::-webkit-calendar-picker-indicator { opacity: .5; cursor: pointer; }
 .campo .unita { color: var(--blu); }
-.cifra { font-family: var(--serif); font-weight: 500; font-size: clamp(48px, 8.5vw, 104px); line-height: 1.02; letter-spacing: -.03em; margin: 2px 0 28px; }
-.numeri { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px 32px; margin: 0 0 28px; padding: 20px 0; border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); }
+.cifra { font-family: var(--serif); font-weight: 500; font-size: clamp(42px, 6.5vw, 76px); line-height: 1.02; letter-spacing: -.03em; margin: 2px 0 20px; }
+.numeri { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px 32px; margin: 0 0 20px; padding: 14px 0; border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); }
 .numeri div { display: flex; flex-direction: column; gap: 2px; }
 .numeri dt { font-size: 14px; color: var(--grigio); }
-.numeri dd { margin: 0; font-size: 22px; font-weight: 500; }
+.numeri dd { margin: 0; font-size: 20px; font-weight: 500; }
 .numeri dd.pos { color: var(--verde); } .numeri dd.neg { color: var(--rosso); }
-.curva { position: relative; min-height: 340px; }
+.curva { position: relative; min-height: 280px; }
 .nota-curva { font-size: 14px; color: var(--grigio); margin: 8px 0 0; }
 
 /* sezioni della dashboard */
-.bt { display: flex; flex-direction: column; gap: 40px; }
+.bt { display: flex; flex-direction: column; gap: 28px; }
+.bt-sez { font-family: var(--serif); font-weight: 500; font-size: 26px; letter-spacing: -.01em; margin: 0; }
+.sez-mesi { margin-bottom: -12px; }
 .bt-head { display: flex; flex-direction: column; gap: 10px; }
 .bt-title, .bt-year-title { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 3.6vw, 40px); letter-spacing: -.02em; line-height: 1.1; margin: 0; }
 .bt-take { font-size: 18px; line-height: 1.55; margin: 0; max-width: 62ch; }
 .bt-take b { font-weight: 600; }
 .bt-note { font-size: 14px; color: var(--grigio); margin: 0; max-width: 80ch; }
-.bt-card { background: var(--pannello); border: 1px solid var(--linea); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.bt-card { background: var(--pannello); border: 1px solid var(--linea); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .bt-card h2, .bt-card h3 { font-family: var(--serif); font-weight: 500; font-size: 22px; letter-spacing: -.01em; margin: 0; }
-.bt-sub { font-size: 14px; color: var(--grigio); margin: 0 0 4px; }
+.bt-sub { font-size: 14.5px; line-height: 1.55; color: var(--grigio); margin: 0 0 4px; max-width: 78ch; }
 .bt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); gap: 20px; }
 .bt-chart { position: relative; min-height: 260px; }
-.bt-chart.bt-small { min-height: 200px; }
+.bt-chart.bt-small { min-height: 180px; }
 .bt-scroll { overflow-x: auto; }
 table.bt-t { border-collapse: collapse; width: 100%; font-size: 14px; white-space: nowrap; }
 .bt-t th { text-align: right; font-size: 13px; font-weight: 500; color: var(--grigio); padding: 8px 10px; border-bottom: 1px solid var(--linea-forte); }
-.bt-t td { text-align: right; padding: 9px 10px; border-bottom: 1px solid var(--linea); }
+.bt-t td { text-align: right; padding: 7px 10px; border-bottom: 1px solid var(--linea); }
 .bt-t th.l, .bt-t td.l { text-align: left; }
 .bt-t tr:last-child td { border-bottom: none; }
 .bt-t .pos { color: var(--verde); } .bt-t .neg { color: var(--rosso); } .bt-t .muted { color: var(--grigio); }
@@ -114,10 +118,12 @@ body.pub .bt-mesi table.bt-t tbody tr { cursor: default; }
 .bt-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap: 14px; }
 .bt-tile { background: var(--pannello); border: 1px solid var(--linea); border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; }
 .bt-tile .k { font-size: 14px; color: var(--grigio); }
-.bt-tile .v { font-family: var(--serif); font-size: 28px; font-weight: 500; line-height: 1.15; letter-spacing: -.01em; }
+.bt-tile .v { font-family: var(--serif); font-size: 22px; font-weight: 500; line-height: 1.15; letter-spacing: -.01em; }
 .bt-tile .v.pos { color: var(--verde); } .bt-tile .v.neg { color: var(--rosso); }
 .bt-tile .s { font-size: 14px; color: var(--grigio); }
-.bt-mesi { display: flex; flex-direction: column; gap: 20px; }
+.bt-mesi { display: flex; flex-direction: column; gap: 16px; }
+body.pub .bt-mesi { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 30rem), 1fr)); align-items: start; }
+body.pub .bt-mese-head { flex-direction: column; gap: 2px; }
 .bt-mese-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
 .bt-mese-sum { font-size: 14px; color: var(--grigio); }
 .bt-mese-sum b { color: var(--inchiostro); font-weight: 600; }
@@ -190,10 +196,12 @@ body.pub .bt-mesi table.bt-t tbody tr { cursor: default; }
         <button type="button" class="seg-b" data-modo="j" aria-pressed="false">Bitcoin + Giappone 225</button>
       </div>
     </div>
+    <p class="intro solo-pub">Questo è il bot di trading automatico che opera su Bitcoin e, se vuoi vederlo insieme, anche sull'indice Giappone 225. Qui sotto puoi vedere quanto sarebbe cresciuto un capitale seguendo le sue regole: scegli da che giorno partire e quanto investire (minimo 1.000 €). Con il pulsante a destra scegli se contare solo Bitcoin o anche il Giappone 225.</p>
     <p class="frase">
-      Con <label class="campo"><span class="vh">Capitale iniziale in euro</span><input type="text" id="calc-euro" value="1.000" inputmode="numeric" autocomplete="off" spellcheck="false"><span class="unita">&nbsp;€</span></label>
+      Con <label class="campo"><span class="vh">Capitale iniziale in euro</span><input type="text" id="calc-euro" value="1.000" inputmode="numeric" autocomplete="off" spellcheck="false"><span class="unita">&nbsp;€</span></label><span class="vh" id="calc-min-lab">minimo 1.000 €</span>
       investiti il <label class="campo"><span class="vh">Giorno di partenza</span><input type="date" id="calc-data"></label>
     </p>
+    <p class="avviso" id="calc-avviso" role="status" hidden>Il minimo è 1.000 €: con meno soldi il lotto minimo farebbe rischiare troppo a ogni trade.</p>
     <p class="frase-esito">oggi avresti</p>
     <p class="cifra" id="calc-out">—</p>
     <dl class="numeri" id="calc-stats"></dl>
@@ -203,7 +211,8 @@ body.pub .bt-mesi table.bt-t tbody tr { cursor: default; }
 
   <section class="bt-card" id="anni">
     <h2>Anno per anno</h2>
-    <p class="bt-sub">Tocca un anno per vedere i suoi mesi e tutti i trade<span class="solo-priv">, poi tocca un trade per vedere il suo grafico</span>. Trade contati nel mese in cui sono entrati.</p>
+    <p class="bt-sub solo-pub">Ogni riga è un anno, partendo da 1.000 € nel 2020: quanti trade ha fatto il bot, quanti hanno chiuso in guadagno (TP, take profit) o in perdita (SL, stop loss) e come è cambiato il saldo. R è il risultato in unità di rischio: un TP vale circa +3, uno SL −1. Il calo massimo è la discesa più grande del saldo dal suo punto più alto. Tocca un anno per vederne il dettaglio più sotto.</p>
+    <p class="bt-sub solo-priv">Tocca un anno per vedere i suoi mesi e tutti i trade, poi tocca un trade per vedere il suo grafico. Trade contati nel mese in cui sono entrati.</p>
     <div class="bt-scroll">
       <table class="bt-t bt-anni" data-source="anni" data-row-key="anno">
         <thead><tr>
@@ -228,6 +237,7 @@ body.pub .bt-mesi table.bt-t tbody tr { cursor: default; }
   <section class="bt-head" id="anno">
     <div class="bt-tabs" role="group" aria-label="Anno"></div>
     <h2 class="bt-year-title"></h2>
+    <p class="bt-sub solo-pub">I numeri dell'anno scelto: trade fatti, percentuale di trade chiusi in guadagno, risultato, saldo a fine anno e rendimento.</p>
     <div class="bt-tiles">
       <div class="bt-tile"><span class="k">Trade</span><span class="v" data-k="trade">—</span><span class="s"><span data-k="tp">—</span> TP · <span data-k="sl">—</span> SL</span></div>
       <div class="bt-tile"><span class="k">% TP</span><span class="v" data-k="pct_tp">—</span><span class="s">SL di fila al massimo: <span data-k="max_sl_fila">—</span></span></div>
@@ -240,7 +250,8 @@ body.pub .bt-mesi table.bt-t tbody tr { cursor: default; }
   <div class="bt-grid">
     <section class="bt-card" id="mesi-grafico">
       <h3>Risultato di ogni mese</h3>
-      <p class="bt-sub">In R: +3 per ogni TP, −1 per ogni SL, spread e swap già tolti.</p>
+      <p class="bt-sub solo-pub">Ogni barra è un mese dell'anno scelto: sopra lo zero il mese ha chiuso in guadagno, sotto in perdita. Passa sopra una barra per i dettagli.</p>
+      <p class="bt-sub solo-priv">In R: +3 per ogni TP, −1 per ogni SL, spread e swap già tolti.</p>
       <div class="bt-chart bt-small" id="barre" data-source="mesi"></div>
     </section>
     <section class="bt-card solo-priv" id="per-strategia">
@@ -262,6 +273,10 @@ body.pub .bt-mesi table.bt-t tbody tr { cursor: default; }
     </section>
   </div>
 
+  <header class="bt-head sez-mesi">
+    <h2 class="bt-sez">I trade mese per mese</h2>
+    <p class="bt-sub solo-pub">Ogni riga è un trade chiuso nell'anno scelto: il giorno di chiusura, se ha preso il TP o lo SL, il risultato in R e in euro e il saldo subito dopo.</p>
+  </header>
   <section class="bt-mesi" id="mesi"></section>
 
   <footer class="come" id="come">
@@ -423,7 +438,7 @@ dash.calc('strategie', {
   const MESI = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
   const INIZIALI = ['G', 'F', 'M', 'A', 'M', 'G', 'L', 'A', 'S', 'O', 'N', 'D'];
   const ORDINE = ['Doppia rottura', 'Seconda correzione', 'Continuazione dopo SL', 'Prima candela', 'Giappone 225 prima candela'];
-  const nf = (d) => new Intl.NumberFormat('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const nf = (d) => new Intl.NumberFormat('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: 'always' });
   const num = (v, d = 0) => nf(d).format(v);
   const eur = (v) => num(v, Math.abs(v) < 10000 ? 2 : 0) + ' €';
   const eurS = (v) => (v > 0 ? '+' : '') + eur(v);
@@ -804,7 +819,7 @@ dash.calc('strategie', {
 (() => {
   const $ = (s) => document.querySelector(s);
   const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
-  const nf = (d) => new Intl.NumberFormat('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const nf = (d) => new Intl.NumberFormat('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: 'always' });
   const num = (v, d = 0) => (v == null || isNaN(v)) ? '—' : nf(d).format(v);
   const eur = (v) => (v == null || isNaN(v)) ? '—' : num(v, Math.abs(v) < 10000 ? 2 : 0) + ' €';
   const eurS = (v) => (v == null || isNaN(v)) ? '—' : (v > 0 ? '+' : '') + eur(v);
@@ -1076,6 +1091,7 @@ dash.calc('strategie', {
 
   // ------------------------------------------------------------------ calcolatore del capitale (in apertura)
   const calc = { righe: null, chiave: '' };
+  const MIN_EURO = 1000;
   const giornoIt = (s) => new Date(s + 'T12:00:00').toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
   const euroIntero = (v) => num(Math.round(v), 0) + ' €';
   function calcolatore() {
@@ -1098,7 +1114,8 @@ dash.calc('strategie', {
     const R = calc.righe; if (!R) return;
     const inp = $('#calc-data');
     let da = inp.value || inp.min; if (da < inp.min) da = inp.min; if (da > inp.max) da = inp.max;
-    const cap = Math.max(0, Number(String($('#calc-euro').value).replace(/\D/g, '')) || 0);
+    const scritto = Number(String($('#calc-euro').value).replace(/\D/g, '')) || 0;
+    const cap = Math.max(MIN_EURO, scritto);
     let base = 1000; for (const r of R) { if (r.c.slice(0, 10) < da) base = r.saldo; else break; }
     const dopo = R.filter((r) => r.c.slice(0, 10) >= da);
     const fattore = R[R.length - 1].saldo / base;
@@ -1113,12 +1130,14 @@ dash.calc('strategie', {
     voce('Rendimento', pctS((fattore - 1) * 100, 0), fattore >= 1 ? 'pos' : 'neg');
     voce('Trade chiusi', num(dopo.length) + ' (' + num(tp) + ' vinti)');
     voce('Calo massimo', '−' + num(calo * 100, 0) + '%');
+    $('#calc-avviso').hidden = scritto >= MIN_EURO;
     $('#calc-nota').textContent = `Simulazione con le regole del bot fino al 23 ottobre 2026, poi i trade chiusi dal bot. Ultimo trade chiuso il ${giornoIt(ultimo)}. Nel periodo il capitale è sceso al massimo del ${num(calo * 100, 1)}% dal suo punto più alto prima di risalire.`;
     const g = $('#calc-graf');
-    if (pts.length > 1) curva(g, pts, 340, true);
+    if (pts.length > 1) curva(g, pts, 280, true);
   }
   $('#calc-data').addEventListener('change', calcola);
   const campoEuro = $('#calc-euro');
+  campoEuro.addEventListener('blur', () => { const n = Number(String(campoEuro.value).replace(/\D/g, '')) || 0; if (n < MIN_EURO) { campoEuro.value = num(MIN_EURO, 0); allarga(); calcola(); } });
   const allarga = () => { campoEuro.style.width = Math.max(2, campoEuro.value.length + 0.4) + 'ch'; };
   campoEuro.addEventListener('input', () => {
     const n = String(campoEuro.value).replace(/\D/g, '').slice(0, 9);
