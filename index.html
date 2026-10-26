@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Risultati del bot</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--ink:#16191d;--muted:#667085;--line:#e4e7ec;--pos:#12805c;--neg:#c8322f;--warn:#b26a00;--accent:#2a5bd7;--grid:#eef0f3;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1115;--card:#171a20;--ink:#e8eaed;--muted:#98a2b3;--line:#2a2f37;--pos:#3ccf91;--neg:#f2706d;--warn:#f0b44c;--accent:#7aa2ff;--grid:#232831;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-variant-numeric:tabular-nums}
+main{max-width:1400px;margin:0 auto;padding:20px max(16px,env(safe-area-inset-left)) 48px max(16px,env(safe-area-inset-right))}
+h1{font-size:22px;margin:0}h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:28px 0 10px}
+.muted{color:var(--muted)}.pos{color:var(--pos)}.neg{color:var(--neg)}.warn{color:var(--warn)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.lab{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.val{font-size:24px;font-weight:650;margin:4px 0 2px}.sub{font-size:13px;color:var(--muted)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;position:sticky;top:0;background:var(--card)}
+th.l,td.l{text-align:left}tr:last-child td{border-bottom:none}
+tbody tr.click{cursor:pointer}tbody tr.click:hover td{background:var(--grid)}tbody tr.sel td{font-weight:650}
+.pill{display:inline-block;padding:1px 9px;border-radius:999px;font-size:12px;font-weight:650;border:1px solid currentColor}
+button,input{font:inherit}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer}
+.btn[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 4px}
+header{display:flex;justify-content:space-between;align-items:baseline;gap:8px 16px;flex-wrap:wrap}
+#login{max-width:380px;margin:12vh auto 0;display:flex;flex-direction:column;gap:12px}
+#login input[type=password]{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.two{display:grid;grid-template-columns:2fr 1fr;gap:12px}@media (max-width:900px){.two{grid-template-columns:1fr}}
+.graf{position:relative;overflow-x:auto;overflow-y:hidden;min-height:380px}
+.tip{position:absolute;pointer-events:none;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:12px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.15);z-index:3}
+.img img{max-width:100%;border-radius:8px;border:1px solid var(--line);display:block;margin-top:8px}
+.mese{margin-top:14px}.mese h3{font-size:15px;margin:0 0 6px}
+.hero{font-size:44px;font-weight:700;letter-spacing:-.02em;margin:2px 0}
+.nota{font-size:12px;margin-top:36px;max-width:820px}
+.mgrid td{min-width:58px}.mgrid td.vuoto{color:var(--muted)}
+.leg{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:6px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+  <section id="pub">
+    <header>
+      <div><h1>Risultati del bot</h1><div class="muted" id="p-sotto">Trading automatico su Bitcoin e Giappone 225 · carico i dati…</div></div>
+      <button class="btn" id="riservata" type="button">Area riservata</button>
+    </header>
+    <div id="p-live"></div>
+    <div id="p-bt"></div>
+    <p class="muted nota">I risultati passati, e ancora di più quelli simulati, non garantiscono risultati futuri. Il trading con leva può far perdere tutto il capitale investito. Questa pagina non è un consiglio di investimento.</p>
+  </section>
+
+  <section id="login" hidden>
+    <h1>Area riservata</h1>
+    <p class="muted">Inserisci la password per aprire i dati. Vengono decifrati solo qui, nel tuo browser.</p>
+    <input id="pw" type="password" autocomplete="current-password" placeholder="Password" aria-label="Password">
+    <label class="muted"><input id="ricorda" type="checkbox"> Ricorda su questo dispositivo</label>
+    <button class="btn" id="entra" type="button">Apri</button>
+    <p id="msg" class="neg" role="alert"></p>
+    <button class="btn" id="indietro" type="button">← Torna ai risultati</button>
+  </section>
+
+  <section id="app" hidden>
+    <header>
+      <h1>Area riservata</h1>
+      <div class="muted" id="agg"></div>
+    </header>
+    <div class="tabs" role="tablist">
+      <button class="btn" id="t-live" aria-pressed="true" type="button">Bot dal vivo</button>
+      <button class="btn" id="t-bt" aria-pressed="false" type="button">Backtest</button>
+      <button class="btn" id="apub" type="button" style="margin-left:auto">Risultati pubblici</button>
+      <button class="btn" id="esci" type="button">Esci</button>
+    </div>
+    <div id="live"></div>
+    <div id="bt" hidden></div>
+  </section>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+(() => {
+  // ---------------------------------------------------------------- dove sono i dati (ramo "dati" del repository)
+  const qs = new URLSearchParams(location.search);
+  let BASE = qs.get('base');
+  if (!BASE) {
+    const owner = location.hostname.split('.')[0];
+    const repo = location.pathname.split('/').filter(Boolean)[0] || '';
+    BASE = `https://raw.githubusercontent.com/${owner}/${repo}/dati/`;
+  }
+  const $ = (s) => document.querySelector(s);
+  const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+  const nf = (d) => new Intl.NumberFormat('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const num = (v, d = 0) => (v == null || isNaN(v)) ? '–' : nf(d).format(v);
+  const eur = (v, val = '€') => (v == null) ? '–' : num(v, Math.abs(v) < 10000 ? 2 : 0) + ' ' + val;
+  const segno = (v) => v > 0 ? 'pos' : v < 0 ? 'neg' : '';
+  const rS = (v) => (v > 0 ? '+' : '') + num(v, 2) + 'R';
+  const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+  const fmtOra = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit' });
+  const fmtGg = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: '2-digit', month: '2-digit' });
+  let CHIAVE = null;
+
+  async function prendi(nome) {
+    const r = await fetch(BASE + nome + '?t=' + Math.floor(Date.now() / 60000), { cache: 'no-store' });
+    if (!r.ok) throw new Error(nome + ': ' + r.status);
+    return r;
+  }
+  async function deriva(pw) {
+    const s = await (await prendi('sale.json')).json();
+    const mat = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveBits']);
+    const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: b64(s.sale), iterations: s.giri }, mat, 256);
+    const h = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bits))).map((x) => x.toString(16).padStart(2, '0')).join('');
+    if (h.slice(0, 16) !== s.verifica) return null;
+    return new Uint8Array(bits);
+  }
+  async function chiaveDa(bytes) { return crypto.subtle.importKey('raw', bytes, 'AES-GCM', false, ['decrypt']); }
+  async function decifra(nome, comeTesto = true) {
+    const j = await (await prendi(nome)).json();
+    const chiaro = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(j.iv) }, CHIAVE, b64(j.d));
+    const flusso = new Blob([chiaro]).stream().pipeThrough(new DecompressionStream('gzip'));
+    const buf = await new Response(flusso).arrayBuffer();
+    return comeTesto ? JSON.parse(new TextDecoder().decode(buf)) : buf;
+  }
+
+  // ---------------------------------------------------------------- accesso (area riservata)
+  let timer = null;
+  const vedi = (q) => { $('#pub').hidden = q !== 'pub'; $('#login').hidden = q !== 'login'; $('#app').hidden = q !== 'app'; window.scrollTo(0, 0); };
+  async function avvia(bytes, salva) {
+    CHIAVE = await chiaveDa(bytes);
+    if (salva) try { localStorage.setItem('k', btoa(String.fromCharCode(...bytes))); } catch (e) {}
+    vedi('app');
+    caricaLive();
+    if (!timer) timer = setInterval(caricaLive, 120000);
+  }
+  $('#riservata').addEventListener('click', async () => {
+    let k = null; try { k = localStorage.getItem('k'); } catch (e) {}
+    if (CHIAVE) { vedi('app'); return; }
+    if (k) { try { await avvia(b64(k), false); return; } catch (e) {} }
+    vedi('login'); $('#pw').focus();
+  });
+  $('#indietro').addEventListener('click', () => vedi('pub'));
+  $('#apub').addEventListener('click', () => vedi('pub'));
+  $('#entra').addEventListener('click', async () => {
+    $('#msg').textContent = 'Controllo…';
+    try {
+      const k = await deriva($('#pw').value);
+      if (!k) { $('#msg').textContent = 'Password sbagliata.'; return; }
+      $('#msg').textContent = ''; $('#pw').value = '';
+      await avvia(k, $('#ricorda').checked);
+    } catch (e) { $('#msg').textContent = 'Dati non raggiungibili: ' + e.message; }
+  });
+  $('#pw').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#entra').click(); });
+  $('#esci').addEventListener('click', () => { try { localStorage.removeItem('k'); } catch (e) {} location.reload(); });
+
+  // ---------------------------------------------------------------- PAGINA PUBBLICA (solo percentuali)
+  const pct = (v, d = 1) => { if (v == null || isNaN(v)) return '–'; const r = +v.toFixed(d); return r === 0 ? num(0, d) + '%' : (r > 0 ? '+' : '') + num(r, d) + '%'; };
+  const MESI_C = ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'];
+  function tile(box, lab, val, sub, cls) { const k = el('div', 'card'); k.append(el('div', 'lab', lab), el('div', 'val ' + (cls || ''), val), el('div', 'sub', sub || '')); box.append(k); }
+  async function caricaPubblico() {
+    let L = null, B = null;
+    try { L = await (await prendi('pubblico.json')).json(); } catch (e) {}
+    try { B = await (await prendi('pubblico_backtest.json')).json(); } catch (e) {}
+    disegnaPubLive(L); disegnaPubBT(B);
+    if (!L && !B) $('#p-sotto').textContent = 'Trading automatico su Bitcoin e Giappone 225 · dati non ancora disponibili';
+  }
+  function disegnaPubLive(L) {
+    const box = $('#p-live'); box.replaceChildren();
+    if (!L) return;
+    const vecchio = (Date.now() - L.aggiornato) / 60000;
+    const stato = vecchio > 20 ? 'fermo (ultimo aggiornamento ' + new Date(L.aggiornato).toLocaleString('it-IT', { timeZone: 'Europe/Rome' }) + ')'
+      : (L.attivo ? 'attivo adesso' : 'in pausa');
+    $('#p-sotto').replaceChildren(document.createTextNode(`Trading automatico su Bitcoin e Giappone 225 · conto ${L.conto} dal ${L.inizio || '–'} · bot `), el('span', vecchio > 20 ? 'neg' : 'pos', stato));
+    box.append(el('h2', '', 'Dal vivo'));
+    const top = el('div', 'card');
+    top.append(el('div', 'lab', 'Rendimento dall’inizio'), el('div', 'hero ' + segno(L.rendimento_pct), pct(L.rendimento_pct, 2)),
+      el('div', 'sub', 'variazione del saldo del conto ' + L.conto));
+    const g = el('div', 'grid'); g.style.marginTop = '12px';
+    tile(g, 'Trade chiusi', String(L.trade_chiusi), L.trade_chiusi ? '' : 'nessuno ancora');
+    tile(g, 'Vincenti', L.vincenti_pct == null ? '–' : num(L.vincenti_pct, 0) + '%', 'ogni trade vincente vale circa 3 perdenti');
+    tile(g, 'Calo massimo', L.calo_max_pct ? '−' + num(L.calo_max_pct, 1) + '%' : '0%', 'dal punto più alto del saldo');
+    tile(g, 'Posizioni aperte', String(L.posizioni_aperte), 'adesso');
+    box.append(top, g);
+    const c = el('div', 'card'); c.style.marginTop = '12px'; c.append(el('div', 'lab', 'Andamento del conto'));
+    const gr = el('div'); c.append(gr); box.append(c);
+    requestAnimationFrame(() => linea(gr, L.curva.map(([d, v]) => ({ t: new Date(d + 'T12:00:00Z'), v })), { h: 240, fmt: (v) => pct(v, 0), vuoto: 'La curva comparirà dal secondo giorno di attività.' }));
+    if (L.mesi.length) {
+      box.append(el('h2', '', 'Mese per mese'));
+      box.append(tabella([['Mese', 'l'], ['Rendimento']], L.mesi.slice().reverse().map((m) => ({ celle: [[MESI[+m.m.slice(5) - 1] + ' ' + m.m.slice(0, 4), 'l'], [pct(m.pct, 2), segno(m.pct)]] }))));
+    }
+  }
+  function disegnaPubBT(B) {
+    const box = $('#p-bt'); box.replaceChildren();
+    if (!B) return;
+    box.append(el('h2', '', 'Simulazione storica su Bitcoin ' + B.periodo));
+    box.append(el('p', 'muted', 'Le regole su Bitcoin applicate ai prezzi passati (il Giappone 225 non è incluso), con costi di spread e swap, reinvestendo i guadagni. Serve a capire come si comporta il bot nel tempo: non è un risultato reale.'));
+    const g = el('div', 'grid');
+    tile(g, 'Trade', num(B.trade, 0), 'circa ' + num(B.trade_settimana, 0) + ' a settimana');
+    tile(g, 'Vincenti', num(B.vincenti_pct, 0) + '%', 'ogni trade vincente vale circa 3 perdenti');
+    tile(g, 'Mesi positivi', num(B.mesi_positivi_pct, 0) + '%', B.mesi_totali + ' mesi');
+    tile(g, 'Mese tipico', pct(B.rendimento_mediano_mese_pct, 0), 'mediana dei mesi');
+    tile(g, 'Calo massimo', '−' + num(B.calo_max_pct, 0) + '%', 'dal punto più alto');
+    box.append(g);
+    const anni = Object.entries(B.anni);
+    box.append(el('h2', '', 'Anno per anno'));
+    const ca = el('div', 'card'); const ga = el('div'); ca.append(ga, el('div', 'sub', anni[0][0] + ': da aprile.')); box.append(ca);
+    requestAnimationFrame(() => barre(ga, anni));
+    box.append(el('h2', '', 'Mese per mese'));
+    const righe = Object.entries(B.mesi).map(([a, v]) => ({ celle: [[a, 'l'], ...v.map((x) => x == null ? ['', 'vuoto'] : [pct(x, 0), segno(x)]), [pct(B.anni[a], 0), segno(B.anni[a])]] }));
+    const t = tabella([['Anno', 'l'], ...MESI_C.map((m) => [m]), ['Anno']], righe); t.querySelector('table').classList.add('mgrid'); box.append(t);
+    box.append(el('h2', '', 'Andamento simulato'));
+    const cc = el('div', 'card'); cc.append(el('div', 'sub', 'Valore di 100 investiti all’inizio, scala logaritmica: la stessa altezza vale la stessa crescita in percentuale.'));
+    const gc = el('div'); cc.append(gc); box.append(cc);
+    requestAnimationFrame(() => linea(gc, B.curva.map(([t, v]) => ({ t: new Date(t), v })), { h: 300, log: true, fmt: (v) => num(v, 0) }));
+  }
+  function linea(box, pts, o) {
+    const W = box.clientWidth, H = o.h; if (!W) return;
+    if (pts.length < 2) { box.append(el('p', 'muted', o.vuoto || '')); return; }
+    const m = { t: 10, r: 12, b: 24, l: 62 };
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H).style('display', 'block');
+    const x = d3.scaleTime(d3.extent(pts, (p) => p.t), [m.l, W - m.r]);
+    const ext = d3.extent(pts, (p) => p.v);
+    const y = o.log ? d3.scaleLog([Math.max(1, ext[0] * .9), ext[1] * 1.1], [H - m.b, m.t]) : d3.scaleLinear([Math.min(0, ext[0]), Math.max(0, ext[1])], [H - m.b, m.t]).nice();
+    const ticks = o.log ? (() => { const r = []; for (let v = 100; v <= ext[1] * 1.1; v *= 2) if (v >= ext[0] * .9) r.push(v); return r.filter((_, i, a) => a.length <= 9 || i % Math.ceil(a.length / 9) === 0); })() : y.ticks(5);
+    ticks.forEach((v) => { svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(v)).attr('y2', y(v)).attr('stroke', 'var(--grid)');
+      svg.append('text').attr('x', m.l - 6).attr('y', y(v)).attr('dy', '.32em').attr('text-anchor', 'end').attr('font-size', 11).attr('fill', 'var(--muted)').text(o.fmt(v)); });
+    x.ticks(Math.max(2, Math.floor(W / 110))).forEach((t) => svg.append('text').attr('x', x(t)).attr('y', H - 6).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'var(--muted)')
+      .text(new Intl.DateTimeFormat('it-IT', pts.length > 120 ? { year: 'numeric' } : { day: '2-digit', month: 'short' }).format(t)));
+    if (!o.log) svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', 'var(--muted)').attr('stroke-width', .6);
+    svg.append('path').datum(pts).attr('fill', 'none').attr('stroke', 'var(--accent)').attr('stroke-width', 2).attr('d', d3.line((p) => x(p.t), (p) => y(p.v)));
+    const tip = el('div', 'tip'); tip.hidden = true; box.style.position = 'relative'; box.append(tip);
+    const bis = d3.bisector((p) => p.t).center;
+    svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).attr('fill', 'transparent')
+      .on('mousemove', (ev) => { const [px, py] = d3.pointer(ev); const p = pts[bis(pts, x.invert(px))];
+        tip.textContent = new Intl.DateTimeFormat('it-IT', { day: '2-digit', month: 'short', year: 'numeric' }).format(p.t) + ' · ' + o.fmt(p.v);
+        tip.hidden = false; tip.style.left = Math.min(W - tip.offsetWidth, px + 12) + 'px'; tip.style.top = Math.max(0, py - 36) + 'px'; })
+      .on('mouseleave', () => { tip.hidden = true; });
+  }
+  function barre(box, dati) {
+    const W = box.clientWidth, H = 220; if (!W) return;
+    const m = { t: 22, r: 8, b: 24, l: 8 };
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H).style('display', 'block');
+    const x = d3.scaleBand(dati.map((d) => d[0]), [m.l, W - m.r]).padding(.3);
+    const y = d3.scaleLinear([Math.min(0, d3.min(dati, (d) => d[1])), d3.max(dati, (d) => d[1])], [H - m.b, m.t]);
+    dati.forEach(([a, v]) => {
+      svg.append('rect').attr('x', x(a)).attr('width', x.bandwidth()).attr('y', y(Math.max(0, v))).attr('height', Math.abs(y(v) - y(0))).attr('rx', 4).attr('fill', v >= 0 ? 'var(--pos)' : 'var(--neg)');
+      svg.append('text').attr('x', x(a) + x.bandwidth() / 2).attr('y', y(Math.max(0, v)) - 6).attr('text-anchor', 'middle').attr('font-size', 12).attr('font-weight', 600).attr('fill', 'var(--ink)').text(pct(v, 0));
+      svg.append('text').attr('x', x(a) + x.bandwidth() / 2).attr('y', H - 6).attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', 'var(--muted)').text(a);
+    });
+  }
+  caricaPubblico();
+  setInterval(caricaPubblico, 300000);
+
+  // ---------------------------------------------------------------- schede
+  const scheda = (q) => {
+    $('#t-live').setAttribute('aria-pressed', String(q === 'live')); $('#t-bt').setAttribute('aria-pressed', String(q === 'bt'));
+    $('#live').hidden = q !== 'live'; $('#bt').hidden = q !== 'bt';
+    if (q === 'bt') caricaBacktest();
+  };
+  $('#t-live').addEventListener('click', () => scheda('live'));
+  $('#t-bt').addEventListener('click', () => scheda('bt'));
+
+  function tabella(colonne, righe, onClick) {
+    const w = el('div', 'scroll'), t = el('table'), th = el('thead'), tr = el('tr');
+    colonne.forEach(([lab, cls]) => tr.append(el('th', cls || '', lab)));
+    th.append(tr); t.append(th);
+    const tb = el('tbody');
+    righe.forEach((r) => {
+      const x = el('tr', onClick ? 'click' : '');
+      r.celle.forEach(([v, cls]) => { const td = el('td', cls || ''); if (v instanceof Node) td.append(v); else td.textContent = v; x.append(td); });
+      if (onClick) x.addEventListener('click', () => onClick(r, x));
+      tb.append(x);
+    });
+    t.append(tb); w.append(t); return w;
+  }
+  function pill(t, cls) { return el('span', 'pill ' + (cls || ''), t); }
+
+  // ---------------------------------------------------------------- BOT DAL VIVO
+  async function caricaLive() {
+    try { disegnaLive(await decifra('live.enc')); }
+    catch (e) { $('#agg').textContent = 'Dati dal vivo non disponibili: ' + e.message; }
+  }
+  function disegnaLive(D) {
+    const box = $('#live'); box.replaceChildren();
+    const vecchio = (Date.now() - D.aggiornato) / 60000;
+    $('#agg').replaceChildren(el('span', vecchio > 15 ? 'neg' : 'muted',
+      (vecchio > 15 ? '⚠️ bot fermo? ' : '') + 'aggiornato ' + D.aggiornato_txt));
+    const c = el('div', 'grid');
+    const card = (lab, val, sub, cls) => { const k = el('div', 'card'); k.append(el('div', 'lab', lab), el('div', 'val ' + (cls || ''), val), el('div', 'sub', sub || '')); c.append(k); };
+    const m = D.conto || {};
+    card('Saldo', eur(m.saldo, m.valuta || ''), 'equity ' + eur(m.equity, m.valuta || ''));
+    const reale = D.trade.filter((t) => t.xm != null).reduce((s, t) => s + t.xm, 0);
+    card('Risultato reale', (reale >= 0 ? '+' : '') + eur(reale, m.valuta || ''), D.trade.filter((t) => t.xm != null).length + ' trade chiusi su XM', segno(reale));
+    const chiusi = D.trade.filter((t) => t.esito);
+    const tp = chiusi.filter((t) => t.esito === 'TP').length, R = chiusi.reduce((s, t) => s + t.R, 0);
+    card('Trade chiusi', String(chiusi.length), tp + ' TP · ' + (chiusi.length - tp) + ' SL · ' + num(chiusi.length ? tp / chiusi.length * 100 : 0, 0) + '%');
+    card('Risultato', rS(R), 'secondo le strategie (prezzi di riferimento)', segno(R));
+    card('Trading automatico', D.auto || '–', 'posizioni massime ' + D.pos_max);
+    box.append(c);
+
+    box.append(el('h2', '', 'Per strategia'));
+    box.append(tabella([['Strategia', 'l'], ['Rischio'], ['Trade'], ['TP'], ['% TP'], ['R'], ['Reale XM'], ['Backtest', '']],
+      D.strategie.map((s) => ({ celle: [[s.nome, 'l'], [num(s.rischio, 0) + '%'], [s.n], [s.tp], [num(s.win, 0) + '%'],
+        [rS(s.R), segno(s.R)], [eur(s.xm, m.valuta || ''), segno(s.xm)], [num(s.bt_win, 1) + '% TP · ' + rS(s.bt_R_trade) + '/trade', 'muted']] }))));
+
+    box.append(el('h2', '', 'Trade aperti'));
+    if (D.aperti.length) box.append(tabella([['Strategia', 'l'], ['Dir.', 'l'], ['Entrata', 'l'], ['Prezzo'], ['SL'], ['TP'], ['Adesso'], ['XM', 'l']],
+      D.aperti.map((t) => ({ celle: [[t.nome, 'l'], [pill(t.direzione), 'l'], [t.data, 'l'], [num(t.entrata, 1)], [num(t.sl, 1)], [num(t.tp, 1)],
+        [rS(t.R_attuale), segno(t.R_attuale)], [t.lotti ? t.lotti + ' lotti' : (t.non_aperto || '–'), 'l']] }))));
+    else box.append(el('p', 'muted', 'Nessun trade aperto.'));
+
+    box.append(el('h2', '', 'Livelli in attesa'));
+    if (D.attese.length) box.append(tabella([['Strategia', 'l'], ['Direzione', 'l'], ['Entra se rompe'], ['Stop circa']],
+      D.attese.map((a) => ({ celle: [[a.nome, 'l'], [a.direzione, 'l'], [num(a.livello, 1)], [num(a.stop, 1)]] }))));
+    else box.append(el('p', 'muted', 'Nessun livello in attesa.'));
+
+    const due = el('div', 'two'); const sx = el('div', 'card'), dx = el('div', 'card');
+    sx.append(el('div', 'lab', 'Andamento (somma dei risultati in R)')); const g = el('div', 'graf'); g.style.minHeight = '220px'; sx.append(g);
+    dx.append(el('div', 'lab', 'Prezzo XM meno Bybit (ultime 24 ore)'));
+    const p = D.prezzi || {};
+    dx.append(el('div', 'val', p.n ? num(p.media, 1) + ' $' : '–'),
+      el('div', 'sub', p.n ? `da ${num(p.min, 1)} a ${num(p.max, 1)} $ · variazione ${num(p.max - p.min, 1)} $ (${num(p.var_pct, 3)}%) · ${p.n} misure` : 'ancora nessuna misura'));
+    due.append(sx, dx); box.append(el('h2', '', 'Andamento'), due);
+    requestAnimationFrame(() => curva(g, chiusi));
+
+    box.append(el('h2', '', 'Storico trade'));
+    const dett = el('div', 'card img'); dett.hidden = true;
+    const righe = D.trade.slice().reverse().map((t) => ({ t, celle: [[t.data, 'l'], [t.nome, 'l'], [pill(t.direzione), 'l'], [num(t.entrata, 1)], [num(t.sl, 1)], [num(t.tp, 1)],
+      [t.esito ? pill(t.esito === 'TP' ? 'TP +3R' : 'SL −1R', t.esito === 'TP' ? 'pos' : 'neg') : pill('aperto', 'warn'), 'l'],
+      [t.xm != null ? eur(t.xm, m.valuta || '') : (t.lotti ? 'aperta' : (t.non_aperto ? 'non aperto' : '–')), t.xm != null ? segno(t.xm) : 'muted'],
+      [(t.img_e || t.img_u) ? '🖼️' : '', 'l']] }));
+    box.append(tabella([['Entrata', 'l'], ['Strategia', 'l'], ['Dir.', 'l'], ['Prezzo'], ['SL'], ['TP'], ['Esito', 'l'], ['Reale XM'], ['Foto', 'l']], righe,
+      async (r) => {
+        dett.hidden = false; dett.replaceChildren(el('div', 'lab', r.t.nome + ' · ' + r.t.direzione + ' · ' + r.t.data + (r.t.non_aperto ? ' · non aperto su XM: ' + r.t.non_aperto : '')));
+        for (const k of [r.t.img_u, r.t.img_e]) {
+          if (!k) continue;
+          try { const buf = await decifra('img/' + k + '.enc', false); const im = el('img'); im.src = URL.createObjectURL(new Blob([buf], { type: 'image/png' })); im.alt = 'Grafico del trade'; dett.append(im); }
+          catch (e) { dett.append(el('p', 'muted', 'Foto non disponibile.')); }
+        }
+        dett.scrollIntoView({ block: 'nearest' });
+      }));
+    box.append(dett);
+  }
+  function curva(box, chiusi) {
+    const W = box.clientWidth, H = 220; if (!W) return;
+    const pts = [{ i: 0, v: 0 }]; let s = 0; chiusi.slice().sort((a, b) => a.uscita_ts - b.uscita_ts).forEach((t, k) => { s += t.R; pts.push({ i: k + 1, v: s }); });
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+    if (pts.length < 2) { svg.append('text').attr('x', 10).attr('y', 30).attr('fill', 'var(--muted)').text('La curva comparirà dopo il primo trade chiuso.'); return; }
+    const x = d3.scaleLinear([0, pts.length - 1], [44, W - 10]), y = d3.scaleLinear(d3.extent(pts, (p) => p.v), [H - 20, 10]).nice();
+    y.ticks(5).forEach((v) => { svg.append('line').attr('x1', 44).attr('x2', W - 10).attr('y1', y(v)).attr('y2', y(v)).attr('stroke', 'var(--grid)');
+      svg.append('text').attr('x', 38).attr('y', y(v)).attr('dy', '.32em').attr('text-anchor', 'end').attr('font-size', 11).attr('fill', 'var(--muted)').text(num(v, 0) + 'R'); });
+    svg.append('path').datum(pts).attr('fill', 'none').attr('stroke', 'var(--accent)').attr('stroke-width', 2).attr('d', d3.line((p) => x(p.i), (p) => y(p.v)));
+  }
+
+  // ---------------------------------------------------------------- BACKTEST
+  let BT = null, CAND = null, anno = null, scelto = null, zoom = 0, alto = false;
+  const ZOOM = [1, 1.6, 2.5, 4];
+  const MESI = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+  async function caricaBacktest() {
+    if (BT) return;
+    $('#bt').replaceChildren(el('p', 'muted', 'Carico il backtest…'));
+    try { BT = await decifra('backtest_trade.enc'); BT.forEach((r) => { r.id = +r.id; }); anno = d3.max(BT, (r) => r.anno); disegnaBT(); }
+    catch (e) { $('#bt').replaceChildren(el('p', 'neg', 'Backtest non disponibile: ' + e.message)); }
+  }
+  function disegnaBT() {
+    const box = $('#bt'); box.replaceChildren();
+    const anni = d3.rollups(BT, (v) => ({ n: v.length, tp: v.filter((t) => t.esito === 'TP').length, R: d3.sum(v, (t) => t.R), eu: d3.sum(v, (t) => t.euro),
+      fine: d3.max(v, (t) => t.saldo) }), (t) => t.anno).sort((a, b) => a[0] - b[0]);
+    box.append(el('h2', '', 'Anno per anno'), el('p', 'muted', 'Tocca un anno, poi un trade per vedere il grafico.'));
+    box.append(tabella([['Anno', 'l'], ['Trade'], ['TP'], ['% TP'], ['Risultato R'], ['Risultato €']],
+      anni.map(([a, s]) => ({ a, celle: [[String(a), 'l'], [s.n], [s.tp], [num(s.tp / s.n * 100, 1) + '%'], [rS(s.R), segno(s.R)], [eur(s.eu), segno(s.eu)]] })),
+      (r) => { anno = r.a; scelto = null; disegnaBT(); }));
+    const tabs = el('div', 'tabs');
+    anni.forEach(([a]) => { const b = el('button', 'btn', String(a)); b.type = 'button'; b.setAttribute('aria-pressed', String(a === anno)); b.onclick = () => { anno = a; scelto = null; disegnaBT(); }; tabs.append(b); });
+    box.append(el('h2', '', String(anno)), tabs);
+    const tA = BT.filter((t) => t.anno === anno);
+    d3.groups(tA, (t) => t.mese).sort((a, b) => a[0] - b[0]).forEach(([m, v]) => {
+      const sec = el('div', 'mese'); const R = d3.sum(v, (t) => t.R);
+      sec.append(el('h3', '', `${MESI[m - 1]} ${anno} · ${v.length} trade · ${v.filter((t) => t.esito === 'TP').length} TP · ${rS(R)}`));
+      sec.append(tabella([['#', 'l'], ['Strategia', 'l'], ['Dir.', 'l'], ['Entrata', 'l'], ['Chiusura', 'l'], ['Prezzo'], ['SL'], ['TP'], ['Lotti'], ['Esito', 'l'], ['R'], ['€'], ['Saldo']],
+        v.map((t) => ({ t, celle: [[String(t.id), 'l'], [t.strategia, 'l'], [t.direzione, 'l'], [t.entrata.slice(8, 10) + '/' + t.entrata.slice(5, 7) + ' ' + t.entrata.slice(11), 'l'],
+          [t.chiusura.slice(8, 10) + '/' + t.chiusura.slice(5, 7) + ' ' + t.chiusura.slice(11), 'l'], [num(t.prezzo_entrata, 1)], [num(t.stop_loss, 1)], [num(t.take_profit, 1)],
+          [num(t.lotti, 2)], [pill(t.esito, t.esito === 'TP' ? 'pos' : 'neg'), 'l'], [rS(t.R), segno(t.R)], [eur(t.euro), segno(t.euro)], [eur(t.saldo)]] })),
+        (r) => { scelto = scelto === r.t.id ? null : r.t.id; zoom = 0; alto = false; disegnaBT(); }));
+      if (scelto && v.some((t) => t.id === scelto)) sec.append(pannelloGrafico(v.find((t) => t.id === scelto)));
+      box.append(sec);
+    });
+  }
+  function pannelloGrafico(t) {
+    const card = el('div', 'card'); card.style.marginTop = '10px';
+    const ore = (t.ts_uscita - t.ts_entrata) / 3600000 + 0.25;
+    card.append(el('div', 'lab', `#${t.id} · ${t.strategia} · ${t.direzione} · ${t.esito === 'TP' ? 'TP +3R' : 'SL −1R'} dopo ${num(ore, 1)} ore`));
+    const z = el('div', 'tabs');
+    const bt = (txt, f, dis) => { const b = el('button', 'btn', txt); b.type = 'button'; b.disabled = dis; b.onclick = f; z.append(b); };
+    bt('−', () => { zoom = Math.max(0, zoom - 1); disegnaBT(); }, zoom === 0);
+    bt('+', () => { zoom = Math.min(ZOOM.length - 1, zoom + 1); disegnaBT(); }, zoom === ZOOM.length - 1);
+    bt(alto ? 'Più basso' : 'Più alto', () => { alto = !alto; disegnaBT(); });
+    bt('Chiudi', () => { scelto = null; disegnaBT(); });
+    const g = el('div', 'graf'); g.style.minHeight = (alto ? 640 : 400) + 'px';
+    card.append(z, g);
+    const vai = () => requestAnimationFrame(() => { disegnaGrafico(g, t); card.scrollIntoView({ block: 'nearest' }); });
+    if (CAND) vai();
+    else { g.append(el('p', 'muted', 'Carico le candele…')); decifra('backtest_candele.enc').then((c) => { CAND = c; g.replaceChildren(); vai(); }).catch((e) => g.replaceChildren(el('p', 'neg', e.message))); }
+    return card;
+  }
+  function disegnaGrafico(box, t) {
+    const vis = box.clientWidth, W = Math.round(vis * ZOOM[zoom]), H = alto ? 640 : 400;
+    const c = CAND.filter((k) => k.t >= t.ts_da && k.t <= t.ts_a);
+    if (!c.length) return;
+    const sl = t.stop_loss, tp = t.take_profit, en = t.prezzo_entrata;
+    const lo = Math.min(d3.min(c, (k) => k.l), sl, tp), hi = Math.max(d3.max(c, (k) => k.h), sl, tp), pad = (hi - lo) * .04;
+    const m = { t: 10, r: 120, b: 34, l: 64 };
+    const svg = d3.select(box).append('svg').attr('width', zoom ? W : '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H).style('display', 'block');
+    const x = d3.scaleBand(c.map((k) => k.t), [m.l, W - m.r]).padding(.25), y = d3.scaleLinear([lo - pad, hi + pad], [H - m.b, m.t]);
+    const ie = c.findIndex((k) => k.t === t.ts_entrata), iu = c.findIndex((k) => k.t === t.ts_uscita);
+    if (ie >= 0) { const x0 = x(c[ie].t), x1 = iu >= 0 ? x(c[iu].t) + x.bandwidth() : W - m.r; svg.append('rect').attr('x', x0).attr('width', x1 - x0).attr('y', m.t).attr('height', H - m.t - m.b).attr('fill', 'var(--grid)'); }
+    y.ticks(7).forEach((v) => { svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(v)).attr('y2', y(v)).attr('stroke', 'var(--grid)');
+      svg.append('text').attr('x', m.l - 6).attr('y', y(v)).attr('dy', '.32em').attr('text-anchor', 'end').attr('font-size', 11).attr('fill', 'var(--muted)').text(num(v, 0)); });
+    const passo = Math.max(1, Math.ceil(c.length / Math.max(3, Math.floor((W - m.l - m.r) / 70)))); let ug = '';
+    c.forEach((k, i) => { if (i % passo) return; const g = fmtGg.format(new Date(k.t));
+      svg.append('text').attr('x', x(k.t) + x.bandwidth() / 2).attr('y', H - m.b + 14).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'var(--muted)').text(fmtOra.format(new Date(k.t)));
+      if (g !== ug) { svg.append('text').attr('x', x(k.t) + x.bandwidth() / 2).attr('y', H - m.b + 28).attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', 'var(--muted)').text(g); ug = g; } });
+    c.forEach((k) => { const col = k.c >= k.o ? 'var(--pos)' : 'var(--neg)', xm = x(k.t) + x.bandwidth() / 2;
+      svg.append('line').attr('x1', xm).attr('x2', xm).attr('y1', y(k.h)).attr('y2', y(k.l)).attr('stroke', col);
+      svg.append('rect').attr('x', x(k.t)).attr('width', x.bandwidth()).attr('y', y(Math.max(k.o, k.c))).attr('height', Math.max(1, Math.abs(y(k.o) - y(k.c)))).attr('fill', col); });
+    const x0 = ie >= 0 ? x(c[ie].t) : m.l, x1 = iu >= 0 ? x(c[iu].t) + x.bandwidth() : W - m.r;
+    const lin = [[tp, 'TP', 'var(--pos)', '6 4'], [sl, 'SL', 'var(--neg)', '6 4'], [en, 'Entrata', 'var(--ink)', '2 3']].map((l) => ({ l, yy: y(l[0]) })).sort((a, b) => a.yy - b.yy);
+    for (let i = 1; i < lin.length; i++) if (lin[i].yy - lin[i - 1].yy < 14) lin[i].yy = lin[i - 1].yy + 14;
+    lin.forEach(({ l, yy }) => { svg.append('line').attr('x1', x0).attr('x2', x1).attr('y1', y(l[0])).attr('y2', y(l[0])).attr('stroke', l[2]).attr('stroke-width', 1.5).attr('stroke-dasharray', l[3]);
+      svg.append('text').attr('x', W - m.r + 6).attr('y', yy).attr('dy', '.32em').attr('font-size', 12).attr('font-weight', 600).attr('fill', l[2]).text(l[1] + ' ' + num(l[0], 1)); });
+    if (zoom && ie >= 0) box.scrollLeft = Math.max(0, x(c[ie].t) - vis * .35);
+    const tip = el('div', 'tip'); tip.hidden = true; box.append(tip);
+    svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).attr('fill', 'transparent')
+      .on('mousemove', (ev) => { const [px, py] = d3.pointer(ev); const k = c[Math.max(0, Math.min(c.length - 1, Math.floor((px - m.l) / x.step())))];
+        tip.textContent = `${fmtGg.format(new Date(k.t))} ${fmtOra.format(new Date(k.t))} · A ${num(k.o, 1)} · Max ${num(k.h, 1)} · Min ${num(k.l, 1)} · C ${num(k.c, 1)}`;
+        tip.hidden = false; const sl_ = box.scrollLeft; tip.style.left = Math.max(sl_, Math.min(sl_ + vis - tip.offsetWidth, px + 12)) + 'px'; tip.style.top = Math.max(0, py - 40) + 'px'; })
+      .on('mouseleave', () => { tip.hidden = true; });
+  }
+})();
+</script>
+</body>
+</html>
