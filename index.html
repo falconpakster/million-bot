@@ -4,442 +4,1120 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Risultati del bot</title>
+<title>Bot BTC</title>
 <style>
-:root{--bg:#f4f5f7;--card:#fff;--ink:#16191d;--muted:#667085;--line:#e4e7ec;--pos:#12805c;--neg:#c8322f;--warn:#b26a00;--accent:#2a5bd7;--grid:#eef0f3;color-scheme:light}
-@media (prefers-color-scheme:dark){:root{--bg:#0f1115;--card:#171a20;--ink:#e8eaed;--muted:#98a2b3;--line:#2a2f37;--pos:#3ccf91;--neg:#f2706d;--warn:#f0b44c;--accent:#7aa2ff;--grid:#232831;color-scheme:dark}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-variant-numeric:tabular-nums}
-main{max-width:1400px;margin:0 auto;padding:20px max(16px,env(safe-area-inset-left)) 48px max(16px,env(safe-area-inset-right))}
-h1{font-size:22px;margin:0}h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:28px 0 10px}
-.muted{color:var(--muted)}.pos{color:var(--pos)}.neg{color:var(--neg)}.warn{color:var(--warn)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
-.lab{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
-.val{font-size:24px;font-weight:650;margin:4px 0 2px}.sub{font-size:13px;color:var(--muted)}
-.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
-table{width:100%;border-collapse:collapse;font-size:14px}
-th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
-th{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;position:sticky;top:0;background:var(--card)}
-th.l,td.l{text-align:left}tr:last-child td{border-bottom:none}
-tbody tr.click{cursor:pointer}tbody tr.click:hover td{background:var(--grid)}tbody tr.sel td{font-weight:650}
-.pill{display:inline-block;padding:1px 9px;border-radius:999px;font-size:12px;font-weight:650;border:1px solid currentColor}
-button,input{font:inherit}
-.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer}
-.btn[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.btn:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 4px}
-header{display:flex;justify-content:space-between;align-items:baseline;gap:8px 16px;flex-wrap:wrap}
-#login{max-width:380px;margin:12vh auto 0;display:flex;flex-direction:column;gap:12px}
-#login input[type=password]{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
-.two{display:grid;grid-template-columns:2fr 1fr;gap:12px}@media (max-width:900px){.two{grid-template-columns:1fr}}
-.graf{position:relative;overflow-x:auto;overflow-y:hidden;min-height:380px}
-.tip{position:absolute;pointer-events:none;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:12px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.15);z-index:3}
-.img img{max-width:100%;border-radius:8px;border:1px solid var(--line);display:block;margin-top:8px}
-.mese{margin-top:14px}.mese h3{font-size:15px;margin:0 0 6px}
-.hero{font-size:44px;font-weight:700;letter-spacing:-.02em;margin:2px 0}
-.nota{font-size:12px;margin-top:36px;max-width:820px}
-.mgrid td{min-width:58px}.mgrid td.vuoto{color:var(--muted)}
-.leg{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:6px}
-[hidden]{display:none!important}
+:root {
+  color-scheme: light;
+  --color-bg: #f9f9f7; --color-panel: #fff; --color-fg: #0b0b0b; --color-fg-muted: #898781;
+  --color-border-line: rgba(11, 11, 11, .1); --cds-border: rgba(11, 11, 11, .1); --cds-chart-grid: rgba(11, 11, 11, .1);
+  --color-ok: #006300; --color-bad: #8e2626; --color-warn: #734500;
+  --cds-surface-popover: #fff; --cds-chart-axis: #c3c2b7; --cds-text-secondary: #52514e; --cds-chart-muted: #c3c2b7;
+  --cds-chart-reference: #898781; --cds-chart-status-critical: #d03b3b; --cds-chart-categorical-1: #2a78d6;
+  --cds-shadow-popover: 0 8px 24px #0000001f, 0 2px 6px #00000014;
+  --font-anthropic-sans: "Anthropic Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-anthropic-serif: "Anthropic Serif", ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  --cds-font-size-caption: .8125rem; --cds-font-size-body: .9375rem; --cds-font-size-heading: .9375rem; --cds-font-size-title: 1.375rem;
+  --cds-font-weight-medium: 500;
+  --cds-pad-xs: .25rem; --cds-pad-sm: .5rem; --cds-pad-md: .75rem; --cds-pad-lg: 1rem;
+  --cds-gap-xs: .5rem; --cds-gap-sm: .75rem; --cds-gap-md: 1rem; --cds-gap-xl: 2.5rem;
+  --cds-radius: .5rem; --cds-dur-slow: .45s;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-bg: #0b0b0b; --color-panel: #1a1a19; --color-fg: #f0efec; --color-fg-muted: #898781;
+    --color-border-line: rgba(255, 255, 255, .1); --cds-border: rgba(255, 255, 255, .1); --cds-chart-grid: rgba(255, 255, 255, .1);
+    --color-ok: #0ca30c; --color-bad: #ec7e7e; --color-warn: #db9300;
+    --cds-surface-popover: #20201f; --cds-chart-axis: #383835; --cds-text-secondary: #c3c2b7; --cds-chart-muted: #5f5e5a;
+    --cds-chart-reference: #97958d; --cds-chart-categorical-1: #3987e5;
+    --cds-shadow-popover: 0 8px 24px #00000052, 0 2px 6px #0003;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #0b0b0b; --color-panel: #1a1a19; --color-fg: #f0efec; --color-fg-muted: #898781;
+  --color-border-line: rgba(255, 255, 255, .1); --cds-border: rgba(255, 255, 255, .1); --cds-chart-grid: rgba(255, 255, 255, .1);
+  --color-ok: #0ca30c; --color-bad: #ec7e7e; --color-warn: #db9300;
+  --cds-surface-popover: #20201f; --cds-chart-axis: #383835; --cds-text-secondary: #c3c2b7; --cds-chart-muted: #5f5e5a;
+  --cds-chart-reference: #97958d; --cds-chart-categorical-1: #3987e5;
+  --cds-shadow-popover: 0 8px 24px #00000052, 0 2px 6px #0003;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); }
+body { font-family: var(--font-anthropic-sans); font-size: var(--cds-font-size-body); line-height: 1.45; -webkit-font-smoothing: antialiased; }
+#dash-root { max-width: 1440px; margin-inline: auto; padding: clamp(16px, 3vw, 40px); padding-top: 0; }
+#dash-root button { font: inherit; }
+[hidden] { display: none !important; }
+body.pub .solo-priv, body:not(.pub) .solo-pub { display: none !important; }
+/* barra in alto */
+#dash-root .top { position: sticky; top: 0; z-index: 5; background: var(--color-bg); display: flex; align-items: center; justify-content: space-between;
+  gap: var(--cds-gap-sm); flex-wrap: wrap; padding: var(--cds-pad-md) 0; margin-bottom: var(--cds-gap-md); border-bottom: 1px solid var(--color-border-line); }
+#dash-root .top .marca { font-family: var(--font-anthropic-serif); font-size: 1.125rem; display: flex; align-items: baseline; gap: var(--cds-gap-xs); }
+#dash-root .top .marca small { font-family: var(--font-anthropic-sans); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+#dash-root .top nav { display: flex; gap: var(--cds-gap-xs); flex-wrap: wrap; }
+#dash-root .btn-l { font-size: var(--cds-font-size-body); padding: var(--cds-pad-xs) var(--cds-pad-md); border-radius: 999px; border: 1px solid var(--color-border-line);
+  background: var(--color-panel); color: var(--color-fg); cursor: pointer; }
+#dash-root .btn-l[aria-pressed="true"] { background: var(--color-fg); color: var(--color-bg); border-color: var(--color-fg); }
+#dash-root .btn-l:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 2px; }
+/* accesso */
+#dash-root .accesso { max-width: 26rem; margin: 10vh auto; }
+#dash-root .accesso input[type=password] { font: inherit; padding: var(--cds-pad-sm) var(--cds-pad-md); border-radius: var(--cds-radius); border: 1px solid var(--color-border-line);
+  background: var(--color-bg); color: var(--color-fg); width: 100%; }
+#dash-root .accesso label { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); display: flex; gap: var(--cds-gap-xs); align-items: center; }
+#dash-root .accesso .err { color: var(--color-bad); font-size: var(--cds-font-size-caption); margin: 0; min-height: 1.2em; }
+/* dal vivo */
+#dash-root .bt-tile .v.pos { color: var(--color-ok); } #dash-root .bt-tile .v.neg { color: var(--color-bad); }
+#dash-root .stato { display: inline-flex; align-items: center; gap: .4em; }
+#dash-root .stato::before { content: ""; width: .5rem; height: .5rem; border-radius: 50%; background: var(--color-ok); }
+#dash-root .stato.fermo::before { background: var(--color-bad); }
+#dash-root .stato.pausa::before { background: var(--color-warn); }
+#dash-root .foto img { max-width: 100%; border-radius: var(--cds-radius); border: 1px solid var(--color-border-line); display: block; }
+#dash-root .foto { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 32rem), 1fr)); gap: var(--cds-gap-md); }
+#dash-root .bt-t tbody tr.click { cursor: pointer; }
+#dash-root .bt-t tbody tr.click:hover td { background: var(--cds-surface-popover); }
+#dash-root .bt-t tbody tr.sel td { font-weight: 600; }
+#dash-root .bt-t tbody tr.sel td:first-child { box-shadow: inset 3px 0 0 var(--color-fg); }
+#dash-root .bt-t .muted { color: var(--color-fg-muted); }
+#dash-root .bt-pill.aperto { color: var(--color-warn); border: 1px solid currentColor; }
+#dash-root .bt-pill.dir { color: var(--color-fg); border: 1px solid var(--color-border-line); font-weight: 500; }
+#dash-root .fine { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: var(--cds-gap-xl) 0 0; max-width: 90ch; }
+/* calcolatore */
+#dash-root .calc-campi { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); align-items: end; }
+#dash-root .calc-campi label { display: flex; flex-direction: column; gap: var(--cds-pad-xs); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+#dash-root .calc-campi input { font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg); background: var(--color-bg); border: 1px solid var(--color-border-line);
+  border-radius: var(--cds-radius); padding: var(--cds-pad-sm) var(--cds-pad-md); min-width: 11rem; }
+#dash-root .calc-campi input:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 1px; }
+#dash-root .calc-ris { font-size: var(--cds-font-size-body); margin: 0; line-height: 1.5; max-width: 80ch; }
+#dash-root .calc-ris b { font-weight: 600; }
+#dash-root .calc-ris .grande { font-family: var(--font-anthropic-serif); font-size: 2rem; font-weight: 400; display: block; line-height: 1.2; }
+/* blocco del backtest (come nella dashboard) */
+
+#dash-root .bt { display: flex; flex-direction: column; gap: var(--cds-gap-xl); font-family: var(--font-anthropic-sans); font-variant-numeric: tabular-nums; }
+#dash-root .bt-head { display: flex; flex-direction: column; gap: var(--cds-gap-sm); }
+#dash-root .bt-title { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; text-wrap: balance; }
+#dash-root .bt-take { font-size: var(--cds-font-size-body); margin: 0; max-width: 70ch; line-height: 1.5; }
+#dash-root .bt-take b { font-weight: 600; }
+#dash-root .bt-note { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0; max-width: 90ch; line-height: 1.5; }
+#dash-root .bt-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-sm); min-width: 0; }
+#dash-root .bt-card h2, #dash-root .bt-card h3 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+#dash-root .bt-sub { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0; }
+#dash-root .bt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: var(--cds-gap-md); }
+#dash-root .bt-chart { position: relative; min-height: 260px; }
+#dash-root .bt-chart.bt-small { min-height: 200px; }
+#dash-root .bt-scroll { overflow-x: auto; }
+#dash-root table.bt-t { border-collapse: collapse; width: 100%; font-size: var(--cds-font-size-caption); white-space: nowrap; }
+#dash-root .bt-t th { text-align: right; font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); }
+#dash-root .bt-t td { text-align: right; padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); }
+#dash-root .bt-t th.l, #dash-root .bt-t td.l { text-align: left; }
+#dash-root .bt-t tr:last-child td { border-bottom: none; }
+#dash-root .bt-t .pos { color: var(--color-ok); }
+#dash-root .bt-t .neg { color: var(--color-bad); }
+#dash-root .bt-pill { display: inline-block; min-width: 2.2em; text-align: center; border-radius: 999px; padding: 0 var(--cds-pad-xs); font-weight: 600; }
+#dash-root .bt-pill.tp { color: var(--color-ok); border: 1px solid currentColor; }
+#dash-root .bt-pill.sl { color: var(--color-bad); border: 1px solid currentColor; }
+#dash-root .bt-anni tbody tr { cursor: pointer; }
+#dash-root .bt-anni tbody tr:hover td { background: var(--cds-surface-popover); }
+#dash-root .bt-anni tbody tr.sel td { font-weight: 600; }
+#dash-root .bt-anni tbody tr.sel td:first-child { box-shadow: inset 3px 0 0 var(--color-fg); }
+#dash-root .bt-tabs { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs); }
+#dash-root .bt-tab { font: inherit; font-size: var(--cds-font-size-body); padding: var(--cds-pad-xs) var(--cds-pad-md); border-radius: 999px; border: 1px solid var(--color-border-line); background: var(--color-panel); color: var(--color-fg); cursor: pointer; }
+#dash-root .bt-tab[aria-pressed="true"] { background: var(--color-fg); color: var(--color-bg); border-color: var(--color-fg); }
+#dash-root .bt-tab:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 2px; }
+#dash-root .bt-year-title { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; }
+#dash-root .bt-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); gap: var(--cds-gap-md); }
+#dash-root .bt-tile { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md); display: flex; flex-direction: column; gap: var(--cds-gap-xs); }
+#dash-root .bt-tile .k { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+#dash-root .bt-tile .v { font-family: var(--font-anthropic-serif); font-size: var(--cds-font-size-title); font-weight: 400; line-height: 1.1; }
+#dash-root .bt-tile .s { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+#dash-root .bt-mesi { display: flex; flex-direction: column; gap: var(--cds-gap-md); }
+#dash-root .bt-mese-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--cds-gap-xs) var(--cds-gap-md); }
+#dash-root .bt-mese-sum { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+#dash-root .bt-mese-sum b { color: var(--color-fg); font-weight: 600; }
+#dash-root .bt-vuoto { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0; }
+#dash-root .bt-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); white-space: nowrap; z-index: 2; }
+#dash-root .bt-tip .d { color: var(--cds-text-secondary); }
+#dash-root .bt-fail { display: flex; align-items: center; justify-content: center; gap: var(--cds-gap-xs); color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); min-height: inherit; }
+#dash-root .bt-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+#dash-root [data-dash-source-state=empty] { color: transparent; }
+#dash-root [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+#dash-root .bt-mesi table.bt-t tbody tr { cursor: pointer; }
+#dash-root .bt-mesi table.bt-t tbody tr:hover td { background: var(--cds-surface-popover); }
+#dash-root .bt-mesi table.bt-t tbody tr.sel td { font-weight: 600; }
+#dash-root .bt-mesi table.bt-t tbody tr.sel td:first-child { box-shadow: inset 3px 0 0 var(--color-fg); }
+#dash-root .bt-graf-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--cds-gap-sm); flex-wrap: wrap; }
+#dash-root .bt-chiudi { font: inherit; font-size: var(--cds-font-size-caption); background: none; border: 1px solid var(--color-border-line); border-radius: 999px; padding: var(--cds-pad-xs) var(--cds-pad-sm); color: var(--color-fg); cursor: pointer; }
+#dash-root .bt-grafico { position: relative; min-height: 360px; overflow-x: auto; overflow-y: hidden; }
+#dash-root .bt-grafico.alto { min-height: 620px; }
+#dash-root .bt-zoom { display: flex; gap: var(--cds-gap-xs); flex-wrap: wrap; align-items: center; }
+#dash-root .bt-zoom button { font: inherit; font-size: var(--cds-font-size-body); min-width: 2.4em; background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: 999px; padding: var(--cds-pad-xs) var(--cds-pad-sm); color: var(--color-fg); cursor: pointer; }
+#dash-root .bt-zoom button[aria-pressed="true"] { background: var(--color-fg); color: var(--color-bg); }
+#dash-root .bt-zoom .lv { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+
 </style>
 </head>
-<body>
-<main>
-  <section id="pub">
-    <header>
-      <div><h1>Risultati del bot</h1><div class="muted" id="p-sotto">Trading automatico su Bitcoin e Giappone 225 · carico i dati…</div></div>
-      <button class="btn" id="riservata" type="button">Area riservata</button>
-    </header>
-    <div id="p-live"></div>
-    <div id="p-bt"></div>
-    <p class="muted nota">I risultati passati, e ancora di più quelli simulati, non garantiscono risultati futuri. Il trading con leva può far perdere tutto il capitale investito. Questa pagina non è un consiglio di investimento.</p>
-  </section>
+<body class="pub">
+<div id="dash-root">
+  <div class="top">
+    <div class="marca">Bot BTC <small id="sotto-marca">risultati</small></div>
+    <nav aria-label="Sezioni" class="solo-priv">
+      <button class="btn-l" id="t-live" type="button" aria-pressed="true">Bot dal vivo</button>
+      <button class="btn-l" id="t-bt" type="button" aria-pressed="false">Backtest</button>
+    </nav>
+    <nav aria-label="Accesso">
+      <button class="btn-l solo-pub" id="b-entra" type="button">Area riservata</button>
+      <button class="btn-l solo-priv" id="b-esci" type="button">Esci</button>
+    </nav>
+  </div>
 
-  <section id="login" hidden>
-    <h1>Area riservata</h1>
-    <p class="muted">Inserisci la password per aprire i dati. Vengono decifrati solo qui, nel tuo browser.</p>
+  <section class="bt-card accesso" id="v-login" hidden>
+    <h2>Area riservata</h2>
+    <p class="bt-sub">Con la password vedi tutti i dettagli: conto dal vivo, strategie, trade, livelli e grafici. I dati si aprono solo qui, nel tuo browser.</p>
     <input id="pw" type="password" autocomplete="current-password" placeholder="Password" aria-label="Password">
-    <label class="muted"><input id="ricorda" type="checkbox"> Ricorda su questo dispositivo</label>
-    <button class="btn" id="entra" type="button">Apri</button>
-    <p id="msg" class="neg" role="alert"></p>
-    <button class="btn" id="indietro" type="button">← Torna ai risultati</button>
+    <label><input id="ricorda" type="checkbox"> Ricorda su questo dispositivo</label>
+    <p class="err" id="msg" role="alert"></p>
+    <div style="display:flex;gap:var(--cds-gap-xs)"><button class="btn-l" id="b-apri" type="button" aria-pressed="true">Entra</button>
+      <button class="btn-l" id="b-annulla" type="button">Annulla</button></div>
   </section>
 
-  <section id="app" hidden>
-    <header>
-      <h1>Area riservata</h1>
-      <div class="muted" id="agg"></div>
-    </header>
-    <div class="tabs" role="tablist">
-      <button class="btn" id="t-live" aria-pressed="true" type="button">Bot dal vivo</button>
-      <button class="btn" id="t-bt" aria-pressed="false" type="button">Backtest</button>
-      <button class="btn" id="apub" type="button" style="margin-left:auto">Risultati pubblici</button>
-      <button class="btn" id="esci" type="button">Esci</button>
+  <div id="v-live"></div>
+
+  <div id="v-bt" hidden>
+<div class="bt" id="bt-blocco">
+  <header class="bt-head" id="riepilogo">
+    <h1 class="bt-title">Backtest Bot BTC</h1>
+    <p class="bt-take">
+      Da aprile 2020 al <span class="bt-fino">23 ottobre 2026</span> <span class="solo-priv">le quattro strategie fanno</span><span class="solo-pub">il bot fa</span> <b data-source="totale" data-field="trade" class="dash-skeleton">—</b> trade:
+      <b data-source="totale" data-field="tp" class="dash-skeleton">—</b> TP e <b data-source="totale" data-field="sl" class="dash-skeleton">—</b> SL.
+      Partendo da 1.000 € il saldo arriva a <b data-source="totale" data-field="saldo_finale" class="dash-skeleton">—</b>,
+      con un calo massimo del <b data-source="totale" data-field="calo_max" class="dash-skeleton">—</b>
+      e al massimo <b data-source="totale" data-field="max_sl_fila" class="dash-skeleton">—</b> SL di fila.
+    </p>
+    <p class="bt-note solo-priv">
+      Dopo il 23/10/2026 continuano i trade chiusi dal bot dal vivo (solo Bitcoin, esiti sui prezzi Bybit), con gli euro calcolati dal rischio sul saldo.
+      Rischi scelti il 26/10/2026 sul saldo del momento: doppia rottura 6%, seconda correzione 3%, continuazione dopo SL 2%, prima candela 2%.
+      Lotti calcolati come fa il bot: rischio diviso per stop + spread, arrotondati per eccesso se il rischio resta entro +20% del previsto, altrimenti per difetto; minimo 0,01.
+      Spread 15 $, swap reale di XM (long 0,043% e short 0,029% a notte), 1 € = 1 $. Orari italiani. Dati Bybit BTCUSDT a 15 minuti.
+      XM accetta al massimo 80 lotti per ordine: dal 2025 i lotti del backtest superano questo limite, quindi da lì gli euro sono teorici.
+    </p>
+  
+
+  <p class="bt-note solo-pub">
+      Simulazione sui prezzi passati di Bitcoin (dati a 15 minuti), con le stesse regole del bot, spread e swap reali di XM e i guadagni
+      reinvestiti, partendo da 1.000 €. Il Giappone 225 non è incluso. Dopo il 23/10/2026 la curva continua con i trade nuovi del bot,
+      calcolati allo stesso modo. Dal 2025 le posizioni del backtest superano il massimo accettato da XM
+      per un ordine, quindi da lì gli euro sono teorici. I risultati simulati non garantiscono risultati futuri.
+    </p>
+  </header>
+
+  <section class="bt-card" id="calcolatore">
+    <h2>Quanto sarebbe diventato il tuo capitale</h2>
+    <p class="bt-sub">Scegli da che giorno partire e quanto investire: il calcolo segue il saldo giorno per giorno fino all'ultimo trade chiuso, con gli stessi rischi e i guadagni reinvestiti.</p>
+    <div class="calc-campi">
+      <label>Dal giorno<input type="date" id="calc-data"></label>
+      <label>Capitale iniziale (€)<input type="number" id="calc-euro" min="1" step="100" value="1000" inputmode="decimal"></label>
     </div>
-    <div id="live"></div>
-    <div id="bt" hidden></div>
+    <div class="bt-tiles" id="calc-tiles"></div>
+    <p class="calc-ris" id="calc-ris"></p>
+    <div class="bt-chart bt-small" id="calc-graf"></div>
   </section>
-</main>
+
+  <section class="bt-card" id="andamento">
+    <h2>Saldo nel tempo</h2>
+    <p class="bt-sub">Scala logaritmica: ogni riga vale 10 volte la precedente. In grigio l'anno scelto.</p>
+    <div class="bt-chart" id="equity" data-source="trade"></div>
+  </section>
+
+  <section class="bt-card" id="anni">
+    <h2>Anno per anno</h2>
+    <p class="bt-sub">Tocca un anno per vedere i suoi mesi e tutti i trade<span class="solo-priv">, poi tocca un trade per vedere il suo grafico</span>. Trade contati nel mese in cui sono entrati.</p>
+    <div class="bt-scroll">
+      <table class="bt-t bt-anni" data-source="anni" data-row-key="anno">
+        <thead><tr>
+          <th class="l" data-field="anno">Anno</th>
+          <th data-field="trade">Trade</th>
+          <th data-field="tp">TP</th>
+          <th data-field="sl">SL</th>
+          <th data-field="pct_tp">% TP</th>
+          <th data-field="R">Risultato R</th>
+          <th data-field="euro">Risultato €</th>
+          <th data-field="saldo_inizio">Saldo inizio</th>
+          <th data-field="saldo_fine">Saldo fine</th>
+          <th data-field="rendimento">Rendimento</th>
+          <th data-field="calo_max">Calo massimo</th>
+          <th data-field="max_sl_fila">SL di fila</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="bt-head" id="anno">
+    <div class="bt-tabs" role="group" aria-label="Anno"></div>
+    <h2 class="bt-year-title"></h2>
+    <div class="bt-tiles">
+      <div class="bt-tile"><span class="k">Trade</span><span class="v" data-k="trade">—</span><span class="s"><span data-k="tp">—</span> TP · <span data-k="sl">—</span> SL</span></div>
+      <div class="bt-tile"><span class="k">% TP</span><span class="v" data-k="pct_tp">—</span><span class="s">SL di fila al massimo: <span data-k="max_sl_fila">—</span></span></div>
+      <div class="bt-tile"><span class="k">Risultato</span><span class="v" data-k="R">—</span><span class="s" data-k="euro">—</span></div>
+      <div class="bt-tile"><span class="k">Saldo a fine anno</span><span class="v" data-k="saldo_fine">—</span><span class="s">da <span data-k="saldo_inizio">—</span></span></div>
+      <div class="bt-tile"><span class="k">Rendimento</span><span class="v" data-k="rendimento">—</span><span class="s">calo massimo <span data-k="calo_max">—</span></span></div>
+    </div>
+  </section>
+
+  <div class="bt-grid">
+    <section class="bt-card" id="mesi-grafico">
+      <h3>Risultato di ogni mese</h3>
+      <p class="bt-sub">In R: +3 per ogni TP, −1 per ogni SL, spread e swap già tolti.</p>
+      <div class="bt-chart bt-small" id="barre" data-source="mesi"></div>
+    </section>
+    <section class="bt-card solo-priv" id="per-strategia">
+      <h3>Per strategia</h3>
+      <p class="bt-sub">Trade entrati nell'anno scelto.</p>
+      <div class="bt-scroll">
+        <table class="bt-t bt-strat" data-source="strategie" data-row-key="anno,strategia">
+          <thead><tr>
+            <th class="l" data-field="strategia">Strategia</th>
+            <th data-field="trade">Trade</th>
+            <th data-field="tp">TP</th>
+            <th data-field="pct_tp">% TP</th>
+            <th data-field="R">R</th>
+            <th data-field="euro">€</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <section class="bt-mesi" id="mesi"></section>
+</div>
+
+
+  </div>
+
+  <p class="fine solo-pub">I risultati passati, e ancora di più quelli simulati, non garantiscono risultati futuri. Il trading con leva può far perdere tutto il capitale. Questa pagina non è un consiglio di investimento.</p>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script>
+// ------------------------------------------------------------------ dati: ramo "dati" del repository
+window.PUB = true;
+const QS = new URLSearchParams(location.search);
+const BASE = QS.get('base') || `https://raw.githubusercontent.com/${location.hostname.split('.')[0]}/${location.pathname.split('/').filter(Boolean)[0] || ''}/dati/`;
+const prendi = async (nome) => { const r = await fetch(BASE + nome + '?t=' + Math.floor(Date.now() / 60000), { cache: 'no-store' }); if (!r.ok) throw new Error(nome + ' ' + r.status); return r; };
+const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+let CHIAVE = null;
+async function decifra(nome, testo = true) {
+  const j = await (await prendi(nome)).json();
+  const chiaro = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(j.iv) }, CHIAVE, b64(j.d));
+  const buf = await new Response(new Blob([chiaro]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+  return testo ? JSON.parse(new TextDecoder().decode(buf)) : buf;
+}
+
+// ------------------------------------------------------------------ piccolo "dash": stessi comandi della dashboard
+const dash = (() => {
+  let P = {}; const src = {}, calcs = {}; const cbs = []; let inCorso = false;
+  const ricalcola = () => {
+    for (const [id, c] of Object.entries(calcs)) {
+      const ins = c.inputs.map((i) => src[i]);
+      if (ins.every((x) => x && x.status === 'ok')) { try { src[id] = { status: 'ok', data: c.fn(...ins.map((x) => x.data)) }; } catch (e) { src[id] = { status: 'error', message: String(e) }; } }
+      else if (ins.some((x) => x && x.status === 'error')) src[id] = { status: 'error' };
+    }
+  };
+  const giro = () => { if (inCorso) return; inCorso = true; try { cbs.forEach((f) => { try { f(); } catch (e) { console.error(e); } }); } finally { inCorso = false; } };
+  return {
+    colors: ['var(--cds-chart-categorical-1)'],
+    params: () => P,
+    setParams(o) { P = Object.assign({}, P, o); if (P.grafico && !src.candele && dash.suCandele) dash.suCandele(); giro(); },
+    data: (id) => src[id] || { status: 'loading', data: [] },
+    calc(id, spec) { calcs[id] = spec; },
+    onData(f) { cbs.push(f); },
+    metti(id, rows) { src[id] = { status: 'ok', data: rows }; ricalcola(); giro(); },
+    errore(id, m) { src[id] = { status: 'error', message: m }; ricalcola(); giro(); },
+    svuota() { for (const k of Object.keys(src)) delete src[k]; P = {}; },
+    giro,
+  };
+})();
+</script>
+<script>
+
+dash.calc('totale', {
+  inputs: ['trade'],
+  title: 'Totale di tutto il periodo',
+  description: 'Trade, TP, SL, saldo finale, calo massimo dal picco e massimo di SL di fila (in ordine di entrata).',
+  fn: (trade) => {
+    const t = trade.map((r) => ({ id: Number(r.id), R: Number(r.R), saldo: Number(r.saldo), chiusura: String(r.chiusura) }));
+    const uscite = [...t].sort((a, b) => (a.chiusura < b.chiusura ? -1 : a.chiusura > b.chiusura ? 1 : a.id - b.id));
+    let picco = 1000, calo = 0;
+    for (const r of uscite) { picco = Math.max(picco, r.saldo); calo = Math.max(calo, 1 - r.saldo / picco); }
+    let serie = 0, max = 0;
+    for (const r of [...t].sort((a, b) => a.id - b.id)) { serie = r.R < 0 ? serie + 1 : 0; max = Math.max(max, serie); }
+    return [{
+      trade: t.length,
+      tp: t.filter((r) => r.R > 0).length,
+      sl: t.filter((r) => r.R < 0).length,
+      R: Math.round(t.reduce((s, r) => s + r.R, 0) * 10) / 10,
+      saldo_finale: Math.round(uscite[uscite.length - 1].saldo),
+      calo_max: Math.round(calo * 1000) / 1000,
+      max_sl_fila: max,
+    }];
+  },
+});
+
+dash.calc('anni', {
+  inputs: ['trade'],
+  title: 'Riepilogo per anno',
+  description: 'Per anno di entrata: trade, TP, SL, R, somma in euro, saldo al 1° gennaio e al 31 dicembre, calo massimo e SL di fila nell\'anno.',
+  fn: (trade) => {
+    const t = trade.map((r) => ({ id: Number(r.id), anno: Number(r.anno), R: Number(r.R), euro: Number(r.euro), saldo: Number(r.saldo), chiusura: String(r.chiusura) }));
+    const uscite = [...t].sort((a, b) => (a.chiusura < b.chiusura ? -1 : a.chiusura > b.chiusura ? 1 : a.id - b.id));
+    const saldoPrima = (data) => { let s = 1000; for (const r of uscite) { if (r.chiusura < data) s = r.saldo; else break; } return s; };
+    const anni = [...new Set(t.map((r) => r.anno))].sort((a, b) => a - b);
+    return anni.map((a) => {
+      const k = t.filter((r) => r.anno === a).sort((x, y) => x.id - y.id);
+      const inizio = saldoPrima(a + '-01-01'), fine = saldoPrima((a + 1) + '-01-01');
+      let picco = inizio, calo = 0;
+      for (const r of uscite) if (r.chiusura.startsWith(String(a))) { picco = Math.max(picco, r.saldo); calo = Math.max(calo, 1 - r.saldo / picco); }
+      let serie = 0, max = 0;
+      for (const r of k) { serie = r.R < 0 ? serie + 1 : 0; max = Math.max(max, serie); }
+      const tp = k.filter((r) => r.R > 0).length;
+      return {
+        anno: a, trade: k.length, tp, sl: k.length - tp,
+        pct_tp: Math.round(tp / k.length * 1000) / 1000,
+        R: Math.round(k.reduce((s, r) => s + r.R, 0) * 10) / 10,
+        euro: Math.round(k.reduce((s, r) => s + r.euro, 0) * 100) / 100,
+        saldo_inizio: Math.round(inizio * 100) / 100,
+        saldo_fine: Math.round(fine * 100) / 100,
+        rendimento: Math.round((fine / inizio - 1) * 1000) / 1000,
+        calo_max: Math.round(calo * 1000) / 1000,
+        max_sl_fila: max,
+      };
+    });
+  },
+});
+
+dash.calc('mesi', {
+  inputs: ['trade'],
+  title: 'Riepilogo per mese',
+  description: 'Per mese di entrata: trade, TP, SL, R, somma in euro e saldo a fine mese.',
+  fn: (trade) => {
+    const t = trade.map((r) => ({ id: Number(r.id), anno: Number(r.anno), mese: Number(r.mese), R: Number(r.R), euro: Number(r.euro), saldo: Number(r.saldo), chiusura: String(r.chiusura) }));
+    const uscite = [...t].sort((a, b) => (a.chiusura < b.chiusura ? -1 : a.chiusura > b.chiusura ? 1 : a.id - b.id));
+    const saldoPrima = (data) => { let s = 1000; for (const r of uscite) { if (r.chiusura < data) s = r.saldo; else break; } return s; };
+    const due = (n) => String(n).padStart(2, '0');
+    const chiavi = [...new Set(t.map((r) => r.anno + '-' + due(r.mese)))].sort();
+    return chiavi.map((c) => {
+      const [a, m] = c.split('-').map(Number);
+      const k = t.filter((r) => r.anno === a && r.mese === m);
+      const dopo = m === 12 ? (a + 1) + '-01-01' : a + '-' + due(m + 1) + '-01';
+      const tp = k.filter((r) => r.R > 0).length;
+      return {
+        chiave: c, anno: a, mese: m, trade: k.length, tp, sl: k.length - tp,
+        R: Math.round(k.reduce((s, r) => s + r.R, 0) * 100) / 100,
+        euro: Math.round(k.reduce((s, r) => s + r.euro, 0) * 100) / 100,
+        saldo_fine: Math.round(saldoPrima(dopo) * 100) / 100,
+      };
+    });
+  },
+});
+
+dash.calc('strategie', {
+  inputs: ['trade'],
+  title: 'Riepilogo per strategia e anno',
+  description: 'Per anno di entrata e strategia: trade, TP, % TP, R e somma in euro.',
+  fn: (trade) => {
+    const out = new Map();
+    for (const r of trade) {
+      const key = r.anno + '|' + r.strategia;
+      if (!out.has(key)) out.set(key, { anno: Number(r.anno), strategia: String(r.strategia), trade: 0, tp: 0, R: 0, euro: 0 });
+      const o = out.get(key);
+      o.trade += 1; if (Number(r.R) > 0) o.tp += 1; o.R += Number(r.R); o.euro += Number(r.euro);
+    }
+    return [...out.values()].map((o) => ({
+      anno: o.anno, strategia: o.strategia, trade: o.trade, tp: o.tp,
+      pct_tp: Math.round(o.tp / o.trade * 1000) / 1000,
+      R: Math.round(o.R * 10) / 10, euro: Math.round(o.euro * 100) / 100,
+    }));
+  },
+});
+
 (() => {
-  // ---------------------------------------------------------------- dove sono i dati (ramo "dati" del repository)
-  const qs = new URLSearchParams(location.search);
-  let BASE = qs.get('base');
-  if (!BASE) {
-    const owner = location.hostname.split('.')[0];
-    const repo = location.pathname.split('/').filter(Boolean)[0] || '';
-    BASE = `https://raw.githubusercontent.com/${owner}/${repo}/dati/`;
+  const root = document.querySelector('#bt-blocco');
+  const MESI = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+  const INIZIALI = ['G', 'F', 'M', 'A', 'M', 'G', 'L', 'A', 'S', 'O', 'N', 'D'];
+  const ORDINE = ['Doppia rottura', 'Seconda correzione', 'Continuazione dopo SL', 'Prima candela'];
+  const nf = (d) => new Intl.NumberFormat('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const num = (v, d = 0) => nf(d).format(v);
+  const eur = (v) => num(v, Math.abs(v) < 10000 ? 2 : 0) + ' €';
+  const eurS = (v) => (v > 0 ? '+' : '') + eur(v);
+  const pct = (v) => num(v * 100, 1) + '%';
+  const pctS = (v) => (v > 0 ? '+' : '') + pct(v);
+  const rS = (v) => (v > 0 ? '+' : '') + num(v, 2) + 'R';
+  const corto = (v) => (v >= 1e6 ? num(v / 1e6, v >= 1e7 ? 0 : 1) + ' mln €' : v >= 1e3 ? num(v / 1e3, v >= 1e4 ? 0 : 1) + 'k €' : num(v) + ' €');
+  const dt = (s) => new Date(s.replace(' ', 'T') + ':00');
+  const giorno = (s) => s.slice(8, 10) + '/' + s.slice(5, 7) + ' ' + s.slice(11, 16);
+  const segno = (el, v) => { el.classList.toggle('pos', v > 0); el.classList.toggle('neg', v < 0); };
+  const mark = (el, source, field, where) => { el.dataset.source = source; el.dataset.field = field; if (where) el.dataset.where = where; else delete el.dataset.where; };
+  const fail = (box) => { box.replaceChildren(); const d = document.createElement('div'); d.className = 'bt-fail'; d.textContent = 'Failed to load'; box.append(d); };
+
+  // tooltip condiviso
+  const tip = (box) => {
+    let t = box.querySelector('.bt-tip');
+    if (!t) { t = document.createElement('div'); t.className = 'bt-tip'; t.hidden = true; box.append(t); }
+    return {
+      show(x, y, data, testo) {
+        t.replaceChildren();
+        const a = document.createElement('div'); a.className = 'd'; a.textContent = data;
+        const b = document.createElement('div'); b.textContent = testo;
+        t.append(a, b); t.hidden = false;
+        const w = t.offsetWidth, W = box.clientWidth;
+        const sl = box.scrollLeft || 0; t.style.left = Math.max(sl, Math.min(sl + W - w, x + 12)) + 'px';
+        t.style.top = Math.max(0, y - 44) + 'px';
+      },
+      hide() { t.hidden = true; },
+    };
+  };
+
+  const scegli = (a) => dash.setParams({ anno: a, grafico: null });
+  root.querySelector('#mesi').addEventListener('click', (e) => {
+    if (e.target.closest('.bt-chiudi')) { dash.setParams({ grafico: null }); return; }
+    const zb = e.target.closest('.bt-zoom button');
+    if (zb) {
+      const p = dash.params(), z = Number(p.gz || 0);
+      if (zb.dataset.z === '+') dash.setParams({ gz: Math.min(ZOOM.length - 1, z + 1) });
+      else if (zb.dataset.z === '-') dash.setParams({ gz: Math.max(0, z - 1) });
+      else dash.setParams({ ga: !p.ga });
+      return;
+    }
+    const tr = e.target.closest('table.bt-t tbody tr');
+    if (!tr || window.PUB) return;
+    const id = Number(tr.firstChild && tr.firstChild.textContent);
+    if (id) dash.setParams({ grafico: dash.params().grafico === id ? null : id, gz: 0, ga: false });
+  });
+  const fmtOra = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit' });
+  const fmtGiorno = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: '2-digit', month: '2-digit' });
+
+  const ZOOM = [1, 1.6, 2.5, 4];
+  function disegnaGrafico(box, t, cand, zoom, alto) {
+    box.querySelectorAll('svg').forEach((x) => x.remove());
+    const vis = box.clientWidth;
+    const W = Math.round(vis * (ZOOM[zoom] || 1)), H = alto ? 620 : 360;
+    if (!W) return;
+    const da = Number(t.ts_da), a = Number(t.ts_a), te = Number(t.ts_entrata), tu = Number(t.ts_uscita);
+    const c = cand.filter((k) => Number(k.t) >= da && Number(k.t) <= a).map((k) => ({ t: Number(k.t), o: Number(k.o), h: Number(k.h), l: Number(k.l), c: Number(k.c) }));
+    if (!c.length) return;
+    const sl = Number(t.stop_loss), tp = Number(t.take_profit), en = Number(t.prezzo_entrata);
+    const lo = Math.min(d3.min(c, (k) => k.l), sl, tp), hi = Math.max(d3.max(c, (k) => k.h), sl, tp);
+    const pad = (hi - lo) * 0.04;
+    const svg = d3.select(box).insert('svg', ':first-child').attr('width', zoom ? W : '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H)
+      .style('display', 'block');
+    const etich = (v) => num(v, 1);
+    const pr = svg.append('text').attr('font-size', 12).text('Entrata ' + etich(hi));
+    const destra = pr.node().getComputedTextLength() + 14; pr.remove();
+    const pr2 = svg.append('text').attr('font-size', 12).text(num(hi, 0));
+    const sinistra = pr2.node().getComputedTextLength() + 10; pr2.remove();
+    const m = { t: 10, r: destra, b: 30, l: sinistra };
+    const x = d3.scaleBand(c.map((k) => k.t), [m.l, W - m.r]).padding(0.25);
+    const y = d3.scaleLinear([lo - pad, hi + pad], [H - m.b, m.t]);
+    const ie = c.findIndex((k) => k.t === te), iu = c.findIndex((k) => k.t === tu);
+    if (ie >= 0) {
+      const x0 = x(c[ie].t), x1 = iu >= 0 ? x(c[iu].t) + x.bandwidth() : W - m.r;
+      svg.append('rect').attr('x', x0).attr('width', Math.max(1, x1 - x0)).attr('y', m.t).attr('height', H - m.t - m.b)
+        .attr('fill', 'var(--cds-chart-grid)').attr('opacity', 0.5);
+    }
+    y.ticks(6).forEach((v) => {
+      svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(v)).attr('y2', y(v)).attr('stroke', 'var(--cds-chart-grid)');
+      svg.append('text').attr('x', m.l - 6).attr('y', y(v)).attr('dy', '0.32em').attr('text-anchor', 'end')
+        .attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(num(v, 0));
+    });
+    const passo = Math.max(1, Math.ceil(c.length / Math.max(3, Math.floor((W - m.l - m.r) / 70))));
+    let ultimoG = '';
+    c.forEach((k, i) => {
+      if (i % passo) return;
+      const g = fmtGiorno.format(new Date(k.t));
+      svg.append('text').attr('x', x(k.t) + x.bandwidth() / 2).attr('y', H - m.b + 14).attr('text-anchor', 'middle')
+        .attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(fmtOra.format(new Date(k.t)));
+      if (g !== ultimoG) {
+        svg.append('text').attr('x', x(k.t) + x.bandwidth() / 2).attr('y', H - m.b + 27).attr('text-anchor', 'middle')
+          .attr('font-size', 10).attr('fill', 'var(--color-fg-muted)').text(g);
+        ultimoG = g;
+      }
+    });
+    const su = 'var(--color-ok)', giu = 'var(--color-bad)';
+    const gc = svg.append('g');
+    c.forEach((k) => {
+      const col = k.c >= k.o ? su : giu, xm = x(k.t) + x.bandwidth() / 2;
+      gc.append('line').attr('x1', xm).attr('x2', xm).attr('y1', y(k.h)).attr('y2', y(k.l)).attr('stroke', col).attr('stroke-width', 1);
+      gc.append('rect').attr('x', x(k.t)).attr('width', x.bandwidth()).attr('y', y(Math.max(k.o, k.c)))
+        .attr('height', Math.max(1, Math.abs(y(k.o) - y(k.c)))).attr('fill', col);
+    });
+    const x0 = ie >= 0 ? x(c[ie].t) : m.l, x1 = iu >= 0 ? x(c[iu].t) + x.bandwidth() : W - m.r;
+    const linee = [[tp, 'TP', su, '6 4'], [sl, 'SL', giu, '6 4'], [en, 'Entrata', 'var(--color-fg)', '2 3']];
+    const pos = linee.map((l) => ({ y: y(l[0]), l }));
+    pos.sort((p, q) => p.y - q.y);
+    for (let i = 1; i < pos.length; i++) if (pos[i].y - pos[i - 1].y < 14) pos[i].y = pos[i - 1].y + 14;
+    pos.forEach(({ y: yy, l }) => {
+      svg.append('line').attr('x1', x0).attr('x2', x1).attr('y1', y(l[0])).attr('y2', y(l[0])).attr('stroke', l[2])
+        .attr('stroke-width', 1.5).attr('stroke-dasharray', l[3]);
+      svg.append('text').attr('x', W - m.r + 6).attr('y', yy).attr('dy', '0.32em').attr('font-size', 12).attr('font-weight', 600)
+        .attr('fill', l[2]).text(`${l[1]} ${etich(l[0])}`);
+    });
+    if (ie >= 0) {
+      const xm = x(c[ie].t) + x.bandwidth() / 2, lungo = t.direzione === 'Long';
+      const sim = d3.symbol(d3.symbolTriangle, 90)();
+      svg.append('path').attr('d', sim).attr('fill', 'var(--color-fg)')
+        .attr('transform', `translate(${xm},${y(en) + (lungo ? 10 : -10)}) rotate(${lungo ? 0 : 180})`);
+    }
+    if (zoom && ie >= 0) box.scrollLeft = Math.max(0, x(c[ie].t) - vis * 0.35);
+    const tt = tip(box);
+    svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).attr('fill', 'transparent')
+      .on('mousemove', (ev) => {
+        const [px, py] = d3.pointer(ev);
+        const i = Math.max(0, Math.min(c.length - 1, Math.floor((px - m.l) / x.step())));
+        const k = c[i];
+        tt.show(px, py, `${fmtGiorno.format(new Date(k.t))} ${fmtOra.format(new Date(k.t))}`,
+          `A ${num(k.o, 1)} · Max ${num(k.h, 1)} · Min ${num(k.l, 1)} · C ${num(k.c, 1)}`);
+      })
+      .on('mouseleave', () => tt.hide());
   }
+  root.querySelector('.bt-anni tbody').addEventListener('click', (e) => {
+    const tr = e.target.closest('tr[data-anno]');
+    if (tr) scegli(Number(tr.dataset.anno));
+  });
+
+  const cella = (tr, testo, cls) => { const td = document.createElement('td'); td.textContent = testo; if (cls) td.className = cls; tr.append(td); return td; };
+
+  function disegnaEquity(rows, anno) {
+    const box = root.querySelector('#equity');
+    box.querySelectorAll('svg').forEach((s) => s.remove());
+    const W = box.clientWidth, H = 260;
+    if (!W) return;
+    const usc = [...rows].sort((a, b) => (a.chiusura < b.chiusura ? -1 : a.chiusura > b.chiusura ? 1 : a.id - b.id));
+    const pts = [{ d: dt(rows[0].entrata), v: 1000 }].concat(usc.map((r) => ({ d: dt(r.chiusura), v: Number(r.saldo) })));
+    const maxV = d3.max(pts, (p) => p.v), minV = d3.min(pts, (p) => p.v);
+    const ticks = [1e2, 1e3, 1e4, 1e5, 1e6, 1e7].filter((v) => v >= minV * 0.8 && v <= maxV * 1.2);
+    const svg = d3.select(box).insert('svg', ':first-child').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+    const probe = svg.append('text').attr('font-size', 12).text(corto(ticks[ticks.length - 1]));
+    const left = probe.node().getComputedTextLength() + 10; probe.remove();
+    const m = { t: 10, r: 12, b: 24, l: left };
+    const x = d3.scaleUtc(d3.extent(pts, (p) => p.d), [m.l, W - m.r]);
+    const y = d3.scaleLog([minV * 0.8, maxV * 1.2], [H - m.b, m.t]);
+    const g = svg.append('g');
+    const y0 = new Date(anno, 0, 1), y1 = new Date(anno + 1, 0, 1);
+    g.append('rect').attr('x', Math.max(m.l, x(y0))).attr('width', Math.max(0, Math.min(W - m.r, x(y1)) - Math.max(m.l, x(y0))))
+      .attr('y', m.t).attr('height', H - m.t - m.b).attr('fill', 'var(--cds-chart-grid)').attr('opacity', 0.6);
+    g.selectAll('line.gy').data(ticks).join('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y).attr('y2', y)
+      .attr('stroke', 'var(--cds-chart-grid)').attr('stroke-width', 1);
+    g.selectAll('text.ty').data(ticks).join('text').attr('x', m.l - 8).attr('y', (v) => y(v)).attr('dy', '0.32em').attr('text-anchor', 'end')
+      .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(corto);
+    const anniT = d3.utcYear.range(d3.utcYear.ceil(x.domain()[0]), x.domain()[1]);
+    const passo = W < 500 ? 2 : 1;
+    g.selectAll('text.tx').data(anniT.filter((_, i) => i % passo === 0)).join('text').attr('x', (d) => x(d)).attr('y', H - 6).attr('text-anchor', 'middle')
+      .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text((d) => d.getUTCFullYear());
+    g.selectAll('line.tx').data(anniT).join('line').attr('x1', x).attr('x2', x).attr('y1', H - m.b).attr('y2', H - m.b + 4).attr('stroke', 'var(--cds-chart-axis)');
+    g.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', H - m.b).attr('y2', H - m.b).attr('stroke', 'var(--cds-chart-axis)');
+    g.append('path').datum(pts).attr('fill', 'none').attr('stroke', dash.colors[0]).attr('stroke-width', 2)
+      .attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round').attr('d', d3.line((p) => x(p.d), (p) => y(p.v)));
+    const dot = g.append('circle').attr('r', 4).attr('fill', dash.colors[0]).attr('visibility', 'hidden');
+    const tt = tip(box);
+    const bis = d3.bisector((p) => p.d).center;
+    svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).attr('fill', 'transparent')
+      .on('mousemove', (e) => {
+        const [px] = d3.pointer(e); const p = pts[bis(pts, x.invert(px))];
+        dot.attr('cx', x(p.d)).attr('cy', y(p.v)).attr('visibility', 'visible');
+        tt.show(x(p.d), y(p.v), p.d.toLocaleDateString('it-IT'), eur(p.v));
+      })
+      .on('mouseleave', () => { dot.attr('visibility', 'hidden'); tt.hide(); });
+  }
+
+  function disegnaBarre(mesi, anno) {
+    const box = root.querySelector('#barre');
+    box.querySelectorAll('svg').forEach((s) => s.remove());
+    const W = box.clientWidth, H = 200;
+    if (!W) return;
+    const per = new Map(mesi.filter((r) => Number(r.anno) === anno).map((r) => [Number(r.mese), r]));
+    const dati = d3.range(1, 13).map((m) => ({ m, r: per.get(m) }));
+    const vals = dati.filter((d) => d.r).map((d) => Number(d.r.R));
+    const lo = Math.min(0, d3.min(vals) ?? 0), hi = Math.max(0, d3.max(vals) ?? 0);
+    const svg = d3.select(box).insert('svg', ':first-child').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+    const y = d3.scaleLinear([lo, hi || 1], [H - 24, 10]).nice(4);
+    const ticks = y.ticks(4);
+    const probe = svg.append('text').attr('font-size', 12).text(ticks.map((t) => (t > 0 ? '+' : '') + num(t)).reduce((a, b) => (a.length >= b.length ? a : b)));
+    const left = probe.node().getComputedTextLength() + 10; probe.remove();
+    const x = d3.scaleBand(d3.range(1, 13), [left, W - 8]).padding(0.25);
+    svg.selectAll('line.g').data(ticks).join('line').attr('x1', left).attr('x2', W - 8).attr('y1', y).attr('y2', y)
+      .attr('stroke', (t) => (t === 0 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)'));
+    svg.selectAll('text.y').data(ticks).join('text').attr('x', left - 8).attr('y', y).attr('dy', '0.32em').attr('text-anchor', 'end')
+      .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text((t) => (t > 0 ? '+' : '') + num(t));
+    svg.selectAll('text.x').data(dati).join('text').attr('x', (d) => x(d.m) + x.bandwidth() / 2).attr('y', H - 6).attr('text-anchor', 'middle')
+      .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text((d) => INIZIALI[d.m - 1]);
+    const tt = tip(box);
+    svg.selectAll('rect.b').data(dati.filter((d) => d.r)).join('rect')
+      .attr('x', (d) => x(d.m)).attr('width', x.bandwidth())
+      .attr('y', (d) => y(Math.max(0, Number(d.r.R)))).attr('height', (d) => Math.max(1, Math.abs(y(Number(d.r.R)) - y(0))))
+      .attr('rx', 4).attr('fill', (d) => (Number(d.r.R) >= 0 ? dash.colors[0] : 'var(--cds-chart-status-critical)'))
+      .on('mousemove', (e, d) => {
+        const [px, py] = d3.pointer(e, box);
+        tt.show(px, py, MESI[d.m - 1] + ' ' + anno, rS(Number(d.r.R)) + ' · ' + d.r.trade + ' trade · ' + eurS(Number(d.r.euro)));
+      })
+      .on('mouseleave', () => tt.hide());
+  }
+
+  dash.onData(() => {
+    const T = dash.data('trade'), A = dash.data('anni'), M = dash.data('mesi'), S = dash.data('strategie'), TOT = dash.data('totale');
+    const ok = T.status === 'ok' && A.status === 'ok' && M.status === 'ok' && S.status === 'ok';
+
+    // intestazione
+    if (T.status === 'ok' && T.data.length) {
+      const u = T.data.reduce((a, r) => (r.chiusura > a ? r.chiusura : a), '');
+      root.querySelectorAll('.bt-fino').forEach((e) => { e.textContent = new Date(u.slice(0, 10) + 'T12:00:00').toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }); });
+    }
+    root.querySelectorAll('[data-source="totale"][data-field]').forEach((el) => {
+      if (TOT.status !== 'ok') { el.textContent = '—'; return; }
+      el.classList.remove('dash-skeleton');
+      const v = TOT.data[0][el.dataset.field];
+      el.textContent = el.dataset.field === 'saldo_finale' ? eur(v) : el.dataset.field === 'calo_max' ? pct(v) : num(v);
+    });
+
+    if (!ok) {
+      if (T.status === 'error') fail(root.querySelector('#equity'));
+      return;
+    }
+    const rows = T.data, anni = A.data;
+    const ultimo = d3.max(anni, (r) => Number(r.anno));
+    const anno = Number(dash.params().anno ?? ultimo);
+
+    disegnaEquity(rows, anno);
+
+    // tabella anni
+    const tb = root.querySelector('.bt-anni tbody');
+    tb.replaceChildren();
+    for (const r of anni) {
+      const tr = document.createElement('tr'); tr.dataset.anno = r.anno; if (Number(r.anno) === anno) tr.className = 'sel';
+      cella(tr, String(r.anno), 'l'); cella(tr, num(r.trade)); cella(tr, num(r.tp)); cella(tr, num(r.sl)); cella(tr, pct(r.pct_tp));
+      segno(cella(tr, rS(r.R)), r.R); segno(cella(tr, eurS(r.euro)), r.euro);
+      cella(tr, eur(r.saldo_inizio)); cella(tr, eur(r.saldo_fine)); segno(cella(tr, pctS(r.rendimento)), r.rendimento);
+      cella(tr, pct(r.calo_max)); cella(tr, num(r.max_sl_fila));
+      tb.append(tr);
+    }
+
+    // schede anni
+    const tabs = root.querySelector('.bt-tabs');
+    tabs.replaceChildren(...anni.map((r) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'bt-tab'; b.id = 'tab-' + r.anno;
+      b.textContent = r.anno; b.setAttribute('aria-pressed', String(Number(r.anno) === anno));
+      b.addEventListener('click', () => scegli(Number(r.anno)));
+      return b;
+    }));
+    root.querySelector('.bt-year-title').textContent = String(anno);
+
+    const ra = anni.find((r) => Number(r.anno) === anno);
+    root.querySelectorAll('.bt-tiles [data-k]').forEach((el) => {
+      const f = el.dataset.k; mark(el, 'anni', f, 'anno=' + anno);
+      const v = ra ? ra[f] : null;
+      if (v == null) { el.textContent = '—'; return; }
+      el.textContent = f === 'pct_tp' || f === 'calo_max' ? pct(v) : f === 'rendimento' ? pctS(v) : f === 'R' ? rS(v)
+        : f === 'euro' ? eurS(v) + ' dai trade' : f.startsWith('saldo') ? eur(v) : num(v);
+    });
+
+    disegnaBarre(M.data, anno);
+
+    // per strategia
+    if (!window.PUB) {
+    const sb = root.querySelector('.bt-strat tbody');
+    sb.replaceChildren();
+    const sr = S.data.filter((r) => Number(r.anno) === anno).sort((a, b) => ORDINE.indexOf(a.strategia) - ORDINE.indexOf(b.strategia));
+    for (const r of sr) {
+      const tr = document.createElement('tr'); tr.dataset.key = r.anno + ',' + encodeURIComponent(r.strategia);
+      cella(tr, r.strategia, 'l'); cella(tr, num(r.trade)); cella(tr, num(r.tp)); cella(tr, pct(r.pct_tp));
+      segno(cella(tr, (r.R > 0 ? '+' : '') + num(r.R, 1) + 'R'), r.R); segno(cella(tr, eurS(r.euro)), r.euro);
+      sb.append(tr);
+    }
+    }
+
+    // mesi
+    const box = root.querySelector('#mesi');
+    box.replaceChildren();
+    const mesiAnno = new Map(M.data.filter((r) => Number(r.anno) === anno).map((r) => [Number(r.mese), r]));
+    const tAnno = rows.filter((r) => Number(r.anno) === anno);
+    const primo = anno === d3.min(anni, (r) => Number(r.anno)) ? d3.min(tAnno, (r) => Number(r.mese)) : 1;
+    const fine = anno === ultimo ? d3.max(tAnno, (r) => Number(r.mese)) : 12;
+    const COLS = window.PUB ? [['id', '#', 'l'], ['chiusura', 'Chiuso il', 'l'], ['esito', 'Esito'], ['R', 'R'], ['euro', '€'], ['saldo', 'Saldo dopo']]
+      : [['id', '#', 'l'], ['strategia', 'Strategia', 'l'], ['direzione', 'Direzione', 'l'], ['entrata', 'Entrata', 'l'], ['chiusura', 'Chiusura', 'l'],
+      ['prezzo_entrata', 'Prezzo'], ['stop_loss', 'Stop loss'], ['take_profit', 'Take profit'], ['lotti', 'Lotti'], ['rischio_pct', 'Rischio'],
+      ['esito', 'Esito'], ['R', 'R'], ['euro', '€'], ['saldo', 'Saldo dopo']];
+    for (let m = primo; m <= fine; m++) {
+      const sec = document.createElement('section'); sec.className = 'bt-card'; sec.id = 'mese-' + anno + '-' + String(m).padStart(2, '0');
+      const head = document.createElement('div'); head.className = 'bt-mese-head';
+      const h = document.createElement('h3'); h.textContent = MESI[m - 1] + ' ' + anno;
+      head.append(h); sec.append(head);
+      const r = mesiAnno.get(m);
+      if (!r) {
+        const p = document.createElement('p'); p.className = 'bt-vuoto'; p.textContent = 'Nessun trade in questo mese.';
+        sec.append(p); box.append(sec); continue;
+      }
+      const sum = document.createElement('div'); sum.className = 'bt-mese-sum';
+      const w = 'chiave=' + r.chiave;
+      const pezzo = (field, testo) => { const b = document.createElement('b'); mark(b, 'mesi', field, w); b.textContent = testo; return b; };
+      sum.append(pezzo('trade', num(r.trade)), ' trade · ', pezzo('tp', num(r.tp)), ' TP / ', pezzo('sl', num(r.sl)), ' SL · ',
+        pezzo('R', rS(r.R)), ' · ', pezzo('euro', eurS(r.euro)), ' · saldo a fine mese ', pezzo('saldo_fine', eur(r.saldo_fine)));
+      head.append(sum);
+      const wrap = document.createElement('div'); wrap.className = 'bt-scroll';
+      const tab = document.createElement('table'); tab.className = 'bt-t'; tab.dataset.source = 'trade'; tab.dataset.rowKey = 'id';
+      const thead = document.createElement('thead'); const htr = document.createElement('tr');
+      for (const [f, l, c] of COLS) { const th = document.createElement('th'); th.dataset.field = f; th.textContent = l; if (c) th.className = c; htr.append(th); }
+      thead.append(htr);
+      const tbody = document.createElement('tbody');
+      for (const x of tAnno.filter((t) => Number(t.mese) === m).sort((a, b) => a.id - b.id)) {
+        const tr = document.createElement('tr');
+        if (Number(x.id) === Number(dash.params().grafico || 0)) tr.className = 'sel';
+        cella(tr, String(x.id), 'l');
+        if (window.PUB) cella(tr, x.chiusura.slice(8, 10) + '/' + x.chiusura.slice(5, 7), 'l');
+        else {
+          cella(tr, x.strategia, 'l'); cella(tr, x.direzione, 'l');
+          cella(tr, giorno(x.entrata), 'l'); cella(tr, giorno(x.chiusura), 'l');
+          cella(tr, num(x.prezzo_entrata, 1)); cella(tr, num(x.stop_loss, 1)); cella(tr, num(x.take_profit, 1));
+          cella(tr, num(x.lotti, 2)); cella(tr, num(x.rischio_pct, 2) + '%');
+        }
+        const e = cella(tr, ''); const pill = document.createElement('span'); pill.className = 'bt-pill ' + x.esito.toLowerCase(); pill.textContent = x.esito; e.append(pill);
+        segno(cella(tr, rS(x.R)), x.R); segno(cella(tr, eurS(x.euro)), x.euro); cella(tr, eur(x.saldo));
+        tbody.append(tr);
+      }
+      tab.append(thead, tbody); wrap.append(tab); sec.append(wrap); box.append(sec);
+    }
+
+    // grafico del trade toccato
+    const gid = Number(dash.params().grafico || 0);
+    if (!gid) window.__btUltimoGrafico = 0;
+    const tg = gid ? rows.find((r) => Number(r.id) === gid) : null;
+    if (tg && !window.PUB && Number(tg.anno) === anno) {
+      const mese = root.querySelector('#mese-' + anno + '-' + String(tg.mese).padStart(2, '0'));
+      const card = document.createElement('section'); card.className = 'bt-card'; card.id = 'grafico';
+      const head = document.createElement('div'); head.className = 'bt-graf-head';
+      const h = document.createElement('h3');
+      const ore = (Number(tg.ts_uscita) - Number(tg.ts_entrata)) / 3600000 + 0.25;
+      h.textContent = `#${tg.id} · ${tg.strategia} · ${tg.direzione} · ${giorno(tg.entrata)} → ${tg.esito === 'TP' ? 'TP +3R' : 'SL −1R'} dopo ${num(ore, 1)} ore`;
+      const chiudi = document.createElement('button'); chiudi.type = 'button'; chiudi.className = 'bt-chiudi'; chiudi.textContent = 'Chiudi grafico';
+      head.append(h, chiudi);
+      const zoom = Number(dash.params().gz || 0), alto = !!dash.params().ga;
+      const zc = document.createElement('div'); zc.className = 'bt-zoom';
+      const bz = (z, txt, lab) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.z = z; b.textContent = txt; b.setAttribute('aria-label', lab); return b; };
+      const meno = bz('-', '−', 'Rimpicciolisci'), piu = bz('+', '+', 'Allarga');
+      meno.disabled = zoom === 0; piu.disabled = zoom === ZOOM.length - 1;
+      const lv = document.createElement('span'); lv.className = 'lv'; lv.textContent = `larghezza ×${num(ZOOM[zoom], 1)}`;
+      const ba = bz('h', alto ? 'Più basso' : 'Più alto', 'Altezza del grafico'); ba.setAttribute('aria-pressed', String(alto));
+      zc.append(meno, piu, lv, ba);
+      const sub = document.createElement('p'); sub.className = 'bt-sub';
+      sub.textContent = 'Candele Bybit a 15 minuti, ora italiana. In grigio il tempo in cui il trade è rimasto aperto. Con + il grafico si allarga: scorri di lato per vederlo tutto. Passa sopra una candela per i prezzi.';
+      const gbox = document.createElement('div'); gbox.className = 'bt-grafico' + (alto ? ' alto' : ''); gbox.dataset.source = 'candele trade';
+      card.append(head, zc, sub, gbox);
+      if (mese) mese.after(card); else box.append(card);
+      const K = dash.data('candele');
+      if (K.status === 'ok') disegnaGrafico(gbox, tg, K.data, zoom, alto);
+      else if (K.status === 'error') fail(gbox);
+      else gbox.classList.add('dash-skeleton');
+      if (window.__btUltimoGrafico !== gid) { window.__btUltimoGrafico = gid; card.scrollIntoView({ block: 'nearest' }); }
+    }
+  });
+})();
+
+</script>
+<script>
+(() => {
   const $ = (s) => document.querySelector(s);
   const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
   const nf = (d) => new Intl.NumberFormat('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d });
-  const num = (v, d = 0) => (v == null || isNaN(v)) ? '–' : nf(d).format(v);
-  const eur = (v, val = '€') => (v == null) ? '–' : num(v, Math.abs(v) < 10000 ? 2 : 0) + ' ' + val;
-  const segno = (v) => v > 0 ? 'pos' : v < 0 ? 'neg' : '';
-  const rS = (v) => (v > 0 ? '+' : '') + num(v, 2) + 'R';
-  const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
-  const fmtOra = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit' });
-  const fmtGg = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: '2-digit', month: '2-digit' });
-  let CHIAVE = null;
+  const num = (v, d = 0) => (v == null || isNaN(v)) ? '—' : nf(d).format(v);
+  const eur = (v) => (v == null || isNaN(v)) ? '—' : num(v, Math.abs(v) < 10000 ? 2 : 0) + ' €';
+  const eurS = (v) => (v == null || isNaN(v)) ? '—' : (v > 0 ? '+' : '') + eur(v);
+  const pctS = (v, d = 1) => { if (v == null || isNaN(v)) return '—'; const r = +(+v).toFixed(d); return (r > 0 ? '+' : '') + num(r, d) + '%'; };
+  const rS = (v) => (v == null || isNaN(v)) ? '—' : (v > 0 ? '+' : '') + num(v, 2) + 'R';
+  const segno = (e, v) => { e.classList.toggle('pos', v > 0); e.classList.toggle('neg', v < 0); return e; };
+  const MESI = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+  const BT_TP = 35.7;
 
-  async function prendi(nome) {
-    const r = await fetch(BASE + nome + '?t=' + Math.floor(Date.now() / 60000), { cache: 'no-store' });
-    if (!r.ok) throw new Error(nome + ': ' + r.status);
-    return r;
+  let vista = 'live', L = null, D = null, P = null, timer = null;
+
+  // ------------------------------------------------------------------ navigazione
+  function mostra(v) {
+    vista = v;
+    $('#t-live').setAttribute('aria-pressed', String(v === 'live'));
+    $('#t-bt').setAttribute('aria-pressed', String(v === 'bt'));
+    $('#v-live').hidden = v !== 'live'; $('#v-bt').hidden = v !== 'bt'; $('#v-login').hidden = v !== 'login';
+    if (v === 'bt') { caricaBacktest(); requestAnimationFrame(() => dash.giro()); }
+    if (v === 'live') requestAnimationFrame(disegnaLive);
   }
+  $('#t-live').addEventListener('click', () => mostra('live'));
+  $('#t-bt').addEventListener('click', () => mostra('bt'));
+  let rz = null;
+  window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (vista === 'bt') dash.giro(); else if (vista === 'live') disegnaLive(); }, 150); });
+
+  // ------------------------------------------------------------------ accesso
   async function deriva(pw) {
     const s = await (await prendi('sale.json')).json();
     const mat = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveBits']);
     const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: b64(s.sale), iterations: s.giri }, mat, 256);
     const h = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bits))).map((x) => x.toString(16).padStart(2, '0')).join('');
-    if (h.slice(0, 16) !== s.verifica) return null;
-    return new Uint8Array(bits);
+    return h.slice(0, 16) === s.verifica ? new Uint8Array(bits) : null;
   }
-  async function chiaveDa(bytes) { return crypto.subtle.importKey('raw', bytes, 'AES-GCM', false, ['decrypt']); }
-  async function decifra(nome, comeTesto = true) {
-    const j = await (await prendi(nome)).json();
-    const chiaro = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(j.iv) }, CHIAVE, b64(j.d));
-    const flusso = new Blob([chiaro]).stream().pipeThrough(new DecompressionStream('gzip'));
-    const buf = await new Response(flusso).arrayBuffer();
-    return comeTesto ? JSON.parse(new TextDecoder().decode(buf)) : buf;
-  }
-
-  // ---------------------------------------------------------------- accesso (area riservata)
-  let timer = null;
-  const vedi = (q) => { $('#pub').hidden = q !== 'pub'; $('#login').hidden = q !== 'login'; $('#app').hidden = q !== 'app'; window.scrollTo(0, 0); };
-  async function avvia(bytes, salva) {
-    CHIAVE = await chiaveDa(bytes);
+  async function entra(bytes, salva) {
+    CHIAVE = await crypto.subtle.importKey('raw', bytes, 'AES-GCM', false, ['decrypt']);
+    D = await decifra('live.enc');               // se la chiave non è più valida qui fallisce
     if (salva) try { localStorage.setItem('k', btoa(String.fromCharCode(...bytes))); } catch (e) {}
-    vedi('app');
-    caricaLive();
-    if (!timer) timer = setInterval(caricaLive, 120000);
+    window.PUB = false; document.body.classList.remove('pub');
+    $('#sotto-marca').textContent = 'area riservata';
+    dash.svuota(); btCaricato = false; btBase = null; extraVisti = ''; L = D.vivo;
+    mostra('live');
   }
-  $('#riservata').addEventListener('click', async () => {
-    let k = null; try { k = localStorage.getItem('k'); } catch (e) {}
-    if (CHIAVE) { vedi('app'); return; }
-    if (k) { try { await avvia(b64(k), false); return; } catch (e) {} }
-    vedi('login'); $('#pw').focus();
-  });
-  $('#indietro').addEventListener('click', () => vedi('pub'));
-  $('#apub').addEventListener('click', () => vedi('pub'));
-  $('#entra').addEventListener('click', async () => {
+  $('#b-entra').addEventListener('click', () => { mostra('login'); $('#t-live').setAttribute('aria-pressed', 'false'); $('#pw').focus(); });
+  $('#b-annulla').addEventListener('click', () => mostra(window.PUB ? 'bt' : 'live'));
+  $('#b-esci').addEventListener('click', () => { try { localStorage.removeItem('k'); } catch (e) {} location.reload(); });
+  $('#b-apri').addEventListener('click', async () => {
     $('#msg').textContent = 'Controllo…';
     try {
       const k = await deriva($('#pw').value);
       if (!k) { $('#msg').textContent = 'Password sbagliata.'; return; }
       $('#msg').textContent = ''; $('#pw').value = '';
-      await avvia(k, $('#ricorda').checked);
+      await entra(k, $('#ricorda').checked);
     } catch (e) { $('#msg').textContent = 'Dati non raggiungibili: ' + e.message; }
   });
-  $('#pw').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#entra').click(); });
-  $('#esci').addEventListener('click', () => { try { localStorage.removeItem('k'); } catch (e) {} location.reload(); });
+  $('#pw').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#b-apri').click(); });
 
-  // ---------------------------------------------------------------- PAGINA PUBBLICA (solo percentuali)
-  const pct = (v, d = 1) => { if (v == null || isNaN(v)) return '–'; const r = +v.toFixed(d); return r === 0 ? num(0, d) + '%' : (r > 0 ? '+' : '') + num(r, d) + '%'; };
-  const MESI_C = ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'];
-  function tile(box, lab, val, sub, cls) { const k = el('div', 'card'); k.append(el('div', 'lab', lab), el('div', 'val ' + (cls || ''), val), el('div', 'sub', sub || '')); box.append(k); }
-  async function caricaPubblico() {
-    let L = null, B = null;
-    try { L = await (await prendi('pubblico.json')).json(); } catch (e) {}
-    try { B = await (await prendi('pubblico_backtest.json')).json(); } catch (e) {}
-    disegnaPubLive(L); disegnaPubBT(B);
-    if (!L && !B) $('#p-sotto').textContent = 'Trading automatico su Bitcoin e Giappone 225 · dati non ancora disponibili';
+  // ------------------------------------------------------------------ backtest (stesso blocco della dashboard)
+  let btCaricato = false, btBase = null, extraVisti = '';
+  function aggiungiExtra(forza) {
+    if (!btBase) return;
+    const extra = (window.PUB ? (P && P.trade_extra) : (D && D.trade_extra)) || [];
+    const k = JSON.stringify(extra.map((r) => r.id));
+    if (!forza && k === extraVisti && dash.data('trade').status === 'ok') return;
+    extraVisti = k;
+    const ids = new Set(btBase.map((r) => Number(r.id)));
+    dash.metti('trade', btBase.concat(extra.filter((r) => !ids.has(Number(r.id)))));
   }
-  function disegnaPubLive(L) {
-    const box = $('#p-live'); box.replaceChildren();
-    if (!L) return;
-    const vecchio = (Date.now() - L.aggiornato) / 60000;
-    const stato = vecchio > 20 ? 'fermo (ultimo aggiornamento ' + new Date(L.aggiornato).toLocaleString('it-IT', { timeZone: 'Europe/Rome' }) + ')'
-      : (L.attivo ? 'attivo adesso' : 'in pausa');
-    $('#p-sotto').replaceChildren(document.createTextNode(`Trading automatico su Bitcoin e Giappone 225 · conto ${L.conto} dal ${L.inizio || '–'} · bot `), el('span', vecchio > 20 ? 'neg' : 'pos', stato));
-    box.append(el('h2', '', 'Dal vivo'));
-    const top = el('div', 'card');
-    top.append(el('div', 'lab', 'Rendimento dall’inizio'), el('div', 'hero ' + segno(L.rendimento_pct), pct(L.rendimento_pct, 2)),
-      el('div', 'sub', 'variazione del saldo del conto ' + L.conto));
-    const g = el('div', 'grid'); g.style.marginTop = '12px';
-    tile(g, 'Trade chiusi', String(L.trade_chiusi), L.trade_chiusi ? '' : 'nessuno ancora');
-    tile(g, 'Vincenti', L.vincenti_pct == null ? '–' : num(L.vincenti_pct, 0) + '%', 'ogni trade vincente vale circa 3 perdenti');
-    tile(g, 'Calo massimo', L.calo_max_pct ? '−' + num(L.calo_max_pct, 1) + '%' : '0%', 'dal punto più alto del saldo');
-    tile(g, 'Posizioni aperte', String(L.posizioni_aperte), 'adesso');
-    box.append(top, g);
-    const c = el('div', 'card'); c.style.marginTop = '12px'; c.append(el('div', 'lab', 'Andamento del conto'));
-    const gr = el('div'); c.append(gr); box.append(c);
-    requestAnimationFrame(() => linea(gr, L.curva.map(([d, v]) => ({ t: new Date(d + 'T12:00:00Z'), v })), { h: 240, fmt: (v) => pct(v, 0), vuoto: 'La curva comparirà dal secondo giorno di attività.' }));
-    if (L.mesi.length) {
-      box.append(el('h2', '', 'Mese per mese'));
-      box.append(tabella([['Mese', 'l'], ['Rendimento']], L.mesi.slice().reverse().map((m) => ({ celle: [[MESI[+m.m.slice(5) - 1] + ' ' + m.m.slice(0, 4), 'l'], [pct(m.pct, 2), segno(m.pct)]] }))));
-    }
+  async function caricaBacktest() {
+    if (btCaricato) return; btCaricato = true;
+    try {
+      const rows = window.PUB ? await (await prendi('pubblico_trade.json')).json() : await decifra('backtest_trade.enc');
+      btBase = rows; aggiungiExtra();
+    } catch (e) { btCaricato = false; dash.errore('trade', e.message); }
   }
-  function disegnaPubBT(B) {
-    const box = $('#p-bt'); box.replaceChildren();
-    if (!B) return;
-    box.append(el('h2', '', 'Simulazione storica su Bitcoin ' + B.periodo));
-    box.append(el('p', 'muted', 'Le regole su Bitcoin applicate ai prezzi passati (il Giappone 225 non è incluso), con costi di spread e swap, reinvestendo i guadagni. Serve a capire come si comporta il bot nel tempo: non è un risultato reale.'));
-    const g = el('div', 'grid');
-    tile(g, 'Trade', num(B.trade, 0), 'circa ' + num(B.trade_settimana, 0) + ' a settimana');
-    tile(g, 'Vincenti', num(B.vincenti_pct, 0) + '%', 'ogni trade vincente vale circa 3 perdenti');
-    tile(g, 'Mesi positivi', num(B.mesi_positivi_pct, 0) + '%', B.mesi_totali + ' mesi');
-    tile(g, 'Mese tipico', pct(B.rendimento_mediano_mese_pct, 0), 'mediana dei mesi');
-    tile(g, 'Calo massimo', '−' + num(B.calo_max_pct, 0) + '%', 'dal punto più alto');
-    box.append(g);
-    const anni = Object.entries(B.anni);
-    box.append(el('h2', '', 'Anno per anno'));
-    const ca = el('div', 'card'); const ga = el('div'); ca.append(ga, el('div', 'sub', anni[0][0] + ': da aprile.')); box.append(ca);
-    requestAnimationFrame(() => barre(ga, anni));
-    box.append(el('h2', '', 'Mese per mese'));
-    const righe = Object.entries(B.mesi).map(([a, v]) => ({ celle: [[a, 'l'], ...v.map((x) => x == null ? ['', 'vuoto'] : [pct(x, 0), segno(x)]), [pct(B.anni[a], 0), segno(B.anni[a])]] }));
-    const t = tabella([['Anno', 'l'], ...MESI_C.map((m) => [m]), ['Anno']], righe); t.querySelector('table').classList.add('mgrid'); box.append(t);
-    box.append(el('h2', '', 'Andamento simulato'));
-    const cc = el('div', 'card'); cc.append(el('div', 'sub', 'Valore di 100 investiti all’inizio, scala logaritmica: la stessa altezza vale la stessa crescita in percentuale.'));
-    const gc = el('div'); cc.append(gc); box.append(cc);
-    requestAnimationFrame(() => linea(gc, B.curva.map(([t, v]) => ({ t: new Date(t), v })), { h: 300, log: true, fmt: (v) => num(v, 0) }));
-  }
-  function linea(box, pts, o) {
-    const W = box.clientWidth, H = o.h; if (!W) return;
-    if (pts.length < 2) { box.append(el('p', 'muted', o.vuoto || '')); return; }
-    const m = { t: 10, r: 12, b: 24, l: 62 };
-    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H).style('display', 'block');
-    const x = d3.scaleTime(d3.extent(pts, (p) => p.t), [m.l, W - m.r]);
-    const ext = d3.extent(pts, (p) => p.v);
-    const y = o.log ? d3.scaleLog([Math.max(1, ext[0] * .9), ext[1] * 1.1], [H - m.b, m.t]) : d3.scaleLinear([Math.min(0, ext[0]), Math.max(0, ext[1])], [H - m.b, m.t]).nice();
-    const ticks = o.log ? (() => { const r = []; for (let v = 100; v <= ext[1] * 1.1; v *= 2) if (v >= ext[0] * .9) r.push(v); return r.filter((_, i, a) => a.length <= 9 || i % Math.ceil(a.length / 9) === 0); })() : y.ticks(5);
-    ticks.forEach((v) => { svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(v)).attr('y2', y(v)).attr('stroke', 'var(--grid)');
-      svg.append('text').attr('x', m.l - 6).attr('y', y(v)).attr('dy', '.32em').attr('text-anchor', 'end').attr('font-size', 11).attr('fill', 'var(--muted)').text(o.fmt(v)); });
-    x.ticks(Math.max(2, Math.floor(W / 110))).forEach((t) => svg.append('text').attr('x', x(t)).attr('y', H - 6).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'var(--muted)')
-      .text(new Intl.DateTimeFormat('it-IT', pts.length > 120 ? { year: 'numeric' } : { day: '2-digit', month: 'short' }).format(t)));
-    if (!o.log) svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', 'var(--muted)').attr('stroke-width', .6);
-    svg.append('path').datum(pts).attr('fill', 'none').attr('stroke', 'var(--accent)').attr('stroke-width', 2).attr('d', d3.line((p) => x(p.t), (p) => y(p.v)));
-    const tip = el('div', 'tip'); tip.hidden = true; box.style.position = 'relative'; box.append(tip);
-    const bis = d3.bisector((p) => p.t).center;
-    svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).attr('fill', 'transparent')
-      .on('mousemove', (ev) => { const [px, py] = d3.pointer(ev); const p = pts[bis(pts, x.invert(px))];
-        tip.textContent = new Intl.DateTimeFormat('it-IT', { day: '2-digit', month: 'short', year: 'numeric' }).format(p.t) + ' · ' + o.fmt(p.v);
-        tip.hidden = false; tip.style.left = Math.min(W - tip.offsetWidth, px + 12) + 'px'; tip.style.top = Math.max(0, py - 36) + 'px'; })
-      .on('mouseleave', () => { tip.hidden = true; });
-  }
-  function barre(box, dati) {
-    const W = box.clientWidth, H = 220; if (!W) return;
-    const m = { t: 22, r: 8, b: 24, l: 8 };
-    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H).style('display', 'block');
-    const x = d3.scaleBand(dati.map((d) => d[0]), [m.l, W - m.r]).padding(.3);
-    const y = d3.scaleLinear([Math.min(0, d3.min(dati, (d) => d[1])), d3.max(dati, (d) => d[1])], [H - m.b, m.t]);
-    dati.forEach(([a, v]) => {
-      svg.append('rect').attr('x', x(a)).attr('width', x.bandwidth()).attr('y', y(Math.max(0, v))).attr('height', Math.abs(y(v) - y(0))).attr('rx', 4).attr('fill', v >= 0 ? 'var(--pos)' : 'var(--neg)');
-      svg.append('text').attr('x', x(a) + x.bandwidth() / 2).attr('y', y(Math.max(0, v)) - 6).attr('text-anchor', 'middle').attr('font-size', 12).attr('font-weight', 600).attr('fill', 'var(--ink)').text(pct(v, 0));
-      svg.append('text').attr('x', x(a) + x.bandwidth() / 2).attr('y', H - 6).attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', 'var(--muted)').text(a);
-    });
-  }
-  caricaPubblico();
-  setInterval(caricaPubblico, 300000);
-
-  // ---------------------------------------------------------------- schede
-  const scheda = (q) => {
-    $('#t-live').setAttribute('aria-pressed', String(q === 'live')); $('#t-bt').setAttribute('aria-pressed', String(q === 'bt'));
-    $('#live').hidden = q !== 'live'; $('#bt').hidden = q !== 'bt';
-    if (q === 'bt') caricaBacktest();
+  let candeleInCorso = false;
+  dash.suCandele = async () => {
+    if (window.PUB || candeleInCorso) return; candeleInCorso = true;
+    try { dash.metti('candele', await decifra('backtest_candele.enc')); } catch (e) { dash.errore('candele', e.message); } finally { candeleInCorso = false; }
   };
-  $('#t-live').addEventListener('click', () => scheda('live'));
-  $('#t-bt').addEventListener('click', () => scheda('bt'));
 
-  function tabella(colonne, righe, onClick) {
-    const w = el('div', 'scroll'), t = el('table'), th = el('thead'), tr = el('tr');
+  // ------------------------------------------------------------------ dal vivo
+  async function caricaLive() {
+    if (window.PUB) { try { P = await (await prendi('pubblico.json')).json(); } catch (e) { P = null; } }
+    else if (CHIAVE) { try { D = await decifra('live.enc'); } catch (e) {} }
+    L = D ? D.vivo : null;
+    aggiungiExtra();
+    if (vista === 'live' && !window.PUB) disegnaLive();
+  }
+  const card = (titolo, sub) => { const c = el('section', 'bt-card'); c.append(el('h2', '', titolo)); if (sub) c.append(el('p', 'bt-sub', sub)); return c; };
+  const tile = (k, v, s, cls) => { const t = el('div', 'bt-tile'); t.append(el('span', 'k', k), el('span', 'v ' + (cls || ''), v), el('span', 's', s || '')); return t; };
+  function tabella(colonne, righe, vuoto, onClick) {
+    if (!righe.length) return el('p', 'bt-vuoto', vuoto);
+    const w = el('div', 'bt-scroll'), t = el('table', 'bt-t'), th = el('thead'), tr = el('tr');
     colonne.forEach(([lab, cls]) => tr.append(el('th', cls || '', lab)));
     th.append(tr); t.append(th);
     const tb = el('tbody');
     righe.forEach((r) => {
       const x = el('tr', onClick ? 'click' : '');
-      r.celle.forEach(([v, cls]) => { const td = el('td', cls || ''); if (v instanceof Node) td.append(v); else td.textContent = v; x.append(td); });
-      if (onClick) x.addEventListener('click', () => onClick(r, x));
+      if (r.sel) x.classList.add('sel');
+      r.celle.forEach(([v, cls, s]) => { const td = el('td', cls || ''); if (v instanceof Node) td.append(v); else td.textContent = v; if (s != null) segno(td, s); x.append(td); });
+      if (onClick) x.addEventListener('click', () => onClick(r));
       tb.append(x);
     });
     t.append(tb); w.append(t); return w;
   }
-  function pill(t, cls) { return el('span', 'pill ' + (cls || ''), t); }
+  const pill = (t, cls) => el('span', 'bt-pill ' + cls, t);
 
-  // ---------------------------------------------------------------- BOT DAL VIVO
-  async function caricaLive() {
-    try { disegnaLive(await decifra('live.enc')); }
-    catch (e) { $('#agg').textContent = 'Dati dal vivo non disponibili: ' + e.message; }
+  let scelto = null;
+  function disegnaLive() {
+    const box = $('#v-live');
+    const top = window.scrollY;
+    box.replaceChildren();
+    const wrap = el('div', 'bt'); box.append(wrap);
+    if (!L) { wrap.append(el('p', 'bt-vuoto', 'Dati dal vivo non ancora disponibili: il bot li carica entro qualche minuto.')); return; }
+    const vecchio = (Date.now() - L.aggiornato) / 60000;
+    const quando = new Date(L.aggiornato).toLocaleString('it-IT', { timeZone: 'Europe/Rome', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+
+    // intestazione
+    const head = el('header', 'bt-head');
+    head.append(el('h1', 'bt-title', 'Bot dal vivo'));
+    const take = el('p', 'bt-take');
+    const b = (t) => el('b', '', t);
+    if (L.trade_chiusi) take.append('Dal ' + (L.inizio || '—') + ' il bot ha chiuso ', b(num(L.trade_chiusi)), ' trade: ', b(num(L.tp)), ' TP e ', b(num(L.sl)), ' SL (', b(rS(L.R)), '). Il saldo è ', b(eur(L.saldo)), ', ', b(pctS(L.rendimento_pct, 2)), ' dall’inizio.');
+    else take.append('La demo è partita il ' + (L.inizio || '—') + ': nessun trade chiuso finora. Il saldo è ', b(eur(L.saldo)), '.');
+    head.append(take);
+    const nota = el('p', 'bt-note');
+    const st = el('span', 'stato' + (vecchio > 20 ? ' fermo' : L.attivo ? '' : ' pausa'), vecchio > 20 ? 'bot fermo' : L.attivo ? 'bot attivo' : 'bot in pausa');
+    nota.append(st, ` · conto ${L.conto} XM · aggiornato il ${quando} · Bitcoin e Giappone 225`);
+    if (D && D.auto) nota.append(' · trading automatico: ' + D.auto);
+    head.append(nota);
+    wrap.append(head);
+
+    // riquadri
+    const tiles = el('div', 'bt-tiles');
+    tiles.append(
+      tile('Saldo', eur(L.saldo), 'partito da ' + eur(L.saldo_inizio)),
+      tile('Rendimento', pctS(L.rendimento_pct, 2), 'calo massimo ' + num(L.calo_max_pct, 1) + '%', L.rendimento_pct > 0 ? 'pos' : L.rendimento_pct < 0 ? 'neg' : ''),
+      tile('Trade chiusi', num(L.trade_chiusi), num(L.tp) + ' TP · ' + num(L.sl) + ' SL'),
+      tile('% TP', L.vincenti_pct == null ? '—' : num(L.vincenti_pct, 1) + '%', 'backtest ' + num(BT_TP, 1) + '%'),
+      tile('Risultato', rS(L.R), D ? 'reale su XM ' + eurS(D.trade.filter((t) => t.xm != null).reduce((s, t) => s + t.xm, 0)) : '+3R ogni TP, −1R ogni SL', L.R > 0 ? 'pos' : L.R < 0 ? 'neg' : ''),
+      tile('Posizioni aperte', num(L.posizioni_aperte), D ? 'al massimo ' + D.pos_max : 'adesso'));
+    wrap.append(tiles);
+
+    // saldo nel tempo
+    const cs = card('Saldo nel tempo', 'Saldo del conto a fine giornata.');
+    const gs = el('div', 'bt-chart'); cs.append(gs); wrap.append(cs);
+
+    const griglia = el('div', 'bt-grid');
+    const cm = card('Mese per mese', 'Variazione del saldo nel mese.');
+    cm.append(tabella([['Mese', 'l'], ['Rendimento'], ['Saldo a fine mese']],
+      L.mesi.slice().reverse().map((m) => ({ celle: [[MESI[+m.m.slice(5) - 1] + ' ' + m.m.slice(0, 4), 'l'], [pctS(m.pct, 2), '', m.pct], [eur(m.saldo)]] })), 'Nessun mese ancora.'));
+    griglia.append(cm);
+    if (D) {
+      const cst = card('Per strategia', 'Trade chiusi dal vivo (TP e SL secondo le strategie) confrontati con il backtest.');
+      cst.append(tabella([['Strategia', 'l'], ['Rischio'], ['Trade'], ['TP'], ['% TP'], ['R'], ['Reale XM'], ['Backtest']],
+        D.strategie.map((s) => ({ celle: [[s.nome, 'l'], [num(s.rischio, 0) + '%'], [num(s.n)], [num(s.tp)], [s.n ? num(s.win, 0) + '%' : '—'], [s.n ? rS(s.R) : '—', '', s.R],
+          [s.n ? eurS(s.xm) : '—', '', s.xm], [num(s.bt_win, 1) + '% · ' + rS(s.bt_R_trade) + '/trade', 'muted']] })), ''));
+      griglia.append(cst);
+    }
+    wrap.append(griglia);
+
+    if (D) {
+      const g2 = el('div', 'bt-grid');
+      const ca = card('Trade aperti', 'R attuale sul prezzo di riferimento della strategia.');
+      ca.append(tabella([['Strategia', 'l'], ['Direzione', 'l'], ['Entrata', 'l'], ['Prezzo'], ['Stop loss'], ['Take profit'], ['Adesso'], ['XM', 'l']],
+        D.aperti.map((t) => ({ celle: [[t.nome, 'l'], [t.direzione, 'l'], [t.data, 'l'], [num(t.entrata, 1)], [num(t.sl, 1)], [num(t.tp, 1)], [rS(t.R_attuale), '', t.R_attuale],
+          [t.lotti ? num(t.lotti, 2) + ' lotti' : (t.non_aperto || '—'), 'l']] })), 'Nessun trade aperto.'));
+      const cl = card('Livelli in attesa', 'Il bot entra se il prezzo rompe il livello.');
+      cl.append(tabella([['Strategia', 'l'], ['Direzione', 'l'], ['Entra se rompe'], ['Stop circa']],
+        D.attese.map((a) => ({ celle: [[a.nome, 'l'], [a.direzione, 'l'], [num(a.livello, 1)], [num(a.stop, 1)]] })), 'Nessun livello in attesa.'));
+      g2.append(ca, cl);
+      wrap.append(g2);
+
+      const ct = card('Storico trade', 'Tocca un trade per vedere i grafici di entrata e di uscita.');
+      const righe = D.trade.slice().reverse().map((t) => ({ t, sel: scelto === t.id, celle: [[t.data, 'l'], [t.nome, 'l'], [t.direzione, 'l'], [num(t.entrata, 1)], [num(t.sl, 1)], [num(t.tp, 1)],
+        [t.esito ? pill(t.esito, t.esito.toLowerCase()) : pill('aperto', 'aperto')],
+        [t.esito ? rS(t.R) : '—', '', t.R],
+        [t.xm != null ? eurS(t.xm) : t.non_aperto ? 'non aperto' : t.lotti ? (t.esito ? 'in attesa' : 'aperta') : '—', t.xm != null ? '' : 'muted', t.xm]] }));
+      ct.append(tabella([['Entrata', 'l'], ['Strategia', 'l'], ['Direzione', 'l'], ['Prezzo'], ['Stop loss'], ['Take profit'], ['Esito'], ['R'], ['Reale XM']], righe,
+        'Nessun trade finora.', (r) => { scelto = scelto === r.t.id ? null : r.t.id; disegnaLive(); }));
+      wrap.append(ct);
+      const t = scelto && D.trade.find((x) => x.id === scelto);
+      if (t) {
+        const cf = card(`${t.nome} · ${t.direzione} · ${t.data}`, t.non_aperto ? 'Non aperto su XM: ' + t.non_aperto : '');
+        const f = el('div', 'foto'); cf.append(f);
+        ct.after(cf);
+        [t.img_e, t.img_u].filter(Boolean).forEach(async (k) => {
+          const slot = el('div', 'dash-skeleton'); slot.style.minHeight = '200px'; f.append(slot);
+          try { const buf = await decifra('img/' + k + '.enc', false); const im = el('img'); im.alt = 'Grafico del trade'; im.src = URL.createObjectURL(new Blob([buf], { type: 'image/png' })); slot.replaceWith(im); }
+          catch (e) { slot.replaceWith(el('p', 'bt-vuoto', 'Foto non ancora caricata.')); }
+        });
+        if (!t.img_e && !t.img_u) f.append(el('p', 'bt-vuoto', 'Nessuna foto per questo trade.'));
+      }
+      const p = D.prezzi || {};
+      const cp = card('Prezzo XM meno Bybit', 'Ultime 24 ore, misurato ogni minuto.');
+      cp.append(el('p', 'bt-take', p.n ? `In media ${num(p.media, 1)} $, da ${num(p.min, 1)} a ${num(p.max, 1)} $ (variazione ${num(p.max - p.min, 1)} $, ${num(p.var_pct, 3)}%), ${num(p.n)} misure.` : 'Ancora nessuna misura.'));
+      wrap.append(cp);
+    }
+    requestAnimationFrame(() => { curva(gs, (L.curva || []).map((c) => ({ d: new Date(c[0] + 'T12:00:00'), v: c[1] }))); window.scrollTo(0, top); });
   }
-  function disegnaLive(D) {
-    const box = $('#live'); box.replaceChildren();
-    const vecchio = (Date.now() - D.aggiornato) / 60000;
-    $('#agg').replaceChildren(el('span', vecchio > 15 ? 'neg' : 'muted',
-      (vecchio > 15 ? '⚠️ bot fermo? ' : '') + 'aggiornato ' + D.aggiornato_txt));
-    const c = el('div', 'grid');
-    const card = (lab, val, sub, cls) => { const k = el('div', 'card'); k.append(el('div', 'lab', lab), el('div', 'val ' + (cls || ''), val), el('div', 'sub', sub || '')); c.append(k); };
-    const m = D.conto || {};
-    card('Saldo', eur(m.saldo, m.valuta || ''), 'equity ' + eur(m.equity, m.valuta || ''));
-    const reale = D.trade.filter((t) => t.xm != null).reduce((s, t) => s + t.xm, 0);
-    card('Risultato reale', (reale >= 0 ? '+' : '') + eur(reale, m.valuta || ''), D.trade.filter((t) => t.xm != null).length + ' trade chiusi su XM', segno(reale));
-    const chiusi = D.trade.filter((t) => t.esito);
-    const tp = chiusi.filter((t) => t.esito === 'TP').length, R = chiusi.reduce((s, t) => s + t.R, 0);
-    card('Trade chiusi', String(chiusi.length), tp + ' TP · ' + (chiusi.length - tp) + ' SL · ' + num(chiusi.length ? tp / chiusi.length * 100 : 0, 0) + '%');
-    card('Risultato', rS(R), 'secondo le strategie (prezzi di riferimento)', segno(R));
-    card('Trading automatico', D.auto || '–', 'posizioni massime ' + D.pos_max);
-    box.append(c);
 
-    box.append(el('h2', '', 'Per strategia'));
-    box.append(tabella([['Strategia', 'l'], ['Rischio'], ['Trade'], ['TP'], ['% TP'], ['R'], ['Reale XM'], ['Backtest', '']],
-      D.strategie.map((s) => ({ celle: [[s.nome, 'l'], [num(s.rischio, 0) + '%'], [s.n], [s.tp], [num(s.win, 0) + '%'],
-        [rS(s.R), segno(s.R)], [eur(s.xm, m.valuta || ''), segno(s.xm)], [num(s.bt_win, 1) + '% TP · ' + rS(s.bt_R_trade) + '/trade', 'muted']] }))));
-
-    box.append(el('h2', '', 'Trade aperti'));
-    if (D.aperti.length) box.append(tabella([['Strategia', 'l'], ['Dir.', 'l'], ['Entrata', 'l'], ['Prezzo'], ['SL'], ['TP'], ['Adesso'], ['XM', 'l']],
-      D.aperti.map((t) => ({ celle: [[t.nome, 'l'], [pill(t.direzione), 'l'], [t.data, 'l'], [num(t.entrata, 1)], [num(t.sl, 1)], [num(t.tp, 1)],
-        [rS(t.R_attuale), segno(t.R_attuale)], [t.lotti ? t.lotti + ' lotti' : (t.non_aperto || '–'), 'l']] }))));
-    else box.append(el('p', 'muted', 'Nessun trade aperto.'));
-
-    box.append(el('h2', '', 'Livelli in attesa'));
-    if (D.attese.length) box.append(tabella([['Strategia', 'l'], ['Direzione', 'l'], ['Entra se rompe'], ['Stop circa']],
-      D.attese.map((a) => ({ celle: [[a.nome, 'l'], [a.direzione, 'l'], [num(a.livello, 1)], [num(a.stop, 1)]] }))));
-    else box.append(el('p', 'muted', 'Nessun livello in attesa.'));
-
-    const due = el('div', 'two'); const sx = el('div', 'card'), dx = el('div', 'card');
-    sx.append(el('div', 'lab', 'Andamento (somma dei risultati in R)')); const g = el('div', 'graf'); g.style.minHeight = '220px'; sx.append(g);
-    dx.append(el('div', 'lab', 'Prezzo XM meno Bybit (ultime 24 ore)'));
-    const p = D.prezzi || {};
-    dx.append(el('div', 'val', p.n ? num(p.media, 1) + ' $' : '–'),
-      el('div', 'sub', p.n ? `da ${num(p.min, 1)} a ${num(p.max, 1)} $ · variazione ${num(p.max - p.min, 1)} $ (${num(p.var_pct, 3)}%) · ${p.n} misure` : 'ancora nessuna misura'));
-    due.append(sx, dx); box.append(el('h2', '', 'Andamento'), due);
-    requestAnimationFrame(() => curva(g, chiusi));
-
-    box.append(el('h2', '', 'Storico trade'));
-    const dett = el('div', 'card img'); dett.hidden = true;
-    const righe = D.trade.slice().reverse().map((t) => ({ t, celle: [[t.data, 'l'], [t.nome, 'l'], [pill(t.direzione), 'l'], [num(t.entrata, 1)], [num(t.sl, 1)], [num(t.tp, 1)],
-      [t.esito ? pill(t.esito === 'TP' ? 'TP +3R' : 'SL −1R', t.esito === 'TP' ? 'pos' : 'neg') : pill('aperto', 'warn'), 'l'],
-      [t.xm != null ? eur(t.xm, m.valuta || '') : (t.lotti ? 'aperta' : (t.non_aperto ? 'non aperto' : '–')), t.xm != null ? segno(t.xm) : 'muted'],
-      [(t.img_e || t.img_u) ? '🖼️' : '', 'l']] }));
-    box.append(tabella([['Entrata', 'l'], ['Strategia', 'l'], ['Dir.', 'l'], ['Prezzo'], ['SL'], ['TP'], ['Esito', 'l'], ['Reale XM'], ['Foto', 'l']], righe,
-      async (r) => {
-        dett.hidden = false; dett.replaceChildren(el('div', 'lab', r.t.nome + ' · ' + r.t.direzione + ' · ' + r.t.data + (r.t.non_aperto ? ' · non aperto su XM: ' + r.t.non_aperto : '')));
-        for (const k of [r.t.img_u, r.t.img_e]) {
-          if (!k) continue;
-          try { const buf = await decifra('img/' + k + '.enc', false); const im = el('img'); im.src = URL.createObjectURL(new Blob([buf], { type: 'image/png' })); im.alt = 'Grafico del trade'; dett.append(im); }
-          catch (e) { dett.append(el('p', 'muted', 'Foto non disponibile.')); }
-        }
-        dett.scrollIntoView({ block: 'nearest' });
-      }));
-    box.append(dett);
-  }
-  function curva(box, chiusi) {
-    const W = box.clientWidth, H = 220; if (!W) return;
-    const pts = [{ i: 0, v: 0 }]; let s = 0; chiusi.slice().sort((a, b) => a.uscita_ts - b.uscita_ts).forEach((t, k) => { s += t.R; pts.push({ i: k + 1, v: s }); });
+  function curva(box, pts, altezza) {
+    const W = box.clientWidth, H = altezza || 260; if (!W) return;
+    box.querySelectorAll('svg,.bt-tip').forEach((x) => x.remove());
+    const lungo = pts[pts.length - 1].d - pts[0].d > 300 * 864e5;
+    if (pts.length < 2) { box.append(el('p', 'bt-vuoto', 'La curva comparirà dal secondo giorno di attività.')); box.style.minHeight = '0'; return; }
     const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
-    if (pts.length < 2) { svg.append('text').attr('x', 10).attr('y', 30).attr('fill', 'var(--muted)').text('La curva comparirà dopo il primo trade chiuso.'); return; }
-    const x = d3.scaleLinear([0, pts.length - 1], [44, W - 10]), y = d3.scaleLinear(d3.extent(pts, (p) => p.v), [H - 20, 10]).nice();
-    y.ticks(5).forEach((v) => { svg.append('line').attr('x1', 44).attr('x2', W - 10).attr('y1', y(v)).attr('y2', y(v)).attr('stroke', 'var(--grid)');
-      svg.append('text').attr('x', 38).attr('y', y(v)).attr('dy', '.32em').attr('text-anchor', 'end').attr('font-size', 11).attr('fill', 'var(--muted)').text(num(v, 0) + 'R'); });
-    svg.append('path').datum(pts).attr('fill', 'none').attr('stroke', 'var(--accent)').attr('stroke-width', 2).attr('d', d3.line((p) => x(p.i), (p) => y(p.v)));
+    const [vmin, vmax] = d3.extent(pts, (p) => p.v);
+    const logS = vmin > 0 && vmax / vmin > 20;
+    const y = logS ? d3.scaleLog([vmin * 0.8, vmax * 1.2], [H - 24, 10]) : d3.scaleLinear([vmin, vmax], [H - 24, 10]).nice(5);
+    const tk = logS ? d3.range(Math.ceil(Math.log10(vmin * 0.8)), Math.floor(Math.log10(vmax * 1.2)) + 1).map((e) => 10 ** e) : y.ticks(5);
+    const eurT = (v) => num(v, 0) + ' €';
+    const probe = svg.append('text').attr('font-size', 12).text(eurT(tk[tk.length - 1]));
+    const left = probe.node().getComputedTextLength() + 10; probe.remove();
+    const x = d3.scaleTime(d3.extent(pts, (p) => p.d), [left, W - 12]);
+    tk.forEach((v) => {
+      svg.append('line').attr('x1', left).attr('x2', W - 12).attr('y1', y(v)).attr('y2', y(v)).attr('stroke', 'var(--cds-chart-grid)');
+      svg.append('text').attr('x', left - 8).attr('y', y(v)).attr('dy', '0.32em').attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(eurT(v));
+    });
+    x.ticks(Math.max(2, Math.floor(W / 120))).forEach((t) => svg.append('text').attr('x', x(t)).attr('y', H - 6).attr('text-anchor', 'middle').attr('font-size', 12)
+      .attr('fill', 'var(--color-fg-muted)').text(t.toLocaleDateString('it-IT', lungo ? { month: 'short', year: 'numeric' } : { day: '2-digit', month: 'short' })));
+    svg.append('line').attr('x1', left).attr('x2', W - 12).attr('y1', H - 24).attr('y2', H - 24).attr('stroke', 'var(--cds-chart-axis)');
+    svg.append('path').datum(pts).attr('fill', 'none').attr('stroke', dash.colors[0]).attr('stroke-width', 2).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round')
+      .attr('d', d3.line((p) => x(p.d), (p) => y(p.v)));
+    const dot = svg.append('circle').attr('r', 4).attr('fill', dash.colors[0]).attr('visibility', 'hidden');
+    const tip = el('div', 'bt-tip'); tip.hidden = true; box.append(tip);
+    const bis = d3.bisector((p) => p.d).center;
+    svg.append('rect').attr('x', left).attr('y', 10).attr('width', W - left - 12).attr('height', H - 34).attr('fill', 'transparent')
+      .on('mousemove', (e) => {
+        const [px] = d3.pointer(e); const p = pts[bis(pts, x.invert(px))];
+        dot.attr('cx', x(p.d)).attr('cy', y(p.v)).attr('visibility', 'visible');
+        tip.replaceChildren(el('div', 'd', p.d.toLocaleDateString('it-IT')), el('div', '', eur(p.v)));
+        tip.hidden = false; tip.style.left = Math.min(W - tip.offsetWidth, x(p.d) + 12) + 'px'; tip.style.top = Math.max(0, y(p.v) - 44) + 'px';
+      })
+      .on('mouseleave', () => { dot.attr('visibility', 'hidden'); tip.hidden = true; });
   }
 
-  // ---------------------------------------------------------------- BACKTEST
-  let BT = null, CAND = null, anno = null, scelto = null, zoom = 0, alto = false;
-  const ZOOM = [1, 1.6, 2.5, 4];
-  const MESI = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
-  async function caricaBacktest() {
-    if (BT) return;
-    $('#bt').replaceChildren(el('p', 'muted', 'Carico il backtest…'));
-    try { BT = await decifra('backtest_trade.enc'); BT.forEach((r) => { r.id = +r.id; }); anno = d3.max(BT, (r) => r.anno); disegnaBT(); }
-    catch (e) { $('#bt').replaceChildren(el('p', 'neg', 'Backtest non disponibile: ' + e.message)); }
+  // ------------------------------------------------------------------ calcolatore del capitale
+  const calc = { righe: null, chiave: '' };
+  const giornoIt = (s) => new Date(s + 'T12:00:00').toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+  function calcolatore() {
+    const T = dash.data('trade');
+    if (T.status !== 'ok' || !T.data.length) return;
+    const k = T.data.length + '|' + T.data[T.data.length - 1].id;
+    const inp = $('#calc-data');
+    if (k !== calc.chiave) {
+      calc.chiave = k;
+      calc.righe = T.data.map((r) => ({ id: Number(r.id), c: String(r.chiusura), e: String(r.entrata), saldo: Number(r.saldo), R: Number(r.R) }))
+        .sort((a, b) => (a.c < b.c ? -1 : a.c > b.c ? 1 : a.id - b.id));
+      const primo = T.data.reduce((m, r) => (r.entrata < m ? r.entrata : m), '9999').slice(0, 10);
+      const ultimo = calc.righe[calc.righe.length - 1].c.slice(0, 10);
+      inp.min = primo; inp.max = ultimo;
+      if (!inp.value || inp.value < primo || inp.value > ultimo) inp.value = primo;
+    }
+    calcola();
   }
-  function disegnaBT() {
-    const box = $('#bt'); box.replaceChildren();
-    const anni = d3.rollups(BT, (v) => ({ n: v.length, tp: v.filter((t) => t.esito === 'TP').length, R: d3.sum(v, (t) => t.R), eu: d3.sum(v, (t) => t.euro),
-      fine: d3.max(v, (t) => t.saldo) }), (t) => t.anno).sort((a, b) => a[0] - b[0]);
-    box.append(el('h2', '', 'Anno per anno'), el('p', 'muted', 'Tocca un anno, poi un trade per vedere il grafico.'));
-    box.append(tabella([['Anno', 'l'], ['Trade'], ['TP'], ['% TP'], ['Risultato R'], ['Risultato €']],
-      anni.map(([a, s]) => ({ a, celle: [[String(a), 'l'], [s.n], [s.tp], [num(s.tp / s.n * 100, 1) + '%'], [rS(s.R), segno(s.R)], [eur(s.eu), segno(s.eu)]] })),
-      (r) => { anno = r.a; scelto = null; disegnaBT(); }));
-    const tabs = el('div', 'tabs');
-    anni.forEach(([a]) => { const b = el('button', 'btn', String(a)); b.type = 'button'; b.setAttribute('aria-pressed', String(a === anno)); b.onclick = () => { anno = a; scelto = null; disegnaBT(); }; tabs.append(b); });
-    box.append(el('h2', '', String(anno)), tabs);
-    const tA = BT.filter((t) => t.anno === anno);
-    d3.groups(tA, (t) => t.mese).sort((a, b) => a[0] - b[0]).forEach(([m, v]) => {
-      const sec = el('div', 'mese'); const R = d3.sum(v, (t) => t.R);
-      sec.append(el('h3', '', `${MESI[m - 1]} ${anno} · ${v.length} trade · ${v.filter((t) => t.esito === 'TP').length} TP · ${rS(R)}`));
-      sec.append(tabella([['#', 'l'], ['Strategia', 'l'], ['Dir.', 'l'], ['Entrata', 'l'], ['Chiusura', 'l'], ['Prezzo'], ['SL'], ['TP'], ['Lotti'], ['Esito', 'l'], ['R'], ['€'], ['Saldo']],
-        v.map((t) => ({ t, celle: [[String(t.id), 'l'], [t.strategia, 'l'], [t.direzione, 'l'], [t.entrata.slice(8, 10) + '/' + t.entrata.slice(5, 7) + ' ' + t.entrata.slice(11), 'l'],
-          [t.chiusura.slice(8, 10) + '/' + t.chiusura.slice(5, 7) + ' ' + t.chiusura.slice(11), 'l'], [num(t.prezzo_entrata, 1)], [num(t.stop_loss, 1)], [num(t.take_profit, 1)],
-          [num(t.lotti, 2)], [pill(t.esito, t.esito === 'TP' ? 'pos' : 'neg'), 'l'], [rS(t.R), segno(t.R)], [eur(t.euro), segno(t.euro)], [eur(t.saldo)]] })),
-        (r) => { scelto = scelto === r.t.id ? null : r.t.id; zoom = 0; alto = false; disegnaBT(); }));
-      if (scelto && v.some((t) => t.id === scelto)) sec.append(pannelloGrafico(v.find((t) => t.id === scelto)));
-      box.append(sec);
-    });
+  function calcola() {
+    const R = calc.righe; if (!R) return;
+    const inp = $('#calc-data');
+    let da = inp.value || inp.min; if (da < inp.min) da = inp.min; if (da > inp.max) da = inp.max;
+    const cap = Math.max(0, Number($('#calc-euro').value) || 0);
+    let base = 1000; for (const r of R) { if (r.c.slice(0, 10) < da) base = r.saldo; else break; }
+    const dopo = R.filter((r) => r.c.slice(0, 10) >= da);
+    const fine = R[R.length - 1].saldo, fattore = fine / base;
+    let picco = base, calo = 0; const pts = [{ d: new Date(da + 'T00:00:00'), v: cap }];
+    for (const r of dopo) { picco = Math.max(picco, r.saldo); calo = Math.max(calo, 1 - r.saldo / picco); pts.push({ d: new Date(r.c.replace(' ', 'T') + ':00'), v: cap * r.saldo / base }); }
+    const finale = cap * fattore, ultimo = R[R.length - 1].c.slice(0, 10);
+    const tp = dopo.filter((r) => r.R > 0).length;
+    const tiles = $('#calc-tiles'); tiles.replaceChildren(
+      tile('Capitale finale', eur(finale), 'al ' + giornoIt(ultimo)),
+      tile('Guadagno', eurS(finale - cap), pctS((fattore - 1) * 100, 1), finale >= cap ? 'pos' : 'neg'),
+      tile('Trade nel periodo', num(dopo.length), num(tp) + ' TP · ' + num(dopo.length - tp) + ' SL'),
+      tile('Calo massimo', num(calo * 100, 1) + '%', 'il momento peggiore del periodo'));
+    const ris = $('#calc-ris'); ris.replaceChildren();
+    ris.append('Con ', el('b', '', eur(cap)), ' investiti il ', el('b', '', giornoIt(da)), ' avresti oggi ', el('b', '', eur(finale)),
+      '. Nel frattempo il capitale sarebbe sceso al massimo del ', el('b', '', num(calo * 100, 1) + '%'), ' rispetto al punto più alto.');
+    const g = $('#calc-graf'); g.replaceChildren();
+    if (pts.length > 1) curva(g, pts, 200);
   }
-  function pannelloGrafico(t) {
-    const card = el('div', 'card'); card.style.marginTop = '10px';
-    const ore = (t.ts_uscita - t.ts_entrata) / 3600000 + 0.25;
-    card.append(el('div', 'lab', `#${t.id} · ${t.strategia} · ${t.direzione} · ${t.esito === 'TP' ? 'TP +3R' : 'SL −1R'} dopo ${num(ore, 1)} ore`));
-    const z = el('div', 'tabs');
-    const bt = (txt, f, dis) => { const b = el('button', 'btn', txt); b.type = 'button'; b.disabled = dis; b.onclick = f; z.append(b); };
-    bt('−', () => { zoom = Math.max(0, zoom - 1); disegnaBT(); }, zoom === 0);
-    bt('+', () => { zoom = Math.min(ZOOM.length - 1, zoom + 1); disegnaBT(); }, zoom === ZOOM.length - 1);
-    bt(alto ? 'Più basso' : 'Più alto', () => { alto = !alto; disegnaBT(); });
-    bt('Chiudi', () => { scelto = null; disegnaBT(); });
-    const g = el('div', 'graf'); g.style.minHeight = (alto ? 640 : 400) + 'px';
-    card.append(z, g);
-    const vai = () => requestAnimationFrame(() => { disegnaGrafico(g, t); card.scrollIntoView({ block: 'nearest' }); });
-    if (CAND) vai();
-    else { g.append(el('p', 'muted', 'Carico le candele…')); decifra('backtest_candele.enc').then((c) => { CAND = c; g.replaceChildren(); vai(); }).catch((e) => g.replaceChildren(el('p', 'neg', e.message))); }
-    return card;
-  }
-  function disegnaGrafico(box, t) {
-    const vis = box.clientWidth, W = Math.round(vis * ZOOM[zoom]), H = alto ? 640 : 400;
-    const c = CAND.filter((k) => k.t >= t.ts_da && k.t <= t.ts_a);
-    if (!c.length) return;
-    const sl = t.stop_loss, tp = t.take_profit, en = t.prezzo_entrata;
-    const lo = Math.min(d3.min(c, (k) => k.l), sl, tp), hi = Math.max(d3.max(c, (k) => k.h), sl, tp), pad = (hi - lo) * .04;
-    const m = { t: 10, r: 120, b: 34, l: 64 };
-    const svg = d3.select(box).append('svg').attr('width', zoom ? W : '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H).style('display', 'block');
-    const x = d3.scaleBand(c.map((k) => k.t), [m.l, W - m.r]).padding(.25), y = d3.scaleLinear([lo - pad, hi + pad], [H - m.b, m.t]);
-    const ie = c.findIndex((k) => k.t === t.ts_entrata), iu = c.findIndex((k) => k.t === t.ts_uscita);
-    if (ie >= 0) { const x0 = x(c[ie].t), x1 = iu >= 0 ? x(c[iu].t) + x.bandwidth() : W - m.r; svg.append('rect').attr('x', x0).attr('width', x1 - x0).attr('y', m.t).attr('height', H - m.t - m.b).attr('fill', 'var(--grid)'); }
-    y.ticks(7).forEach((v) => { svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(v)).attr('y2', y(v)).attr('stroke', 'var(--grid)');
-      svg.append('text').attr('x', m.l - 6).attr('y', y(v)).attr('dy', '.32em').attr('text-anchor', 'end').attr('font-size', 11).attr('fill', 'var(--muted)').text(num(v, 0)); });
-    const passo = Math.max(1, Math.ceil(c.length / Math.max(3, Math.floor((W - m.l - m.r) / 70)))); let ug = '';
-    c.forEach((k, i) => { if (i % passo) return; const g = fmtGg.format(new Date(k.t));
-      svg.append('text').attr('x', x(k.t) + x.bandwidth() / 2).attr('y', H - m.b + 14).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'var(--muted)').text(fmtOra.format(new Date(k.t)));
-      if (g !== ug) { svg.append('text').attr('x', x(k.t) + x.bandwidth() / 2).attr('y', H - m.b + 28).attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', 'var(--muted)').text(g); ug = g; } });
-    c.forEach((k) => { const col = k.c >= k.o ? 'var(--pos)' : 'var(--neg)', xm = x(k.t) + x.bandwidth() / 2;
-      svg.append('line').attr('x1', xm).attr('x2', xm).attr('y1', y(k.h)).attr('y2', y(k.l)).attr('stroke', col);
-      svg.append('rect').attr('x', x(k.t)).attr('width', x.bandwidth()).attr('y', y(Math.max(k.o, k.c))).attr('height', Math.max(1, Math.abs(y(k.o) - y(k.c)))).attr('fill', col); });
-    const x0 = ie >= 0 ? x(c[ie].t) : m.l, x1 = iu >= 0 ? x(c[iu].t) + x.bandwidth() : W - m.r;
-    const lin = [[tp, 'TP', 'var(--pos)', '6 4'], [sl, 'SL', 'var(--neg)', '6 4'], [en, 'Entrata', 'var(--ink)', '2 3']].map((l) => ({ l, yy: y(l[0]) })).sort((a, b) => a.yy - b.yy);
-    for (let i = 1; i < lin.length; i++) if (lin[i].yy - lin[i - 1].yy < 14) lin[i].yy = lin[i - 1].yy + 14;
-    lin.forEach(({ l, yy }) => { svg.append('line').attr('x1', x0).attr('x2', x1).attr('y1', y(l[0])).attr('y2', y(l[0])).attr('stroke', l[2]).attr('stroke-width', 1.5).attr('stroke-dasharray', l[3]);
-      svg.append('text').attr('x', W - m.r + 6).attr('y', yy).attr('dy', '.32em').attr('font-size', 12).attr('font-weight', 600).attr('fill', l[2]).text(l[1] + ' ' + num(l[0], 1)); });
-    if (zoom && ie >= 0) box.scrollLeft = Math.max(0, x(c[ie].t) - vis * .35);
-    const tip = el('div', 'tip'); tip.hidden = true; box.append(tip);
-    svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).attr('fill', 'transparent')
-      .on('mousemove', (ev) => { const [px, py] = d3.pointer(ev); const k = c[Math.max(0, Math.min(c.length - 1, Math.floor((px - m.l) / x.step())))];
-        tip.textContent = `${fmtGg.format(new Date(k.t))} ${fmtOra.format(new Date(k.t))} · A ${num(k.o, 1)} · Max ${num(k.h, 1)} · Min ${num(k.l, 1)} · C ${num(k.c, 1)}`;
-        tip.hidden = false; const sl_ = box.scrollLeft; tip.style.left = Math.max(sl_, Math.min(sl_ + vis - tip.offsetWidth, px + 12)) + 'px'; tip.style.top = Math.max(0, py - 40) + 'px'; })
-      .on('mouseleave', () => { tip.hidden = true; });
-  }
+  $('#calc-data').addEventListener('change', calcola);
+  $('#calc-euro').addEventListener('input', calcola);
+  dash.onData(calcolatore);
+
+  // ------------------------------------------------------------------ avvio
+  (async () => {
+    let k = null; try { k = localStorage.getItem('k'); } catch (e) {}
+    mostra('bt');
+    await caricaLive();
+    if (k) { try { await entra(b64(k), false); } catch (e) {} }
+    timer = setInterval(caricaLive, 120000);
+  })();
 })();
+
 </script>
 </body>
 </html>
