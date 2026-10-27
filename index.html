@@ -281,10 +281,11 @@ body.pub .bt-mese-head { flex-direction: column; gap: 2px; }
 
   <footer class="come" id="come">
     <h2>Come è calcolato</h2>
-    <p class="solo-pub">È una simulazione sui prezzi passati di Bitcoin a 15 minuti con le stesse regole del bot, gli spread e gli swap reali di XM e i guadagni reinvestiti. Parte da 1.000 € ad aprile 2020. Dal 24 ottobre 2026 la curva continua con i trade chiusi dal bot, calcolati allo stesso modo.</p>
+    <p class="solo-pub">È una simulazione sui prezzi passati di Bitcoin a 15 minuti con le stesse regole del bot, gli spread e gli swap reali di XM e i guadagni reinvestiti, su un conto in euro con i limiti veri di XM: al massimo 80 lotti per ordine su Bitcoin, quindi quando il conto cresce il rischio di ogni trade scende. Parte da 1.000 € ad aprile 2020. Dal 24 ottobre 2026 la curva continua con i trade chiusi dal bot, calcolati allo stesso modo.</p>
     <p class="solo-pub modo-j">Con il Giappone 225 si aggiungono i suoi trade sui prezzi XM, con spread di 7 punti e swap reale, sullo stesso saldo.</p>
-    <p class="solo-priv">Rischi sul saldo del momento: doppia rottura 6%, seconda correzione 3%, continuazione dopo SL 2%, prima candela 2%<span class="modo-j">, Giappone 225 prima candela 2%</span>. Lotti come il bot: rischio diviso per stop più spread, arrotondati per eccesso se il rischio resta entro il 20% in più, altrimenti per difetto, minimo 0,01. Spread 15 $, swap reale di XM (long 0,043% e short 0,029% a notte), 1 € = 1 $. Dati Bybit BTCUSDT a 15 minuti, orari italiani.<span class="modo-j"> Giappone 225: prezzi XM, spread 7 punti, swap long −4,74 e short −1 punti a notte.</span> Dal 24 ottobre 2026 continuano i trade chiusi dal bot dal vivo, esiti sui prezzi di riferimento.</p>
-    <p>Dal 2025 le posizioni simulate superano il massimo che XM accetta per un singolo ordine: da lì gli euro sono teorici. I risultati passati, e ancora di più quelli simulati, non garantiscono risultati futuri. Il trading con leva può far perdere tutto il capitale. Questa pagina non è un consiglio di investimento.</p>
+    <p class="solo-priv">Rischi sul saldo del momento: doppia rottura 6%, seconda correzione 3%, continuazione dopo SL 2%, prima candela 2%<span class="modo-j">, Giappone 225 prima candela 2%</span>. Lotti come il bot: rischio diviso per stop più spread, arrotondati per eccesso se il rischio resta entro il 20% in più, altrimenti per difetto, minimo 0,01, massimo 80 per ordine (Giappone 225: da 0,1 a 11.940), un solo ordine per trade, esposizione massima 50 volte il saldo, al massimo 6 posizioni insieme. Conto in euro con i cambi EUR/USD e EUR/JPY del giorno. Spread 15 $, swap reale di XM (long 0,043% e short 0,029% a notte). Dati Bybit BTCUSDT a 15 minuti, orari italiani.<span class="modo-j"> Giappone 225: prezzi XM, spread 7 punti, swap long −4,74 e short −1 punti a notte.</span> Dal 24 ottobre 2026 continuano i trade chiusi dal bot dal vivo, esiti sui prezzi di riferimento.</p>
+    <p class="solo-priv">Il massimo per ordine si raggiunge dal 2025 (doppia rottura da circa 470.000 € di saldo): da lì il rischio reale della doppia rottura scende in media al 2–2,5%.</p>
+    <p>I risultati passati, e ancora di più quelli simulati, non garantiscono risultati futuri. Il trading con leva può far perdere tutto il capitale. Questa pagina non è un consiglio di investimento.</p>
   </footer>
 </div>
 
@@ -1011,7 +1012,7 @@ dash.calc('strategie', {
       const ca = card('Trade aperti', 'R attuale sul prezzo di riferimento della strategia.');
       ca.append(tabella([['Strategia', 'l'], ['Direzione', 'l'], ['Entrata', 'l'], ['Prezzo'], ['Stop loss'], ['Take profit'], ['Adesso'], ['XM', 'l']],
         D.aperti.map((t) => ({ celle: [[t.nome, 'l'], [t.direzione, 'l'], [t.data, 'l'], [num(t.entrata, 1)], [num(t.sl, 1)], [num(t.tp, 1)], [rS(t.R_attuale), '', t.R_attuale],
-          [t.lotti ? num(t.lotti, 2) + ' lotti' : (t.non_aperto || '—'), 'l']] })), 'Nessun trade aperto.'));
+          [(t.lotti ? num(t.lotti, 2) + ' lotti' : (t.non_aperto || '—')) + (t.nota ? ' · ' + t.nota : ''), 'l']] })), 'Nessun trade aperto.'));
       const cl = card('Livelli in attesa', 'Il bot entra se il prezzo rompe il livello.');
       cl.append(tabella([['Strategia', 'l'], ['Direzione', 'l'], ['Entra se rompe'], ['Stop circa']],
         D.attese.map((a) => ({ celle: [[a.nome, 'l'], [a.direzione, 'l'], [num(a.livello, 1)], [num(a.stop, 1)]] })), 'Nessun livello in attesa.'));
@@ -1022,7 +1023,7 @@ dash.calc('strategie', {
       const righe = D.trade.slice().reverse().map((t) => ({ t, sel: scelto === t.id, celle: [[t.data, 'l'], [t.nome, 'l'], [t.direzione, 'l'], [num(t.entrata, 1)], [num(t.sl, 1)], [num(t.tp, 1)],
         [t.esito ? pill(t.esito, t.esito.toLowerCase()) : pill('aperto', 'aperto')],
         [t.esito ? rS(t.R) : '—', '', t.R],
-        [t.xm != null ? eurS(t.xm) : t.non_aperto ? 'non aperto' : t.lotti ? (t.esito ? 'in attesa' : 'aperta') : '—', t.xm != null ? '' : 'muted', t.xm]] }));
+        [t.xm != null ? eurS(t.xm) : t.non_aperto ? 'non aperto' : t.lotti ? 'aperta su XM' : '—', t.xm != null ? '' : 'muted', t.xm]] }));
       ct.append(tabella([['Entrata', 'l'], ['Strategia', 'l'], ['Direzione', 'l'], ['Prezzo'], ['Stop loss'], ['Take profit'], ['Esito'], ['R'], ['Reale XM']], righe,
         'Nessun trade finora.', (r) => { scelto = scelto === r.t.id ? null : r.t.id; disegnaLive(); }));
       wrap.append(ct);
