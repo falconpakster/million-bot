@@ -576,7 +576,7 @@ details.come p { margin: 8px 0; }
       </div>
       <div class="lato-hero">
         <div class="guida grande"><span class="robot-posto" data-robot="posto"></span><p class="fumetto">Ciao! Sono <b>Million Bot</b>. Scorri la pagina: quando mi vedi salutare, <b>cliccami</b> e ti racconto qualcosa.</p></div>
-        <div class="vetrina">
+        <div class="vetrina" data-robot-punto="centro" data-robot="Le discese su questa linea sono i periodi di perdite: <b>le ho superate tutte</b> e ho continuato a salire.">
           <span class="etichetta">Bitcoin + Giappone 225 · 1.000 € nel 2020</span>
           <p class="grande" id="h-saldo">—</p>
           <div class="curva" id="h-curva"></div>
@@ -1887,7 +1887,8 @@ dash.calc('strategie', {
   const letti = new WeakSet();
   let attuale = null, ultimoY = null, tVolo = null, tChiama = null, giro = 0, apertoA = null;
   const visibile = (e) => e.offsetParent !== null && !e.closest('[hidden]') && e.getBoundingClientRect().height > 0;
-  const docTop = (e) => e.getBoundingClientRect().top + scrollY;
+  const punto = (e) => { const r = e.getBoundingClientRect(); return e.dataset.robotPunto === 'centro' ? r.top + r.height / 2 : r.top; };
+  const docTop = (e) => punto(e) + scrollY;
   function bersagli() {
     if (!document.body.classList.contains('pub') || document.getElementById('pub').hidden) return [];
     extra.forEach(([sel, msg]) => { const e = document.querySelector(sel); if (e && !e.dataset.robot) e.dataset.robot = msg; });
@@ -1896,18 +1897,18 @@ dash.calc('strategie', {
   function scegli(L) {
     if (scrollY < 40) return L.find((e) => e.dataset.robot === 'posto') || L[0];
     if (scrollY + innerHeight >= document.documentElement.scrollHeight - 30) return L[L.length - 1];
-    const linea = innerHeight * 0.5;
+    const linea = innerHeight * 0.35;
     let s = L[0];
-    for (const e of L) if (e.getBoundingClientRect().top < linea) s = e;
+    for (const e of L) if (punto(e) < linea) s = e;
     return s;
   }
   function posizione(e) {
     const r = e.getBoundingClientRect(), vw = document.documentElement.clientWidth;
     if (e.dataset.robot === 'posto') return { x: r.left + scrollX, y: r.top + scrollY, w: r.width, posto: true };
-    const w = vw < 760 ? 64 : 84, h = w * 184 / 160;
-    let x = r.right + scrollX - w * 0.8;
+    const w = vw < 760 ? 64 : 84, h = w * 184 / 160, centro = e.dataset.robotPunto === 'centro';
+    let x = r.right + scrollX - w * (centro ? 0.6 : 0.8);
     x = Math.min(Math.max(x, scrollX + 6), scrollX + vw - w - 6);
-    return { x, y: r.top + scrollY - h * 0.72, w };
+    return { x, y: centro ? r.top + scrollY + r.height / 2 - h * 0.6 : r.top + scrollY - h * 0.72, w };
   }
   function chiudi() { fum.classList.remove('vede'); apertoA = null; }
   function apri() {
