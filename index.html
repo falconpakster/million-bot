@@ -593,17 +593,20 @@ button.anno-b { font: inherit; text-align: left; cursor: pointer; border: 1px so
 button.anno-b:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(16, 36, 26, .14); }
 /* colore in base al rendimento dell'anno (--t da 0 a 1) e un riflesso di luce che passa di continuo */
 button.anno-b { position: relative; overflow: hidden; --t: .3; background: color-mix(in srgb, #0f7a47 calc(var(--t) * 88%), #eaf7ef); border-color: color-mix(in srgb, #0b5a35 calc(var(--t) * 100%), rgba(23, 163, 98, .3)); }
-button.anno-b.scuro span, button.anno-b.scuro small { color: rgba(255, 255, 255, .82); }
-button.anno-b.scuro b { color: #fff; }
-button.anno-b.top { background: linear-gradient(135deg, #fbe39a, #eab53c 55%, #d6981f); border-color: #b9821a; animation: brilla 2.6s ease-in-out infinite; }
+/* tutte le percentuali uguali: nere con il contorno bianco */
+button.anno-b b, button.anno-b b.neg { color: #0d1a13; text-shadow: 1.5px 0 #fff, -1.5px 0 #fff, 0 1.5px #fff, 0 -1.5px #fff, 1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff; }
+button.anno-b.scuro span, button.anno-b.scuro small { color: rgba(255, 255, 255, .85); }
+button.anno-b.top { background: linear-gradient(135deg, #fbe39a, #eab53c 55%, #d6981f); border-color: #b9821a; }
 button.anno-b.top span, button.anno-b.top small { color: #5a3f08; }
-button.anno-b.top b { color: #2e2104; }
 button.anno-b.top::before { content: "★"; position: absolute; top: 6px; right: 9px; font-size: 13px; color: #6b4a07; }
 button.anno-b.negativo { background: #fdecea; border-color: rgba(200, 68, 58, .35); }
-button.anno-b::after { content: ""; position: absolute; top: -10%; bottom: -10%; left: -70%; width: 45%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .55), transparent); transform: skewX(-18deg); animation: lucida 5.5s ease-in-out infinite; animation-delay: calc(var(--i, 0) * .4s); pointer-events: none; }
-@keyframes lucida { 0%, 60% { left: -70%; } 88%, 100% { left: 135%; } }
-@keyframes brilla { 0%, 100% { box-shadow: 0 0 0 0 rgba(234, 181, 60, .0); } 50% { box-shadow: 0 0 0 5px rgba(234, 181, 60, .28); } }
-@media (prefers-reduced-motion: reduce) { button.anno-b::after { animation-duration: 9s; } button.anno-b.top { animation: none; } }
+/* animazione continua: gli anni rimbalzano uno alla volta, da sinistra a destra */
+button.anno-b { animation: rimbalza calc(var(--n, 7) * .6s) ease-in-out infinite; animation-delay: calc(var(--i, 0) * .6s); }
+button.anno-b.top { animation: rimbalza calc(var(--n, 7) * .6s) ease-in-out infinite calc(var(--i, 0) * .6s), brilla 2.6s ease-in-out infinite; }
+@keyframes rimbalza { 0% { transform: translateY(0); } 4% { transform: translateY(-11px); } 8% { transform: translateY(0); } 10.5% { transform: translateY(-4px); } 13%, 100% { transform: translateY(0); } }
+@keyframes brilla { 0%, 100% { box-shadow: 0 0 0 0 rgba(234, 181, 60, 0); } 50% { box-shadow: 0 0 0 5px rgba(234, 181, 60, .28); } }
+button.anno-b:hover { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { @keyframes rimbalza { 0% { transform: translateY(0); } 5% { transform: translateY(-6px); } 10%, 100% { transform: translateY(0); } } }
 .nota-cifre { margin: 8px 0 0; }
 .schede { position: sticky; top: 64px; z-index: 15; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 22px 0 16px; padding: 6px; background: rgba(255, 255, 255, .92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--linea); border-radius: 999px; box-shadow: var(--ombra); scroll-margin-top: 72px; }
 .schede::-webkit-scrollbar { display: none; }
@@ -1789,6 +1792,7 @@ dash.calc('strategie', {
       $('#h-anni').textContent = pos + ' su ' + A.data.length;
       // le caselle si creano una volta (per gli stessi anni) e poi si aggiornano: così il conteggio non si perde
       const box = $('#h-anni-lista'), kA = A.data.map((r) => r.anno).join(',');
+      box.style.setProperty('--n', A.data.length);
       const vmax = Math.max(...A.data.map((r) => Math.abs(r.rendimento)), 1e-9);
       const durata = (r) => 1200 + 3800 * Math.abs(r.rendimento) / vmax;      // la più alta circa 5 secondi
       const vbest = Math.max(...A.data.map((r) => r.rendimento));
