@@ -2423,6 +2423,7 @@ dash.calc('strategie', {
   }
   // tema del sito: anteprima solo per te (si apre il sito con il tema) o per tutti (il bot lo mette sul sito, comando Telegram /tema)
   const TEMI = [
+    ['Giorno e notte (il meteo resta quello vero di Ugento)', [['ora:giorno', 'Sempre giorno', 'Niente luna e stelle, anche di sera'], ['ora:notte', 'Sempre notte', 'Luna, stelle e cielo scuro, anche di giorno']]],
     ['Feste', [['festa:natale', 'Natale', 'Cappello di Babbo Natale, luci e neve'], ['festa:capodanno', 'Capodanno', 'Fuochi d\'artificio e coriandoli d\'oro'],
       ['festa:befana', 'Befana', 'Cappello da strega, caramelle, la Befana in volo'], ['festa:carnevale', 'Carnevale', 'Maschera, coriandoli e stelle filanti'],
       ['festa:sanvalentino', 'San Valentino', 'Cuore che batte e cuoricini'], ['festa:donna', 'Festa della donna', 'Mimosa'],
@@ -2607,7 +2608,8 @@ dash.calc('strategie', {
       b.classList.add(...a.map((x) => 'm-' + x));
     };
     if (!m) { if (frase) frase.textContent = ''; veste([]); return; }
-    const t = Number(m.temp), p = Number(m.percepita ?? m.temp), c = Number(m.codice), g = m.giorno !== false, T = Math.round(t) + '°';
+    const oraF = new URLSearchParams(location.search).get('ora') || temaScelto('ora');   // "Sempre giorno" / "Sempre notte" dall'area riservata
+    const t = Number(m.temp), p = Number(m.percepita ?? m.temp), c = Number(m.codice), g = oraF === 'giorno' ? true : oraF === 'notte' ? false : m.giorno !== false, T = Math.round(t) + '°';
     const cieloK = c >= 95 ? 'temporale' : (c >= 51 && c <= 67) || (c >= 80 && c <= 82) ? 'pioggia' : (c >= 71 && c <= 77) || c === 85 || c === 86 ? 'neve'
       : c === 45 || c === 48 ? 'nebbia' : !g ? 'notte' : c <= 1 ? 'sole' : 'nuvole';
     const tK = p <= 5 ? 'gelo' : p <= 15 ? 'freddo' : p <= 18 ? 'fresco' : p >= 30 ? 'caldo' : 'mite';
