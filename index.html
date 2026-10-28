@@ -1506,14 +1506,19 @@ dash.calc('strategie', {
   function puntiBt() {
     const T = dash.data('trade');
     if (T.status !== 'ok' || !T.data.length) return null;
-    const k = modo + T.data.length + '|' + T.data[T.data.length - 1].id + (window.PUB ? 'p' : 'r');
+    // la linea arriva fino all'ultimo aggiornamento del bot (oggi): dopo l'ultimo trade chiuso il saldo resta uguale
+    const fonte = window.PUB ? P : D, agg = fonte && fonte.aggiornato ? new Date(fonte.aggiornato) : null;
+    const oggi = agg ? agg.toISOString().slice(0, 10) : '';
+    const k = modo + T.data.length + '|' + T.data[T.data.length - 1].id + (window.PUB ? 'p' : 'r') + oggi;
     if (puntiCache.k !== k) {
       const righe = T.data.map((r) => ({ id: Number(r.id), c: String(r.chiusura), e: String(r.entrata), s: Number(r.saldo) }))
         .sort((a, b) => (a.c < b.c ? -1 : a.c > b.c ? 1 : a.id - b.id));
       const primo = righe.reduce((m, r) => (r.e < m ? r.e : m), '9999');
       const pts = [{ d: new Date(primo.slice(0, 10) + 'T00:00:00'), v: 1000 }];
       righe.forEach((r) => pts.push({ d: new Date(r.c.replace(' ', 'T') + ':00'), v: r.s }));
-      puntiCache.k = k; puntiCache.pts = pts; puntiCache.ultimo = righe[righe.length - 1].c.slice(0, 10);
+      let ultimo = righe[righe.length - 1].c.slice(0, 10);
+      if (agg && agg > pts[pts.length - 1].d) { pts.push({ d: agg, v: pts[pts.length - 1].v }); ultimo = agg.toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' }); }
+      puntiCache.k = k; puntiCache.pts = pts; puntiCache.ultimo = ultimo;
     }
     return puntiCache;
   }
@@ -1854,6 +1859,7 @@ dash.calc('strategie', {
     if (window.PUB) { try { P = await (await prendi('pubblico.json')).json(); } catch (e) { P = null; } striscia(); }
     else if (CHIAVE) { try { D = await decifra('live.enc'); L = D.vivo; } catch (e) {} }
     aggiungiExtra();
+    riempiHero(); disegnaCurvaBt(); disegnaGrande();     // la linea arriva sempre fino all'ultimo aggiornamento
     if (!window.PUB && vista !== 'backtest') disegnaVista();
   }
 
