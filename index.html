@@ -242,6 +242,24 @@ body.pub .bt-mesi table.bt-t tbody tr { cursor: default; }
 .bt-anno-det[open] > summary::before { transform: rotate(90deg); }
 .bt-anno-det > summary h3 { margin: 0; font-family: var(--serif); font-weight: 600; font-size: 21px; }
 .bt-anno-det > .bt-mesi { padding: 0 12px 12px; }
+body.pub .bt-mesi.con-scelta { display: block; }
+.bt-mesi.con-scelta { display: block; }
+.bt-mesi-scelta { display: grid; grid-template-columns: repeat(auto-fill, minmax(66px, 1fr)); gap: 8px; margin: 0 0 14px; }
+.bt-mesi-scelta button { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 8px 11px; border-radius: 12px; border: 1px solid var(--linea-forte); background: var(--pannello); color: var(--grigio); font: 600 13px/1.2 var(--sans); cursor: pointer; text-align: left; }
+.bt-mesi-scelta button b { font-family: var(--serif); font-size: 16px; color: var(--inchiostro); }
+.bt-mesi-scelta button b.pos { color: var(--verde); } .bt-mesi-scelta button b.neg { color: var(--rosso); }
+.bt-mesi-scelta button:hover:not(:disabled) { border-color: var(--oro); }
+.bt-mesi-scelta button[aria-pressed="true"] { background: var(--inchiostro); border-color: var(--inchiostro); color: #cfe3d7; }
+.bt-mesi-scelta button[aria-pressed="true"] b { color: #fff; }
+.bt-mesi-scelta button[aria-pressed="true"] b.pos { color: #8ff5bf; } .bt-mesi-scelta button[aria-pressed="true"] b.neg { color: #ffb0a8; }
+.bt-mesi-scelta button:disabled { opacity: .45; cursor: default; }
+@media (max-width: 600px) {
+  .bt-mesi-scelta button { padding: 7px 9px; } .bt-mesi-scelta button b { font-size: 15px; }
+  body.pub .bt-mese-vista .bt-t th:nth-child(1), body.pub .bt-mese-vista .bt-t td:nth-child(1),
+  body.pub .bt-mese-vista .bt-t th:nth-child(4), body.pub .bt-mese-vista .bt-t td:nth-child(4) { display: none; }
+  body.pub .bt-mese-vista .bt-t { font-size: 14px; }
+  body.pub .bt-mese-vista .bt-card { padding-left: 12px; padding-right: 12px; }
+}
 .bt-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap: 12px; }
 .bt-tile { background: var(--pannello); border: 1px solid var(--linea); border-radius: var(--raggio); padding: 14px 16px; display: flex; flex-direction: column; gap: 4px; }
 .bt-tile .k { font-size: 13.5px; color: var(--grigio); }
@@ -1060,6 +1078,7 @@ dash.calc('strategie', {
   const root = document.querySelector('#bt-blocco');
   const MESI = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
   const INIZIALI = ['G', 'F', 'M', 'A', 'M', 'G', 'L', 'A', 'S', 'O', 'N', 'D'];
+  const meseScelto = new Map();          // mese aperto per ogni anno (resta quando i dati si aggiornano)
   const ORDINE = ['Doppia rottura', 'Seconda correzione', 'Continuazione dopo SL', 'Prima candela', 'Ritest trend line', 'Giappone 225 prima candela'];
   const nf = (d) => new Intl.NumberFormat('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: 'always' });
   const num = (v, d = 0) => nf(d).format(v);
@@ -1425,7 +1444,8 @@ dash.calc('strategie', {
       : [['id', '#', 'l'], ['strategia', 'Strategia', 'l'], ['direzione', 'Direzione', 'l'], ['entrata', 'Entrata', 'l'], ['chiusura', 'Chiusura', 'l'],
       ['prezzo_entrata', 'Prezzo'], ['stop_loss', 'Stop loss'], ['take_profit', 'Take profit'], ['lotti', 'Lotti'], ['rischio_pct', 'Rischio'],
       ['esito', 'Esito'], ['R', 'R'], ['euro', '€'], ['saldo', 'Saldo dopo']];
-    for (let m = primo; m <= fine; m++) {
+    // un mese alla volta: in alto i 12 mesi col risultato, sotto i trade del mese scelto
+    const sezione = (m) => {
       const sec = document.createElement('section'); sec.className = 'bt-card'; sec.id = 'mese-' + anno + '-' + String(m).padStart(2, '0');
       const head = document.createElement('div'); head.className = 'bt-mese-head';
       const h = document.createElement('h3'); h.textContent = MESI[m - 1] + ' ' + anno;
@@ -1433,7 +1453,7 @@ dash.calc('strategie', {
       const r = mesiAnno.get(m);
       if (!r) {
         const p = document.createElement('p'); p.className = 'bt-vuoto'; p.textContent = 'Nessun trade in questo mese.';
-        sec.append(p); box.append(sec); continue;
+        sec.append(p); return sec;
       }
       const sum = document.createElement('div'); sum.className = 'bt-mese-sum';
       const w = 'chiave=' + r.chiave;
@@ -1462,9 +1482,35 @@ dash.calc('strategie', {
         segno(cella(tr, rS(x.R)), x.R); segno(cella(tr, eurS(x.euro)), x.euro); cella(tr, eur(x.saldo));
         tbody.append(tr);
       }
-      tab.append(thead, tbody); wrap.append(tab); sec.append(wrap); box.append(sec);
-    }
+      tab.append(thead, tbody); wrap.append(tab); sec.append(wrap); return sec;
     };
+    const mesiCon = d3.range(primo, fine + 1).filter((m) => mesiAnno.has(m));
+    const gT = rows.find((x) => Number(x.id) === Number(dash.params().grafico || 0));
+    let scelto = meseScelto.get(anno);
+    if (gT && Number(gT.anno) === anno) scelto = Number(gT.mese);
+    if (!scelto || !mesiAnno.has(scelto)) scelto = anno === ultimo ? mesiCon[mesiCon.length - 1] : mesiCon[0];
+    const barra = document.createElement('div'); barra.className = 'bt-mesi-scelta'; barra.setAttribute('role', 'group'); barra.setAttribute('aria-label', 'Mesi del ' + anno);
+    const vista = document.createElement('div'); vista.className = 'bt-mese-vista';
+    const mostra = (m) => {
+      meseScelto.set(anno, m);
+      barra.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.m) === m)));
+      vista.replaceChildren(sezione(m));
+    };
+    for (let m = primo; m <= fine; m++) {
+      const r = mesiAnno.get(m);
+      const b = document.createElement('button'); b.type = 'button'; b.dataset.m = m;
+      const n = document.createElement('span'); n.textContent = MESI[m - 1].slice(0, 3);
+      const v = document.createElement('b'); v.textContent = r ? (r.R > 0 ? '+' : r.R < 0 ? '−' : '') + num(Math.abs(r.R), 1) + 'R' : '—';
+      if (r) segno(v, r.R); else b.disabled = true;
+      b.title = r ? MESI[m - 1] + ' ' + anno + ': ' + r.trade + ' trade' : MESI[m - 1] + ' ' + anno + ': nessun trade';
+      b.append(n, v); b.addEventListener('click', () => mostra(m));
+      barra.append(b);
+    }
+    box.classList.add('con-scelta');
+    box.append(barra, vista);
+    if (scelto) mostra(scelto);
+    };
+    box.classList.add('con-scelta');
     if (!tutti) disegnaMesi(box, anno);
     else for (const r of anni) {
       // complessivo: un anno per riquadro, i mesi si disegnano quando lo apri
