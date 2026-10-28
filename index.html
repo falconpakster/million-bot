@@ -95,7 +95,7 @@ body.pub .solo-priv, body:not(.pub) .solo-pub, body:not(.con-j) .modo-j { displa
 .punto.fermo { background: var(--grigio-2); box-shadow: 0 0 0 4px rgba(85, 101, 91, .15); }
 .punto.rosso { background: #e0362c; box-shadow: 0 0 0 4px rgba(224, 54, 44, .18); animation: lampeggia 1.1s ease-in-out infinite; }
 @keyframes lampeggia { 0%, 100% { opacity: 1; } 50% { opacity: .2; } }
-@media (prefers-reduced-motion: reduce) { .punto.rosso { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .punto.rosso { animation-duration: 2s; } }   /* con "meno animazioni" lampeggia più piano */
 
 .passi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; counter-reset: passo; }
 .passo { background: var(--pannello); border: 1px solid var(--linea); border-radius: var(--raggio); padding: 22px; }
@@ -469,7 +469,7 @@ strong { font-weight: 600; color: var(--inchiostro); }
 .scorri:hover .scorri-testo { color: var(--oro); }
 @keyframes chevron { 0% { opacity: .2; transform: translateY(-3px); } 50% { opacity: 1; transform: translateY(1px); } 100% { opacity: .2; transform: translateY(4px); } }
 @keyframes anello { 0% { transform: scale(.85); opacity: .9; } 100% { transform: scale(1.25); opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .scorri-icona::after, .scorri-icona path { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .scorri-icona::after { animation: none; } }
 .hero-pub .btn-demo-mini { margin: 0 0 16px; }
 .btn-demo-mini { display: inline-flex; align-items: center; gap: 7px; align-self: center; padding: 5px 11px; border-radius: 999px; border: 1px solid rgba(217, 58, 48, .45); background: rgba(217, 58, 48, .07); color: #b42d24; font: 600 13px/1 var(--sans); cursor: pointer; }
 .btn-demo-mini:hover { background: rgba(217, 58, 48, .14); }
@@ -509,7 +509,7 @@ strong { font-weight: 600; color: var(--inchiostro); }
 .punto-vivo { animation: vivo 1s ease-in-out infinite alternate; }
 @keyframes onda { 0% { transform: scale(.5); opacity: .5; } 100% { transform: scale(2.6); opacity: 0; } }
 @keyframes vivo { from { opacity: 1; } to { opacity: .45; } }
-@media (prefers-reduced-motion: reduce) { .punto-onda, .punto-vivo { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .punto-onda.due { display: none; } .punto-onda { animation-duration: 3s; } }
 body.blocca { overflow: hidden; }
 body.blocca .compagno { display: none; }
 @media (max-width: 760px) { .btn-ingrandisci span { display: none; } .btn-ingrandisci { padding: 8px; top: 16px; right: 16px; } }
@@ -541,7 +541,8 @@ body.blocca .compagno { display: none; }
 .c-fumetto b { color: #0d6a3e; font-weight: 600; }
 .c-fumetto::after { content: ""; position: absolute; right: -7px; top: 18px; width: 12px; height: 12px; background: #fff; border-right: 1px solid var(--linea-forte); border-top: 1px solid var(--linea-forte); transform: rotate(45deg); }
 @media (max-width: 760px) { .robot-posto { width: 92px; } .finale-robot .robot-posto { width: 120px; } .c-fumetto { font-size: 13.5px; max-width: 190px; } }
-@media (prefers-reduced-motion: reduce) { .compagno { transition: opacity .3s; } .c-corpo, .r-anello, .r-anello2, .r-aura, .r-nucleo, .r-occhi, .r-fiamma, .r-scintille, .r-braccio-d, .r-luce, .compagno.chiama .c-corpo, .compagno.chiama .r-braccio-d, .compagno.chiama .c-avviso { animation: none; } }
+/* con "meno animazioni" nel computer: il robottino vola e saluta lo stesso, ma senza i movimenti continui */
+@media (prefers-reduced-motion: reduce) { .compagno { transition: transform .6s ease, width .4s ease, opacity .3s; } .c-corpo, .r-anello, .r-anello2, .r-aura, .r-nucleo, .r-scintille, .r-luce, .r-fiamma { animation: none; } .compagno.chiama .c-corpo { animation: none; } }
 @media (max-width: 760px) {
   .testa-sez { flex-direction: column; align-items: stretch; gap: 14px; }
   .fumetto { font-size: 14.5px; }
@@ -1685,8 +1686,8 @@ dash.calc('strategie', {
   }), { threshold: 1, rootMargin: '0px 0px -18% 0px' }) : null;
   function avviaConta(e) {
     const c = e._conta; if (!c || c.stato !== 'attesa') return;
-    if (lentoNum.matches) { c.stato = 'fatto'; e.textContent = c.fmt(c.v); return; }
     c.stato = 'corre';
+    if (lentoNum.matches) c.durata *= 0.6;            // "meno animazioni" nel computer: conteggio più breve, ma c'è
     const t0 = performance.now();
     const passo = (t) => {
       const k = Math.min(1, (t - t0) / c.durata), f = 1 - Math.pow(1 - k, 2);
@@ -2212,7 +2213,7 @@ dash.calc('strategie', {
     const s = scegli(L), p = posizione(s), cambia = s !== attuale;
     if (cambia) {
       chiudi(); c.classList.remove('chiama'); clearTimeout(tChiama);
-      if (attuale && !lento.matches) {
+      if (attuale) {
         c.classList.add('in-volo'); c.classList.toggle('su', p.y < ultimoY);
         clearTimeout(tVolo); tVolo = setTimeout(() => c.classList.remove('in-volo', 'su'), 1000);
       }
@@ -2221,7 +2222,7 @@ dash.calc('strategie', {
       corpo.tabIndex = msg ? 0 : -1;
       c.classList.toggle('parla', msg);
       // arrivato: saluta con la mano per dire "ho qualcosa da dirti"
-      if (msg && !letti.has(s)) tChiama = setTimeout(() => c.classList.add('chiama'), lento.matches ? 0 : 1000);
+      if (msg && !letti.has(s)) tChiama = setTimeout(() => c.classList.add('chiama'), lento.matches ? 600 : 1000);
     }
     c.style.width = p.w + 'px';
     c.style.transform = `translate3d(${Math.round(p.x)}px, ${Math.round(p.y)}px, 0)`;
