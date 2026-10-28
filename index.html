@@ -515,6 +515,34 @@ strong { font-weight: 600; color: var(--inchiostro); }
 .btn-demo:hover { background: #c22f26; }
 .btn-demo .punto.rosso { background: #fff; box-shadow: 0 0 0 4px rgba(255, 255, 255, .3); }
 .conto-demo { margin: 30px 0 8px; scroll-margin-top: 140px; }
+.tasse { margin: 64px 0 0; padding: 28px clamp(18px, 3vw, 32px); background: var(--pannello); border: 1px solid var(--linea); border-radius: 24px; box-shadow: var(--ombra); }
+.tasse h2 { font-family: var(--serif); font-weight: 600; font-size: clamp(26px, 3.2vw, 36px); margin: 0 0 10px; }
+.tasse .lead { color: var(--grigio); font-size: 16.5px; max-width: 72ch; margin: 0 0 20px; }
+.tasse .lead strong { color: var(--inchiostro); }
+.tasse-tot { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 0 18px; }
+.tasse-tot > div { border: 1px solid var(--linea); border-radius: 16px; padding: 14px 16px; background: #fff; display: flex; flex-direction: column; gap: 4px; }
+.tasse-tot span { font-size: 13px; color: var(--grigio); }
+.tasse-tot b { font-family: var(--serif); font-weight: 600; font-size: clamp(22px, 2.6vw, 30px); line-height: 1.1; color: var(--inchiostro); }
+.tasse-tot b.neg { color: var(--rosso); }
+.tasse-tot .netto { border-color: rgba(15, 122, 71, .45); background: linear-gradient(135deg, rgba(31, 176, 107, .14), #fff 70%); }
+.tasse-tot .netto b { color: #0b4f2f; }
+.tasse-tab { overflow-x: auto; border: 1px solid var(--linea); border-radius: 16px; background: #fff; }
+.tasse-tab table { width: 100%; border-collapse: collapse; font-size: 15px; font-variant-numeric: tabular-nums; }
+.tasse-tab th { text-align: right; font-size: 12.5px; font-weight: 600; color: var(--grigio); padding: 10px 14px; border-bottom: 1px solid var(--linea); }
+.tasse-tab td { text-align: right; padding: 10px 14px; border-bottom: 1px solid var(--linea); white-space: nowrap; }
+.tasse-tab th:first-child, .tasse-tab td:first-child { text-align: left; font-weight: 600; }
+.tasse-tab tr:last-child td { border-bottom: 0; }
+.tasse-tab td small { color: var(--grigio-2); font-weight: 400; }
+.tasse-tab td.pos { color: var(--verde); } .tasse-tab td.neg { color: var(--rosso); }
+.tasse-tab .eu-m { display: none; } @media (max-width: 760px) { .tasse-tab .eu-m { display: inline; } }
+.tasse-nota { margin: 12px 0 0; font-size: 13px; color: var(--grigio-2); max-width: 90ch; }
+@media (max-width: 760px) {
+  .tasse { margin-top: 44px; padding: 22px 14px; }
+  .tasse-tot { grid-template-columns: 1fr 1fr; } .tasse-tot .netto { grid-column: 1 / -1; }
+  .tasse-tab table { font-size: 13.5px; } .tasse-tab th, .tasse-tab td { padding: 9px 10px; }
+  .tasse-tab table { font-size: 12.5px; } .tasse-tab th, .tasse-tab td { padding: 9px 6px; } .tasse-tab th:first-child, .tasse-tab td:first-child { padding-left: 10px; } .tasse-tab th:last-child, .tasse-tab td:last-child { padding-right: 10px; }
+  .tasse .solo-largo, .tasse-tab .eu { display: none; }
+}
 .conto-demo h2 { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; }
 .conto-demo .demo-striscia { margin: 0 0 14px; }
 .demo-perche { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -872,6 +900,21 @@ details.come p { margin: 8px 0; }
         <details><summary>Quanto rischia per operazione?</summary><p>Da circa l'<strong>1,5% a circa il 5%</strong> del conto, sempre con lo stop loss. Il guadagno possibile è <strong>3 volte il rischio</strong>.</p></details>
         <details><summary>Posso usare Million Bot anch'io?</summary><p><strong>Non ancora.</strong> Lo annuncerò su TikTok.</p></details>
       </div>
+    </section>
+
+    <section class="tasse solo-pub" id="tasse" aria-label="Risultati con le tasse" data-robot-umore="sincero" data-robot="Anche togliendo le tasse, <b>1.000 € diventano più di 2 milioni</b>. Le metto da parte ogni 1° gennaio, così sono sempre pronte.">
+      <h2>E con le tasse?</h2>
+      <p class="lead">Per essere il più onesto possibile: con un conto reale, in Italia avrei pagato il <strong>26% sui guadagni di ogni anno</strong>. Per non correre rischi, il <strong>1° gennaio</strong> metto da parte le tasse dell'anno appena chiuso, fuori dal conto: da quel giorno il bot lavora con meno soldi.</p>
+      <div class="tasse-tot">
+        <div><span>Senza tasse</span><b>5.016.338 €</b></div>
+        <div><span>Tasse pagate in tutto</span><b class="neg">−809.764 €</b></div>
+        <div class="netto"><span>Con le tasse, netti</span><b>2.305.714 €</b></div>
+      </div>
+      <div class="tasse-tab"><table>
+        <thead><tr><th>Anno</th><th>Guadagno<span class="eu-m"> (€)</span></th><th>Tasse 26%<span class="solo-largo"> messe da parte il 1° gennaio</span></th><th>Saldo<span class="solo-largo"> dopo le tasse</span></th></tr></thead>
+        <tbody><tr><td>2020</td><td class="pos">+631<span class="eu"> €</span></td><td class="neg">−164<span class="eu"> €</span></td><td><b>1.467<span class="eu"> €</span></b></td></tr><tr><td>2021</td><td class="pos">+5.180<span class="eu"> €</span></td><td class="neg">−1.347<span class="eu"> €</span></td><td><b>5.300<span class="eu"> €</span></b></td></tr><tr><td>2022</td><td class="pos">+10.035<span class="eu"> €</span></td><td class="neg">−2.609<span class="eu"> €</span></td><td><b>12.726<span class="eu"> €</span></b></td></tr><tr><td>2023</td><td class="pos">+17.355<span class="eu"> €</span></td><td class="neg">−4.512<span class="eu"> €</span></td><td><b>25.569<span class="eu"> €</span></b></td></tr><tr><td>2024</td><td class="pos">+224.108<span class="eu"> €</span></td><td class="neg">−58.268<span class="eu"> €</span></td><td><b>191.409<span class="eu"> €</span></b></td></tr><tr><td>2025</td><td class="pos">+1.000.930<span class="eu"> €</span></td><td class="neg">−260.242<span class="eu"> €</span></td><td><b>932.097<span class="eu"> €</span></b></td></tr><tr><td>2026<small class="solo-largo"> (fino a oggi)</small></td><td class="pos">+1.856.239<span class="eu"> €</span></td><td class="neg">−482.622<span class="eu"> €</span></td><td><b>2.305.714<span class="eu"> €</span></b></td></tr></tbody>
+      </table></div>
+      <p class="tasse-nota">Partenza da 1.000 € a gennaio 2020, stessi trade e stesse regole del bot. Il guadagno è più basso dei risultati senza tasse perché, dopo ogni prelievo, il bot apre posizioni più piccole. Le tasse del 2026 si mettono da parte il 1° gennaio 2027 e sono già tolte dal saldo finale. Calcolo al 28 ottobre 2026: CFD con broker estero, imposta del 26% sui redditi diversi; non è una consulenza fiscale.</p>
     </section>
 
     <section class="finale">
