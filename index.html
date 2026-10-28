@@ -950,10 +950,12 @@ body.festa-ferragosto .compagno.in-volo .c-corpo { transform: rotate(-4deg) scal
 .r-ala-s { transform-box: view-box; transform-origin: 54px 112px; animation: ala .22s ease-in-out infinite alternate; }
 .r-ala-d { transform-box: view-box; transform-origin: 106px 112px; animation: ala .22s ease-in-out infinite alternate; }
 @keyframes ala { from { transform: scaleY(1); } to { transform: scaleY(.45); } }
-.c-scia { position: absolute; left: 50%; width: 30px; height: 150px; margin-left: -15px; top: 72%; z-index: -1; opacity: 0; pointer-events: none; transition: opacity .25s;
+.c-scia { position: absolute; left: 50%; width: 30px; height: 0; margin-left: -15px; top: 72%; z-index: -1; opacity: 0; pointer-events: none;
   -webkit-mask-image: linear-gradient(180deg, #000, transparent); mask-image: linear-gradient(180deg, #000, transparent); }
 .compagno.in-volo:not(.su) .c-scia { top: auto; bottom: 62%; -webkit-mask-image: linear-gradient(0deg, #000, transparent); mask-image: linear-gradient(0deg, #000, transparent); }
-.compagno.in-volo .c-scia { opacity: .95; }
+/* la scia cresce mentre vola e va solo dal punto di partenza a quello di arrivo (lunghezza = distanza percorsa) */
+.compagno.in-volo .c-scia { opacity: .95; animation-name: scia, scia-cresce; animation-duration: 1s, 1s; animation-timing-function: linear, cubic-bezier(.5, .05, .25, 1); animation-iteration-count: infinite, 1; animation-fill-mode: none, forwards; }
+@keyframes scia-cresce { from { height: 0; } to { height: var(--scia, 120px); } }
 body.festa-befana .c-scia, body.festa-natale .c-scia, body.festa-capodanno .c-scia { background-image: radial-gradient(circle, #ffe08a 0 2px, transparent 2.6px), radial-gradient(circle, #fff 0 1.5px, transparent 2px); background-size: 14px 16px, 11px 13px; background-position: 0 0, 7px 6px; animation: scia 1s linear infinite; }
 body.festa-carnevale .c-scia { background-image: radial-gradient(circle, #ff5d8f 0 2.5px, transparent 3px), radial-gradient(circle, #2fd0ff 0 2.5px, transparent 3px), radial-gradient(circle, #f6c95a 0 2.5px, transparent 3px); background-size: 16px 18px, 13px 15px, 19px 14px; background-position: 0 0, 8px 5px, 4px 10px; animation: scia 1s linear infinite; }
 body.festa-sanvalentino .c-scia { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='40'%3E%3Cpath transform='translate(8 10) scale(1.1)' d='M0 6 C-7 1 -6 -5 -2 -5 Q-0.5 -5 0 -3 Q0.5 -5 2 -5 C6 -5 7 1 0 6 Z' fill='%23ff3d6e'/%3E%3Cpath transform='translate(19 30) scale(.8)' d='M0 6 C-7 1 -6 -5 -2 -5 Q-0.5 -5 0 -3 Q0.5 -5 2 -5 C6 -5 7 1 0 6 Z' fill='%23ff8fb1'/%3E%3C/svg%3E") 0 0 / 26px 40px; animation: scia 1s linear infinite; }
@@ -2454,6 +2456,7 @@ dash.calc('strategie', {
   }
   // tema del sito: anteprima solo per te (si apre il sito con il tema) o per tutti (il bot lo mette sul sito, comando Telegram /tema)
   const TEMI = [
+    ['Standard', [['auto', 'Automatico', 'Feste nei loro giorni, meteo e ora veri di Ugento'], ['nessuno', 'Nessun tema', 'Sito semplice: niente feste, meteo, giorno o notte']]],
     ['Giorno e notte (il meteo resta quello vero di Ugento)', [['ora:giorno', 'Sempre giorno', 'Niente luna e stelle, anche di sera'], ['ora:notte', 'Sempre notte', 'Luna, stelle e cielo scuro, anche di giorno']]],
     ['Feste', [['festa:natale', 'Natale', 'Cappello di Babbo Natale, luci e neve'], ['festa:capodanno', 'Capodanno', 'Fuochi d\'artificio e coriandoli d\'oro'],
       ['festa:befana', 'Befana', 'Cappello da strega, caramelle, la Befana in volo'], ['festa:carnevale', 'Carnevale', 'Maschera, coriandoli e stelle filanti'],
@@ -2474,24 +2477,18 @@ dash.calc('strategie', {
     const c0 = card('Tema del sito', 'Di solito il sito sceglie da solo: feste nei loro giorni e meteo di Ugento. Qui puoi vedere ogni tema o metterlo sul sito per tutti.');
     const r = el('p', 'bt-take'); r.append('Adesso sul sito: ', el('span', 'tema-ora', ora ? nome(ora) + ' (scelto da te)' : 'automatico (feste e meteo veri)'));
     c0.append(r);
-    if (ora) {
-      const box0 = el('div', 'tema-c'); box0.style.border = '0'; box0.style.padding = '0'; box0.style.background = 'none';
-      const d0 = el('div', 'az'), auto = el('a', 'metti', 'Rimetti automatico');
-      auto.href = BOT_TG + 'tema-auto'; auto.target = '_blank'; auto.rel = 'noopener';
-      d0.append(auto); box0.append(d0); c0.append(box0);
-    }
-    c0.append(el('p', 'bt-sub', '«Guarda» apre il sito con quel tema solo per te. «Metti a tutti» apre Telegram: premi Avvia (o invia il messaggio) e il bot cambia il sito per tutti in pochi secondi. Puoi anche scrivere al bot /tema natale, /tema neve, /tema auto.'));
+    c0.append(el('p', 'bt-sub', '«Guarda» apre il sito con quel tema solo per te. «Metti a tutti» apre Telegram: premi Avvia (o invia il messaggio) e il bot cambia il sito per tutti in pochi secondi. Puoi anche scrivere al bot /tema natale, /tema neve, /tema nessuno, /tema auto.'));
     box.append(c0);
     for (const [gruppo, L] of TEMI) {
       const cg = card(gruppo); cg.style.marginTop = '16px';
       const g = el('div', 'temi');
       for (const [k, n, desc] of L) {
-        const t = el('div', 'tema-c' + (k === ora ? ' attivo' : ''));
+        const t = el('div', 'tema-c' + (k === (ora || 'auto') ? ' attivo' : ''));
         t.append(el('b', '', n), el('small', '', desc));
         const a = el('div', 'az');
-        const [tipo, val] = k.split(':');
-        const guarda = el('a', '', 'Guarda'); guarda.href = location.pathname + '?pub=1&' + tipo + '=' + val; guarda.target = '_blank'; guarda.rel = 'noopener';
-        const metti = el('a', 'metti', 'Metti a tutti'); metti.href = BOT_TG + 'tema-' + tipo + '-' + val; metti.target = '_blank'; metti.rel = 'noopener';
+        const [tipo, val] = k.includes(':') ? k.split(':') : ['tema', k];
+        const guarda = el('a', '', 'Guarda'); guarda.href = location.pathname + '?pub=1' + (k === 'auto' ? '' : '&' + tipo + '=' + val); guarda.target = '_blank'; guarda.rel = 'noopener';
+        const metti = el('a', 'metti', 'Metti a tutti'); metti.href = BOT_TG + 'tema-' + (k.includes(':') ? tipo + '-' + val : val); metti.target = '_blank'; metti.rel = 'noopener';
         a.append(guarda, metti); t.append(a); g.append(t);
       }
       cg.append(g); box.append(cg);
@@ -2628,6 +2625,10 @@ dash.calc('strategie', {
     const b = document.body;
     [...b.classList].filter((k) => /^(m|cielo|t|festa|lupi|scena)-|^(buio|nuvoloso)$/.test(k)).forEach((k) => b.classList.remove(k));
     const frase = $('#meteo-frase'), fraseF = $('#festa-frase');
+    // "Nessun tema": sito semplice, senza feste, meteo, giorno o notte
+    if ((new URLSearchParams(location.search).get('tema') || String(((window.PUB ? P : D) || {}).tema || '')) === 'nessuno') {
+      if (fraseF) fraseF.textContent = ''; if (frase) frase.textContent = ''; return;
+    }
     const festa = festaOggi(), costume = festa ? (COSTUMI[festa.nome] || []) : [];
     if (fraseF) fraseF.textContent = festa ? festa.frase : '';
     const veste = (acc) => {
@@ -2859,6 +2860,7 @@ dash.calc('strategie', {
     if (cambia) {
       chiudi(); c.classList.remove('chiama'); clearTimeout(tChiama);
       if (attuale) {
+        c.style.setProperty('--scia', Math.round(Math.max(0, Math.min(260, Math.abs(p.y - ultimoY) - 30))) + 'px');   // scia lunga quanto il tragitto
         c.classList.add('in-volo'); c.classList.toggle('su', p.y < ultimoY);
         clearTimeout(tVolo); tVolo = setTimeout(() => c.classList.remove('in-volo', 'su'), 1000);
       }
