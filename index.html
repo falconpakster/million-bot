@@ -590,7 +590,20 @@ body.blocca .compagno { display: none; }
 .hero-pub .sotto mark { white-space: nowrap; }
 .anni-striscia { margin-top: 4px; }
 button.anno-b { font: inherit; text-align: left; cursor: pointer; border: 1px solid rgba(23, 163, 98, .25); border-radius: 12px; padding: 10px 12px; background: var(--menta); transition: transform .15s, box-shadow .15s; }
-button.anno-b:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(16, 36, 26, .1); background: #fff; }
+button.anno-b:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(16, 36, 26, .14); }
+/* colore in base al rendimento dell'anno (--t da 0 a 1) e un riflesso di luce che passa di continuo */
+button.anno-b { position: relative; overflow: hidden; --t: .3; background: color-mix(in srgb, #0f7a47 calc(var(--t) * 88%), #eaf7ef); border-color: color-mix(in srgb, #0b5a35 calc(var(--t) * 100%), rgba(23, 163, 98, .3)); }
+button.anno-b.scuro span, button.anno-b.scuro small { color: rgba(255, 255, 255, .82); }
+button.anno-b.scuro b { color: #fff; }
+button.anno-b.top { background: linear-gradient(135deg, #fbe39a, #eab53c 55%, #d6981f); border-color: #b9821a; animation: brilla 2.6s ease-in-out infinite; }
+button.anno-b.top span, button.anno-b.top small { color: #5a3f08; }
+button.anno-b.top b { color: #2e2104; }
+button.anno-b.top::before { content: "★"; position: absolute; top: 6px; right: 9px; font-size: 13px; color: #6b4a07; }
+button.anno-b.negativo { background: #fdecea; border-color: rgba(200, 68, 58, .35); }
+button.anno-b::after { content: ""; position: absolute; top: -10%; bottom: -10%; left: -70%; width: 45%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .55), transparent); transform: skewX(-18deg); animation: lucida 5.5s ease-in-out infinite; animation-delay: calc(var(--i, 0) * .4s); pointer-events: none; }
+@keyframes lucida { 0%, 60% { left: -70%; } 88%, 100% { left: 135%; } }
+@keyframes brilla { 0%, 100% { box-shadow: 0 0 0 0 rgba(234, 181, 60, .0); } 50% { box-shadow: 0 0 0 5px rgba(234, 181, 60, .28); } }
+@media (prefers-reduced-motion: reduce) { button.anno-b::after { animation-duration: 9s; } button.anno-b.top { animation: none; } }
 .nota-cifre { margin: 8px 0 0; }
 .schede { position: sticky; top: 64px; z-index: 15; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 22px 0 16px; padding: 6px; background: rgba(255, 255, 255, .92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--linea); border-radius: 999px; box-shadow: var(--ombra); scroll-margin-top: 72px; }
 .schede::-webkit-scrollbar { display: none; }
@@ -1725,18 +1738,24 @@ dash.calc('strategie', {
   }
 
   // ================================================================== parte pubblica: hero e striscia demo
-  // numeri che salgono da zero quando la loro sezione arriva bene sullo schermo: più la cifra è grande, più tempo ci mette
+  // numeri che salgono da zero ogni volta che la loro sezione arriva bene sullo schermo (anche ripassandoci):
+  // quando escono del tutto dallo schermo tornano a zero, pronti a ripartire. Più la cifra è grande, più tempo ci mette.
   const lentoNum = matchMedia('(prefers-reduced-motion: reduce)');
   const ossNum = 'IntersectionObserver' in window ? new IntersectionObserver((L) => L.forEach((x) => {
-    if (!x.isIntersecting) return; ossNum.unobserve(x.target); avviaConta(x.target);
+    if (x.isIntersecting) avviaConta(x.target);
   }), { threshold: 1, rootMargin: '0px 0px -18% 0px' }) : null;
+  const ossFuori = 'IntersectionObserver' in window ? new IntersectionObserver((L) => L.forEach((x) => {
+    const c = x.target._conta;
+    if (!x.isIntersecting && c && c.stato !== 'attesa') { c.giro++; c.stato = 'attesa'; x.target.textContent = c.fmt(c.da); }
+  }), { threshold: 0 }) : null;
   function avviaConta(e) {
     const c = e._conta; if (!c || c.stato !== 'attesa') return;
     c.stato = 'corre';
-    if (lentoNum.matches) c.durata *= 0.6;            // "meno animazioni" nel computer: conteggio più breve, ma c'è
+    const giro = ++c.giro, durata = c.durata * (lentoNum.matches ? 0.6 : 1);   // "meno animazioni": più breve, ma c'è
     const t0 = performance.now();
     const passo = (t) => {
-      const k = Math.min(1, (t - t0) / c.durata), f = 1 - Math.pow(1 - k, 2);
+      if (c.giro !== giro) return;                       // è uscito dallo schermo: si ferma
+      const k = Math.min(1, (t - t0) / durata), f = 1 - Math.pow(1 - k, 2);
       e.textContent = c.fmt(c.da + (c.v - c.da) * f);
       if (k < 1) requestAnimationFrame(passo); else { c.stato = 'fatto'; e.textContent = c.fmt(c.v); }
     };
@@ -1750,8 +1769,8 @@ dash.calc('strategie', {
       if (c.stato === 'fatto') e.textContent = fmt(v);
       return;
     }
-    e._conta = { v, fmt, durata, da, stato: 'attesa' }; e.textContent = fmt(da);
-    if (ossNum) ossNum.observe(e); else { e._conta.stato = 'fatto'; e.textContent = fmt(v); }
+    e._conta = { v, fmt, durata, da, stato: 'attesa', giro: 0 }; e.textContent = fmt(da);
+    if (ossNum) { ossNum.observe(e); ossFuori.observe(e); } else { e._conta.stato = 'fatto'; e.textContent = fmt(v); }
   }
   function riempiHero() {
     if (!window.PUB) return;
@@ -1772,8 +1791,16 @@ dash.calc('strategie', {
       const box = $('#h-anni-lista'), kA = A.data.map((r) => r.anno).join(',');
       const vmax = Math.max(...A.data.map((r) => Math.abs(r.rendimento)), 1e-9);
       const durata = (r) => 1200 + 3800 * Math.abs(r.rendimento) / vmax;      // la più alta circa 5 secondi
+      const vbest = Math.max(...A.data.map((r) => r.rendimento));
+      const colora = (d, r) => {           // più l'anno è andato bene, più il colore è pieno; l'anno migliore in oro
+        const t = Math.max(0, Math.min(1, r.rendimento / vmax));
+        d.style.setProperty('--t', (Math.pow(t, 0.8)).toFixed(3));
+        d.classList.toggle('scuro', t > 0.5 && r.rendimento < vbest);
+        d.classList.toggle('top', r.rendimento === vbest && r.rendimento > 0);
+        d.classList.toggle('negativo', r.rendimento < 0);
+      };
       if (box.dataset.k === kA) {
-        A.data.forEach((r) => { const b = box.querySelector(`[data-anno="${r.anno}"] b`); if (b) { b.className = r.rendimento < 0 ? 'neg' : ''; conta(b, r.rendimento * 100, (v) => pctS(v, 0), durata(r)); } });
+        A.data.forEach((r) => { const d = box.querySelector(`[data-anno="${r.anno}"]`), b = d && d.querySelector('b'); if (b) { colora(d, r); b.className = r.rendimento < 0 ? 'neg' : ''; conta(b, r.rendimento * 100, (v) => pctS(v, 0), durata(r)); } });
       } else { box.dataset.k = kA; box.replaceChildren(); }
       if (box.childElementCount === 0) A.data.forEach((r, k) => {
         const d = el('button', 'anno-b'); d.type = 'button'; d.title = 'Vedi il ' + r.anno;
@@ -1781,7 +1808,8 @@ dash.calc('strategie', {
         const d0 = c.pts[0].d, nota = k === 0 && d0.getMonth() > 0 ? ' (da ' + d0.toLocaleDateString('it-IT', { month: 'long' }) + ')' : k === A.data.length - 1 ? ' (fino a oggi)' : '';
         const s = el('span', '', String(r.anno)); if (nota) s.append(el('small', '', nota));
         const cifra = el('b', r.rendimento < 0 ? 'neg' : '', pctS(r.rendimento * 100, 0));
-        d.dataset.anno = r.anno;
+        d.dataset.anno = r.anno; d.style.setProperty('--i', k); colora(d, r);
+        if (r.rendimento === vbest && r.rendimento > 0) d.title = 'Anno record: vedi il ' + r.anno;
         d.append(s, cifra);
         box.append(d);
         conta(cifra, r.rendimento * 100, (v) => pctS(v, 0), durata(r));
@@ -2268,7 +2296,7 @@ dash.calc('strategie', {
       corpo.tabIndex = msg ? 0 : -1;
       c.classList.toggle('parla', msg);
       // arrivato: saluta con la mano per dire "ho qualcosa da dirti"
-      if (msg && !letti.has(s)) tChiama = setTimeout(() => c.classList.add('chiama'), lento.matches ? 600 : 1000);
+      if (msg) tChiama = setTimeout(() => c.classList.add('chiama'), lento.matches ? 600 : 1000);
     }
     c.style.width = p.w + 'px';
     c.style.transform = `translate3d(${Math.round(p.x)}px, ${Math.round(p.y)}px, 0)`;
