@@ -1678,29 +1678,33 @@ dash.calc('strategie', {
   }
 
   // ================================================================== parte pubblica: hero e striscia demo
-  // numeri che salgono da zero quando arrivano sullo schermo: più la cifra è grande, più tempo ci mette
+  // numeri che salgono da zero quando la loro sezione arriva bene sullo schermo: più la cifra è grande, più tempo ci mette
   const lentoNum = matchMedia('(prefers-reduced-motion: reduce)');
   const ossNum = 'IntersectionObserver' in window ? new IntersectionObserver((L) => L.forEach((x) => {
     if (!x.isIntersecting) return; ossNum.unobserve(x.target); avviaConta(x.target);
-  }), { threshold: 0.5 }) : null;
+  }), { threshold: 1, rootMargin: '0px 0px -18% 0px' }) : null;
   function avviaConta(e) {
-    const c = e._conta; if (!c) return;
-    if (lentoNum.matches) { e.textContent = c.fmt(c.v); return; }
+    const c = e._conta; if (!c || c.stato !== 'attesa') return;
+    if (lentoNum.matches) { c.stato = 'fatto'; e.textContent = c.fmt(c.v); return; }
+    c.stato = 'corre';
     const t0 = performance.now();
     const passo = (t) => {
-      const k = Math.min(1, (t - t0) / c.durata), f = 1 - Math.pow(1 - k, 3);
+      const k = Math.min(1, (t - t0) / c.durata), f = 1 - Math.pow(1 - k, 2);
       e.textContent = c.fmt(c.da + (c.v - c.da) * f);
-      if (k < 1) requestAnimationFrame(passo); else e.textContent = c.fmt(c.v);
+      if (k < 1) requestAnimationFrame(passo); else { c.stato = 'fatto'; e.textContent = c.fmt(c.v); }
     };
     requestAnimationFrame(passo);
   }
   function conta(e, v, fmt, durata, da = 0) {
     if (!e) return;
-    if (e.dataset.contato === String(v)) return;          // già mostrato con questo valore
-    const prima = e.dataset.contato; e.dataset.contato = String(v);
-    if (prima !== undefined) { e.textContent = fmt(v); return; }   // aggiornamento dopo: niente animazione
-    e._conta = { v, fmt, durata, da }; e.textContent = fmt(da);
-    if (ossNum) ossNum.observe(e); else e.textContent = fmt(v);
+    const c = e._conta;
+    if (c) {                                   // valore aggiornato (es. nuovo trade): l'animazione non riparte
+      c.v = v; c.fmt = fmt; c.durata = durata;
+      if (c.stato === 'fatto') e.textContent = fmt(v);
+      return;
+    }
+    e._conta = { v, fmt, durata, da, stato: 'attesa' }; e.textContent = fmt(da);
+    if (ossNum) ossNum.observe(e); else { e._conta.stato = 'fatto'; e.textContent = fmt(v); }
   }
   function riempiHero() {
     if (!window.PUB) return;
@@ -1710,26 +1714,30 @@ dash.calc('strategie', {
     const giorni = (c.pts[c.pts.length - 1].d - c.pts[0].d) / 864e5;
     const molt = t.saldo_finale / 1000;
     const media = (Math.pow(molt, 365.25 / giorni) - 1) * 100;
-    conta($('#h-titolo-num'), media, (v) => '+' + num(v, 0) + '%', 1400);
-    conta($('#h-c-bot'), molt, (v) => '×' + num(v, 0), 1800, 1);
-    conta($('#h-saldo'), t.saldo_finale, (v) => euroIntero(v), 2000, 1000);
+    conta($('#h-titolo-num'), media, (v) => '+' + num(v, 0) + '%', 3000);
+    conta($('#h-c-bot'), molt, (v) => '×' + num(v, 0), 3500, 1);
+    conta($('#h-saldo'), t.saldo_finale, (v) => euroIntero(v), 4000, 1000);
     $('#h-calo').textContent = '−' + num(t.calo_max * 100, 0) + '%';
     if (A.status === 'ok') {
       const pos = A.data.filter((r) => r.rendimento > 0).length;
       $('#h-anni').textContent = pos + ' su ' + A.data.length;
-      const box = $('#h-anni-lista'), kA = JSON.stringify(A.data.map((r) => r.rendimento));
-      const primaVolta = !box.dataset.k, uguale = box.dataset.k === kA;
-      if (!uguale) { box.dataset.k = kA; box.replaceChildren(); }
+      // le caselle si creano una volta (per gli stessi anni) e poi si aggiornano: così il conteggio non si perde
+      const box = $('#h-anni-lista'), kA = A.data.map((r) => r.anno).join(',');
       const vmax = Math.max(...A.data.map((r) => Math.abs(r.rendimento)), 1e-9);
-      if (!uguale) A.data.forEach((r, k) => {
+      const durata = (r) => 1200 + 3800 * Math.abs(r.rendimento) / vmax;      // la più alta circa 5 secondi
+      if (box.dataset.k === kA) {
+        A.data.forEach((r) => { const b = box.querySelector(`[data-anno="${r.anno}"] b`); if (b) { b.className = r.rendimento < 0 ? 'neg' : ''; conta(b, r.rendimento * 100, (v) => pctS(v, 0), durata(r)); } });
+      } else { box.dataset.k = kA; box.replaceChildren(); }
+      if (box.childElementCount === 0) A.data.forEach((r, k) => {
         const d = el('button', 'anno-b'); d.type = 'button'; d.title = 'Vedi il ' + r.anno;
         d.addEventListener('click', () => { vai('risultati'); dash.setParams({ anno: r.anno }); });
         const d0 = c.pts[0].d, nota = k === 0 && d0.getMonth() > 0 ? ' (da ' + d0.toLocaleDateString('it-IT', { month: 'long' }) + ')' : k === A.data.length - 1 ? ' (fino a oggi)' : '';
         const s = el('span', '', String(r.anno)); if (nota) s.append(el('small', '', nota));
         const cifra = el('b', r.rendimento < 0 ? 'neg' : '', pctS(r.rendimento * 100, 0));
+        d.dataset.anno = r.anno;
         d.append(s, cifra);
         box.append(d);
-        if (primaVolta) conta(cifra, r.rendimento * 100, (v) => pctS(v, 0), 500 + 1700 * Math.abs(r.rendimento) / vmax);
+        conta(cifra, r.rendimento * 100, (v) => pctS(v, 0), durata(r));
       });
     }
     const box = $('#h-curva');
