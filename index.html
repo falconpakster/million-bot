@@ -593,20 +593,19 @@ button.anno-b { font: inherit; text-align: left; cursor: pointer; border: 1px so
 button.anno-b:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(16, 36, 26, .14); }
 /* colore in base al rendimento dell'anno (--t da 0 a 1) e un riflesso di luce che passa di continuo */
 button.anno-b { position: relative; overflow: hidden; --t: .3; background: color-mix(in srgb, #0f7a47 calc(var(--t) * 88%), #eaf7ef); border-color: color-mix(in srgb, #0b5a35 calc(var(--t) * 100%), rgba(23, 163, 98, .3)); }
-/* tutte le percentuali uguali: nere con il contorno bianco */
-button.anno-b b, button.anno-b b.neg { color: #0d1a13; text-shadow: 1.5px 0 #fff, -1.5px 0 #fff, 0 1.5px #fff, 0 -1.5px #fff, 1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff; }
-button.anno-b.scuro span, button.anno-b.scuro small { color: rgba(255, 255, 255, .85); }
-button.anno-b.top { background: linear-gradient(135deg, #fbe39a, #eab53c 55%, #d6981f); border-color: #b9821a; }
-button.anno-b.top span, button.anno-b.top small { color: #5a3f08; }
-button.anno-b.top::before { content: "★"; position: absolute; top: 6px; right: 9px; font-size: 13px; color: #6b4a07; }
+/* stesso colore per tutte le percentuali (verde bosco), sfondi dal menta chiaro al verde tenue, l'anno migliore in oro */
+button.anno-b { background: color-mix(in srgb, #1fb06b calc(var(--t) * 42%), #f1faf4); border-color: color-mix(in srgb, #0f7a47 calc(var(--t) * 70%), rgba(23, 163, 98, .25)); }
+button.anno-b b, button.anno-b b.neg { color: #0b4f2f; }
+button.anno-b span, button.anno-b small { color: #2f5a43; }
+button.anno-b.top { background: linear-gradient(135deg, #fdf0c4, #f3cf72 60%, #e9b94a); border-color: #d1a13a; }
+button.anno-b.top span, button.anno-b.top small { color: #6a4c0c; }
+button.anno-b.top::before { content: "★"; position: absolute; top: 6px; right: 9px; font-size: 13px; color: #8a6210; }
 button.anno-b.negativo { background: #fdecea; border-color: rgba(200, 68, 58, .35); }
-/* animazione continua: gli anni rimbalzano uno alla volta, da sinistra a destra */
-button.anno-b { animation: rimbalza calc(var(--n, 7) * .6s) ease-in-out infinite; animation-delay: calc(var(--i, 0) * .6s); }
-button.anno-b.top { animation: rimbalza calc(var(--n, 7) * .6s) ease-in-out infinite calc(var(--i, 0) * .6s), brilla 2.6s ease-in-out infinite; }
-@keyframes rimbalza { 0% { transform: translateY(0); } 4% { transform: translateY(-11px); } 8% { transform: translateY(0); } 10.5% { transform: translateY(-4px); } 13%, 100% { transform: translateY(0); } }
-@keyframes brilla { 0%, 100% { box-shadow: 0 0 0 0 rgba(234, 181, 60, 0); } 50% { box-shadow: 0 0 0 5px rgba(234, 181, 60, .28); } }
-button.anno-b:hover { animation-play-state: paused; }
-@media (prefers-reduced-motion: reduce) { @keyframes rimbalza { 0% { transform: translateY(0); } 5% { transform: translateY(-6px); } 10%, 100% { transform: translateY(0); } } }
+/* animazione continua leggera: una luce verde morbida passa da un anno all'altro, senza spostarli */
+button.anno-b { animation: luce-anno calc(var(--n, 7) * .9s) ease-in-out infinite; animation-delay: calc(var(--i, 0) * .9s); }
+button.anno-b.top { animation-name: luce-oro; }
+@keyframes luce-anno { 0%, 100% { box-shadow: 0 0 0 0 rgba(31, 176, 107, 0); } 7% { box-shadow: 0 0 0 4px rgba(31, 176, 107, .18), 0 8px 22px rgba(31, 176, 107, .28); } 16% { box-shadow: 0 0 0 0 rgba(31, 176, 107, 0); } }
+@keyframes luce-oro { 0%, 100% { box-shadow: 0 0 0 0 rgba(233, 185, 74, 0); } 7% { box-shadow: 0 0 0 4px rgba(233, 185, 74, .25), 0 8px 22px rgba(233, 185, 74, .4); } 16% { box-shadow: 0 0 0 0 rgba(233, 185, 74, 0); } }
 .nota-cifre { margin: 8px 0 0; }
 .schede { position: sticky; top: 64px; z-index: 15; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 22px 0 16px; padding: 6px; background: rgba(255, 255, 255, .92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--linea); border-radius: 999px; box-shadow: var(--ombra); scroll-margin-top: 72px; }
 .schede::-webkit-scrollbar { display: none; }
@@ -1799,7 +1798,6 @@ dash.calc('strategie', {
       const colora = (d, r) => {           // più l'anno è andato bene, più il colore è pieno; l'anno migliore in oro
         const t = Math.max(0, Math.min(1, r.rendimento / vmax));
         d.style.setProperty('--t', (Math.pow(t, 0.8)).toFixed(3));
-        d.classList.toggle('scuro', t > 0.5 && r.rendimento < vbest);
         d.classList.toggle('top', r.rendimento === vbest && r.rendimento > 0);
         d.classList.toggle('negativo', r.rendimento < 0);
       };
