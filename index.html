@@ -448,15 +448,24 @@ strong { font-weight: 600; color: var(--inchiostro); }
 .btn-ingrandisci { position: absolute; top: 18px; right: 18px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--linea-forte); background: #fff; color: var(--inchiostro); font: 600 13px/1 var(--sans); cursor: pointer; box-shadow: 0 4px 12px rgba(18, 36, 26, .08); }
 .btn-ingrandisci:hover { background: var(--pannello-2); }
 .btn-ingrandisci svg { width: 16px; height: 16px; }
-.schermo-grafico { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; background: radial-gradient(120% 90% at 80% 0%, rgba(15, 122, 71, .12), transparent 60%), var(--carta); padding: 16px clamp(14px, 3vw, 36px) calc(14px + env(safe-area-inset-bottom)); }
+.schermo-grafico { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 14px; background: rgba(10, 34, 25, .55); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
 .schermo-grafico[hidden] { display: none; }
+.sg-finestra { display: flex; flex-direction: column; width: min(1200px, 100%); height: min(760px, 84vh); background: radial-gradient(120% 90% at 80% 0%, rgba(15, 122, 71, .12), transparent 60%), var(--pannello); border-radius: 24px; box-shadow: 0 30px 80px rgba(0, 0, 0, .3); padding: 18px clamp(14px, 2.5vw, 30px) 14px; }
 .sg-testa { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .sg-testa .etichetta { display: inline-flex; font-size: 12.5px; color: var(--oro-chiaro); border: 1px solid rgba(15, 122, 71, .35); border-radius: 999px; padding: 3px 10px; }
 .sg-testa b { display: block; color: var(--oro); font-family: var(--serif); font-weight: 600; font-size: clamp(28px, 4.5vw, 46px); line-height: 1.1; margin-top: 6px; }
-.sg-chiudi { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--linea-forte); background: #fff; font-size: 18px; color: var(--inchiostro); cursor: pointer; }
+.sg-chiudi { flex: none; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--linea-forte); background: #fff; font-size: 18px; color: var(--inchiostro); cursor: pointer; }
 .sg-chiudi:hover { background: var(--pannello-2); }
-#sg-curva { flex: 1; min-height: 0; margin-top: 10px; }
-.sg-nota { margin: 6px 0 0; font-size: 13px; color: var(--grigio); }
+#sg-curva { flex: 1; min-height: 0; margin-top: 10px; overflow: hidden; }
+.sg-nota { margin: 6px 0 0; font-size: 12.5px; color: var(--grigio); }
+@media (max-width: 760px) { .sg-finestra { height: min(560px, 74vh); border-radius: 20px; padding: 14px 12px 10px; } }
+/* il punto finale del grafico lampeggia: la crescita è in corso */
+.punto-onda { transform-box: fill-box; transform-origin: center; animation: onda 2s ease-out infinite; }
+.punto-onda.due { animation-delay: 1s; }
+.punto-vivo { animation: vivo 1s ease-in-out infinite alternate; }
+@keyframes onda { 0% { transform: scale(.5); opacity: .5; } 100% { transform: scale(2.6); opacity: 0; } }
+@keyframes vivo { from { opacity: 1; } to { opacity: .45; } }
+@media (prefers-reduced-motion: reduce) { .punto-onda, .punto-vivo { animation: none; } }
 body.blocca { overflow: hidden; }
 body.blocca .compagno { display: none; }
 @media (max-width: 760px) { .btn-ingrandisci span { display: none; } .btn-ingrandisci { padding: 8px; top: 16px; right: 16px; } }
@@ -565,13 +574,15 @@ details.come p { margin: 8px 0; }
 
 <div class="compagno" id="compagno"><div class="c-corpo" role="button" tabindex="-1" aria-label="Million Bot ha qualcosa da dirti"><svg class="robot" viewBox="0 0 160 184" aria-hidden="true" focusable="false"><defs><radialGradient id="rb-aura" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#b8f7d4" stop-opacity=".6"/><stop offset=".6" stop-color="#3fd98c" stop-opacity=".14"/><stop offset="1" stop-color="#3fd98c" stop-opacity="0"/></radialGradient><linearGradient id="rb-verde" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fe39a"/><stop offset=".55" stop-color="#1fb06b"/><stop offset="1" stop-color="#108552"/></linearGradient><linearGradient id="rb-viso" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14402f"/><stop offset="1" stop-color="#0a2219"/></linearGradient><linearGradient id="rb-oro" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff2c4"/><stop offset=".5" stop-color="#f2c14e"/><stop offset="1" stop-color="#c9921f"/></linearGradient><linearGradient id="rb-fuoco" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff7dc"/><stop offset=".4" stop-color="#f6c95a"/><stop offset="1" stop-color="#f6c95a" stop-opacity="0"/></linearGradient><filter id="rb-luce" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle class="r-aura" cx="80" cy="92" r="74" fill="url(#rb-aura)"/><circle class="r-anello" cx="80" cy="92" r="66" fill="none" stroke="#e3b23c" stroke-width="3" stroke-linecap="round" stroke-dasharray="0.1 23" opacity=".85"/><g class="r-corpo"><g class="r-fiamma"><path d="M70 154 Q80 192 90 154 Z" fill="url(#rb-fuoco)"/><path d="M75 154 Q80 174 85 154 Z" fill="#fffaf0"/></g><path d="M68 146 H92 L88 157 H72 Z" fill="url(#rb-oro)"/><g class="r-braccio-s"><path d="M53 112 Q42 120 40 131" fill="none" stroke="#108552" stroke-width="9" stroke-linecap="round"/><circle cx="40" cy="133" r="6.5" fill="url(#rb-oro)"/></g><g class="r-braccio-d"><path d="M107 110 Q121 104 126 89" fill="none" stroke="#108552" stroke-width="9" stroke-linecap="round"/><circle cx="127" cy="86" r="6.5" fill="url(#rb-oro)"/></g><rect x="50" y="94" width="60" height="56" rx="27" fill="url(#rb-verde)"/><ellipse cx="80" cy="124" rx="21" ry="19" fill="#ffffff" opacity=".16"/><circle class="r-nucleo" cx="80" cy="121" r="15" fill="#f6c95a" opacity=".4" filter="url(#rb-luce)"/><circle cx="80" cy="121" r="11.5" fill="url(#rb-oro)" stroke="#fff2c4" stroke-width="1"/><text x="80" y="125" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="10.5" fill="#0f2d22">1M</text><rect x="72" y="88" width="16" height="9" rx="3" fill="#108552"/><line x1="80" y1="27" x2="80" y2="15" stroke="#108552" stroke-width="3" stroke-linecap="round"/><path class="r-luce" d="M80 2 L82.6 9.4 L90 12 L82.6 14.6 L80 22 L77.4 14.6 L70 12 L77.4 9.4 Z" fill="url(#rb-oro)" filter="url(#rb-luce)"/><circle cx="34" cy="60" r="9.5" fill="url(#rb-oro)"/><circle cx="34" cy="60" r="4.5" fill="#108552"/><circle cx="126" cy="60" r="9.5" fill="url(#rb-oro)"/><circle cx="126" cy="60" r="4.5" fill="#108552"/><rect x="36" y="25" width="88" height="68" rx="30" fill="url(#rb-verde)"/><path d="M52 30 Q80 22 108 30" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".45"/><rect x="45" y="37" width="70" height="47" rx="21" fill="url(#rb-viso)"/><g class="r-occhi"><ellipse cx="66" cy="58" rx="7.5" ry="9" fill="#8ff5bf" filter="url(#rb-luce)"/><ellipse cx="94" cy="58" rx="7.5" ry="9" fill="#8ff5bf" filter="url(#rb-luce)"/><circle cx="63.6" cy="54.6" r="2.6" fill="#fff"/><circle cx="91.6" cy="54.6" r="2.6" fill="#fff"/><circle cx="68.5" cy="61.5" r="1.2" fill="#fff" opacity=".8"/><circle cx="96.5" cy="61.5" r="1.2" fill="#fff" opacity=".8"/></g><path d="M71 71 Q80 79 89 71" fill="none" stroke="#8ff5bf" stroke-width="3" stroke-linecap="round"/><circle cx="55" cy="70" r="4.5" fill="#ff8fa8" opacity=".7"/><circle cx="105" cy="70" r="4.5" fill="#ff8fa8" opacity=".7"/></g><g class="r-scintille" fill="#f2c14e"><path d="M24 26 L25.6 30.4 L30 32 L25.6 33.6 L24 38 L22.4 33.6 L18 32 L22.4 30.4 Z"/><path d="M140 112 L141.3 115.7 L145 117 L141.3 118.3 L140 122 L138.7 118.3 L135 117 L138.7 115.7 Z"/><path d="M142 30 L143 32.8 L146 34 L143 35.2 L142 38 L141 35.2 L138 34 L141 32.8 Z"/></g></svg><span class="c-avviso" aria-hidden="true">!</span></div><p class="c-fumetto" role="status"></p></div>
 
-<div class="schermo-grafico" id="schermo-grafico" role="dialog" aria-modal="true" aria-label="Grafico a tutto schermo" hidden>
+<div class="schermo-grafico" id="schermo-grafico" hidden>
+ <div class="sg-finestra" role="dialog" aria-modal="true" aria-label="Grafico ingrandito">
   <div class="sg-testa">
-    <div><span class="etichetta">1.000 €, dal 2020 ad oggi, adesso sono…</span><b id="sg-saldo">—</b></div>
+    <div><span class="etichetta">1.000 €, dal 2020, adesso sono…</span><b id="sg-saldo">—</b></div>
     <button type="button" class="sg-chiudi" id="sg-chiudi" aria-label="Chiudi il grafico">✕</button>
   </div>
   <div class="curva" id="sg-curva"></div>
-  <p class="sg-nota">Passa il dito o il mouse sulla linea per vedere il saldo di ogni giorno. Risultati simulati da aprile 2020, non garantiti per il futuro.</p>
+  <p class="sg-nota">Tocca o trascina il dito sulla linea (o passa il mouse) per vedere il saldo di ogni giorno. Risultati simulati da aprile 2020, non garantiti per il futuro.</p>
+ </div>
 </div>
 
 <!-- ======================= PAGINA PUBBLICA ======================= -->
@@ -606,8 +617,8 @@ details.come p { margin: 8px 0; }
       <div class="lato-hero">
         <div class="guida grande"><span class="robot-posto" data-robot="posto"></span><p class="fumetto">Ciao! Sono <b>Million Bot</b>. Scorri la pagina: quando mi vedi salutare, <b>cliccami</b> e ti racconto qualcosa.</p></div>
         <div class="vetrina" data-robot-lato="fuori" data-robot="Questo grafico mostra cosa sarebbero diventati <b>1.000 €</b> affidati a me ad aprile 2020, <b>anno dopo anno</b>, fino a oggi.">
-          <span class="etichetta">1.000 €, dal 2020 ad oggi, adesso sono…</span>
-          <button type="button" class="btn-ingrandisci" id="b-ingrandisci" aria-label="Ingrandisci il grafico a tutto schermo"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>Ingrandisci</span></button>
+          <span class="etichetta">1.000 €, dal 2020, adesso sono…</span>
+          <button type="button" class="btn-ingrandisci" id="b-ingrandisci" aria-label="Ingrandisci il grafico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>Ingrandisci</span></button>
           <p class="grande" id="h-saldo">—</p>
           <div class="curva" id="h-curva"></div>
         </div>
@@ -1406,6 +1417,7 @@ dash.calc('strategie', {
     box.querySelectorAll('svg,.bt-tip,.bt-vuoto').forEach((x) => x.remove());
     if (pts.length < 2) { box.append(el('p', 'bt-vuoto', o.vuoto || 'La curva comparirà dal secondo giorno di attività.')); box.style.minHeight = '0'; return; }
     box.style.minHeight = '';
+    box.style.touchAction = o.blocca ? 'none' : 'pan-y';     // nella finestra ingrandita il dito scorre sulla linea, non sulla pagina
     const durata = pts[pts.length - 1].d - pts[0].d;
     const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H).attr('role', 'img')
       .attr('aria-label', o.etichetta || 'Andamento del saldo');
@@ -1437,8 +1449,9 @@ dash.calc('strategie', {
     svg.append('path').datum(pts).attr('fill', 'none').attr('stroke', 'var(--oro)').attr('stroke-width', 2.2).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round')
       .attr('d', d3.line((p) => x(p.d), (p) => y(p.v)));
     const ult = pts[pts.length - 1];
-    svg.append('circle').attr('cx', x(ult.d)).attr('cy', y(ult.v)).attr('r', 8).attr('fill', 'var(--oro)').attr('opacity', .18);
-    svg.append('circle').attr('cx', x(ult.d)).attr('cy', y(ult.v)).attr('r', 3.5).attr('fill', 'var(--oro-chiaro)');
+    svg.append('circle').attr('class', 'punto-onda').attr('cx', x(ult.d)).attr('cy', y(ult.v)).attr('r', 8).attr('fill', 'var(--oro)').attr('opacity', .18);
+    svg.append('circle').attr('class', 'punto-onda due').attr('cx', x(ult.d)).attr('cy', y(ult.v)).attr('r', 8).attr('fill', 'var(--oro)').attr('opacity', .18);
+    svg.append('circle').attr('class', 'punto-vivo').attr('cx', x(ult.d)).attr('cy', y(ult.v)).attr('r', 4).attr('fill', 'var(--oro-chiaro)');
     const dot = svg.append('circle').attr('r', 4).attr('fill', 'var(--oro-chiaro)').attr('visibility', 'hidden');
     const tip = el('div', 'bt-tip'); tip.hidden = true; box.append(tip);
     const bis = d3.bisector((p) => p.d).center;
@@ -1449,8 +1462,9 @@ dash.calc('strategie', {
       tip.hidden = false; tip.style.left = Math.max(0, Math.min(W - tip.offsetWidth, x(p.d) + 12)) + 'px'; tip.style.top = Math.max(0, y(p.v) - 48) + 'px';
     };
     svg.append('rect').attr('x', left).attr('y', alto).attr('width', W - left - 10).attr('height', basso - alto).attr('fill', 'transparent')
-      .on('mousemove', muovi).on('touchstart', muovi, { passive: true }).on('touchmove', muovi, { passive: true })
-      .on('mouseleave', () => { dot.attr('visibility', 'hidden'); tip.hidden = true; });
+      .style('cursor', 'crosshair')
+      .on('pointerdown', muovi).on('pointermove', muovi)
+      .on('pointerleave', (e) => { if (e.pointerType === 'mouse') { dot.attr('visibility', 'hidden'); tip.hidden = true; } });
   }
 
   // ================================================================== backtest: solo Bitcoin o Bitcoin + Giappone 225
@@ -1558,42 +1572,33 @@ dash.calc('strategie', {
     const box = $('#h-curva');
     if (box.offsetParent) curva(box, c.pts, { altezza: 230, chiave: c.k, piccolo: true, etichetta: 'Saldo simulato da 1.000 € nel 2020 a oggi' });
   }
-  // grafico della pagina iniziale a tutto schermo
-  const sg = $('#schermo-grafico');
-  let sgFull = false, sgRz = null;
+  // grafico della pagina iniziale ingrandito in una finestra
+  const sg = $('#schermo-grafico'), sgFin = sg.querySelector('.sg-finestra');
+  let sgRz = null;
   function disegnaGrande() {
     const c = puntiBt(); if (!c || sg.hidden) return;
     const box = $('#sg-curva'); delete box.dataset.k;
     $('#sg-saldo').textContent = $('#h-saldo').textContent;
-    const H = Math.max(220, box.clientHeight || (innerHeight - 160));
-    curva(box, c.pts, { altezza: H, chiave: c.k + 'g', etichetta: 'Saldo simulato da 1.000 € nel 2020 a oggi, a tutto schermo' });
+    box.querySelectorAll('svg').forEach((x) => x.remove());
+    const H = Math.max(220, box.clientHeight);
+    curva(box, c.pts, { altezza: H, chiave: c.k + 'g', blocca: true, etichetta: 'Saldo simulato da 1.000 € nel 2020 a oggi, ingrandito' });
   }
   function apriGrafico() {
     if (!puntiBt()) return;
     sg.hidden = false; body.classList.add('blocca');
-    const fs = sg.requestFullscreen || sg.webkitRequestFullscreen;
-    if (fs) {
-      Promise.resolve(fs.call(sg)).then(() => { sgFull = true; try { screen.orientation.lock('landscape').catch(() => {}); } catch (e) { } })
-        .catch(() => {}).finally(() => setTimeout(disegnaGrande, 120));
-    }
     requestAnimationFrame(disegnaGrande);
     $('#sg-chiudi').focus();
   }
   function chiudiGrafico() {
     if (sg.hidden) return;
     sg.hidden = true; body.classList.remove('blocca');
-    try { screen.orientation.unlock(); } catch (e) { }
-    if (sgFull && (document.fullscreenElement || document.webkitFullscreenElement)) (document.exitFullscreen || document.webkitExitFullscreen).call(document).catch?.(() => {});
-    sgFull = false;
     $('#b-ingrandisci').focus();
   }
   $('#b-ingrandisci').addEventListener('click', apriGrafico);
   $('#sg-chiudi').addEventListener('click', chiudiGrafico);
+  sg.addEventListener('click', (e) => { if (!sgFin.contains(e.target)) chiudiGrafico(); });   // tocco fuori dalla finestra
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') chiudiGrafico(); });
-  ['fullscreenchange', 'webkitfullscreenchange'].forEach((ev) => document.addEventListener(ev, () => {
-    if (sgFull && !(document.fullscreenElement || document.webkitFullscreenElement)) { sgFull = false; chiudiGrafico(); }
-  }));
-  window.addEventListener('resize', () => { clearTimeout(sgRz); sgRz = setTimeout(disegnaGrande, 120); });
+  window.addEventListener('resize', () => { clearTimeout(sgRz); sgRz = setTimeout(disegnaGrande, 150); });
   function striscia() {
     const s = $('#demo-striscia');
     const d = P && P.demo;
