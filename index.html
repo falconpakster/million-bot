@@ -906,15 +906,15 @@ details.come p { margin: 8px 0; }
       <h2>E con le tasse?</h2>
       <p class="lead">Per essere il più onesto possibile: con un conto reale, in Italia avrei pagato il <strong>26% sui guadagni di ogni anno</strong>. Per non correre rischi, il <strong>1° gennaio</strong> metto da parte le tasse dell'anno appena chiuso, fuori dal conto: da quel giorno il bot lavora con meno soldi.</p>
       <div class="tasse-tot">
-        <div><span>Senza tasse</span><b>5.016.338 €</b></div>
-        <div><span>Tasse pagate in tutto</span><b class="neg">−809.764 €</b></div>
-        <div class="netto"><span>Con le tasse, netti</span><b>2.305.714 €</b></div>
+        <div><span>Senza tasse</span><b id="tx-senza">—</b></div>
+        <div><span>Tasse pagate in tutto</span><b class="neg" id="tx-tasse">—</b></div>
+        <div class="netto"><span>Con le tasse, netti</span><b id="tx-netto">—</b></div>
       </div>
       <div class="tasse-tab"><table>
         <thead><tr><th>Anno</th><th>Guadagno<span class="eu-m"> (€)</span></th><th>Tasse 26%<span class="solo-largo"> messe da parte il 1° gennaio</span></th><th>Saldo<span class="solo-largo"> dopo le tasse</span></th></tr></thead>
-        <tbody><tr><td>2020</td><td class="pos">+631<span class="eu"> €</span></td><td class="neg">−164<span class="eu"> €</span></td><td><b>1.467<span class="eu"> €</span></b></td></tr><tr><td>2021</td><td class="pos">+5.180<span class="eu"> €</span></td><td class="neg">−1.347<span class="eu"> €</span></td><td><b>5.300<span class="eu"> €</span></b></td></tr><tr><td>2022</td><td class="pos">+10.035<span class="eu"> €</span></td><td class="neg">−2.609<span class="eu"> €</span></td><td><b>12.726<span class="eu"> €</span></b></td></tr><tr><td>2023</td><td class="pos">+17.355<span class="eu"> €</span></td><td class="neg">−4.512<span class="eu"> €</span></td><td><b>25.569<span class="eu"> €</span></b></td></tr><tr><td>2024</td><td class="pos">+224.108<span class="eu"> €</span></td><td class="neg">−58.268<span class="eu"> €</span></td><td><b>191.409<span class="eu"> €</span></b></td></tr><tr><td>2025</td><td class="pos">+1.000.930<span class="eu"> €</span></td><td class="neg">−260.242<span class="eu"> €</span></td><td><b>932.097<span class="eu"> €</span></b></td></tr><tr><td>2026<small class="solo-largo"> (fino a oggi)</small></td><td class="pos">+1.856.239<span class="eu"> €</span></td><td class="neg">−482.622<span class="eu"> €</span></td><td><b>2.305.714<span class="eu"> €</span></b></td></tr></tbody>
+        <tbody id="tx-anni"></tbody>
       </table></div>
-      <p class="tasse-nota">Partenza da 1.000 € a gennaio 2020, stessi trade e stesse regole del bot. Il guadagno è più basso dei risultati senza tasse perché, dopo ogni prelievo, il bot apre posizioni più piccole. Le tasse del 2026 si mettono da parte il 1° gennaio 2027 e sono già tolte dal saldo finale. Calcolo al 28 ottobre 2026: CFD con broker estero, imposta del 26% sui redditi diversi; non è una consulenza fiscale.</p>
+      <p class="tasse-nota">Partenza da 1.000 € a gennaio 2020, stessi trade e stesse regole del bot. Il guadagno è più basso dei risultati senza tasse perché, dopo ogni prelievo, il bot apre posizioni più piccole. <span id="tx-ultime"></span> Si aggiorna ogni giorno con i trade nuovi. Imposta del 26% sui redditi diversi (CFD con broker estero), perdite recuperabili nei 4 anni dopo; non è una consulenza fiscale.</p>
     </section>
 
     <section class="finale">
@@ -1917,8 +1917,47 @@ dash.calc('strategie', {
     e._conta = { v, fmt, durata, da, stato: 'attesa', giro: 0 }; e.textContent = fmt(da);
     if (ossNum) { ossNum.observe(e); ossFuori.observe(e); } else { e._conta.stato = 'fatto'; e.textContent = fmt(v); }
   }
+  // conto con le tasse italiane (26% sui guadagni dell'anno, messe da parte il 1° gennaio; perdite recuperabili per 4 anni).
+  // Trade del backtest: guadagno già calcolato in quel conto (campo "et"); trade nuovi del bot: stessa percentuale sul saldo netto.
+  function riempiTasse() {
+    const T = dash.data('trade'), box = $('#tx-anni');
+    if (!box || T.status !== 'ok' || !T.data.length) return;
+    const fonte = window.PUB ? P : D, agg = fonte && fonte.aggiornato ? new Date(fonte.aggiornato) : new Date();
+    const righe = T.data.slice().sort((a, b) => (a.chiusura < b.chiusura ? -1 : a.chiusura > b.chiusura ? 1 : a.id - b.id));
+    const oggiA = Math.max(Number(agg.toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' }).slice(0, 4)), Number(righe[righe.length - 1].chiusura.slice(0, 4)));
+    const ALI = 0.26, gua = {}, tasse = {}, saldoA = {}, perdite = [];
+    const imposta = (a) => {
+      let g = gua[a] || 0;
+      if (g <= 0) { if (g < 0) perdite.push([a, -g]); return 0; }
+      for (const p of perdite) if (a - p[0] <= 4 && p[1] > 0) { const u = Math.min(p[1], g); p[1] -= u; g -= u; }
+      return ALI * g;
+    };
+    let eq = 1000, anno = Number(righe[0].chiusura.slice(0, 4));
+    const chiudiAnno = () => { tasse[anno] = imposta(anno); saldoA[anno] = eq - tasse[anno]; eq -= tasse[anno]; anno++; };
+    for (const r of righe) {
+      const a = Number(String(r.chiusura).slice(0, 4));
+      while (anno < a) chiudiAnno();
+      const prima = Number(r.saldo) - Number(r.euro);
+      const g = r.et != null ? Number(r.et) : (prima > 0 ? eq * Number(r.euro) / prima : 0);
+      eq += g; gua[a] = (gua[a] || 0) + g;
+    }
+    while (anno < oggiA) chiudiAnno();
+    tasse[anno] = imposta(anno); saldoA[anno] = eq - tasse[anno];
+    const netto = saldoA[anno], tot = Object.values(tasse).reduce((x, y) => x + y, 0);
+    const senza = Number(righe[righe.length - 1].saldo);
+    conta($('#tx-senza'), senza, (v) => euroIntero(v), 3000, 1000);
+    conta($('#tx-tasse'), tot, (v) => '−' + euroIntero(v), 2500);
+    conta($('#tx-netto'), netto, (v) => euroIntero(v), 3500, 1000);
+    const n0 = (v) => num(Math.round(v), 0), eu = '<span class="eu"> €</span>';
+    box.innerHTML = Object.keys(saldoA).map(Number).sort((x, y) => x - y).map((a) =>
+      `<tr><td>${a}${a === anno ? '<small class="solo-largo"> (fino a oggi)</small>' : ''}</td>` +
+      `<td class="${(gua[a] || 0) < 0 ? 'neg' : 'pos'}">${(gua[a] || 0) < 0 ? '−' : '+'}${n0(Math.abs(gua[a] || 0))}${eu}</td>` +
+      `<td class="neg">${tasse[a] > 0 ? '−' + n0(tasse[a]) + eu : '0' + eu}</td><td><b>${n0(saldoA[a])}${eu}</b></td></tr>`).join('');
+    $('#tx-ultime').textContent = `Le tasse del ${anno} si mettono da parte il 1° gennaio ${anno + 1} e sono già tolte dal saldo finale. Aggiornato al ${agg.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Rome' })}.`;
+  }
   function riempiHero() {
     if (!window.PUB) return;
+    riempiTasse();
     const TOT = dash.data('totale'), A = dash.data('anni'), c = puntiBt();
     if (TOT.status !== 'ok' || !c) return;
     const t = TOT.data[0];
