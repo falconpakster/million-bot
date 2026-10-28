@@ -465,6 +465,9 @@ strong { font-weight: 600; color: var(--inchiostro); }
 @keyframes avviso { 0%, 100% { box-shadow: 0 0 0 3px rgba(227, 178, 60, .3); } 50% { box-shadow: 0 0 0 7px rgba(227, 178, 60, 0); } }
 .c-fumetto { position: absolute; right: 100%; top: 18%; margin: 0 8px 0 0; width: max-content; max-width: 230px; background: #fff; border: 1px solid var(--linea-forte); border-radius: 14px; padding: 8px 12px; font-size: 14px; line-height: 1.4; color: var(--inchiostro); box-shadow: 0 8px 22px rgba(16, 36, 26, .14); opacity: 0; transform: translateX(8px) scale(.94); transform-origin: right center; transition: opacity .3s, transform .3s; }
 .c-fumetto.vede { opacity: 1; transform: none; }
+.compagno.f-destra .c-fumetto { right: auto; left: 100%; margin: 0 0 0 8px; transform-origin: left center; transform: translateX(-8px) scale(.94); }
+.compagno.f-destra .c-fumetto.vede { transform: none; }
+.compagno.f-destra .c-fumetto::after { right: auto; left: -7px; border-right: 0; border-top: 0; border-left: 1px solid var(--linea-forte); border-bottom: 1px solid var(--linea-forte); }
 .c-fumetto b { color: #0d6a3e; font-weight: 600; }
 .c-fumetto::after { content: ""; position: absolute; right: -7px; top: 18px; width: 12px; height: 12px; background: #fff; border-right: 1px solid var(--linea-forte); border-top: 1px solid var(--linea-forte); transform: rotate(45deg); }
 @media (max-width: 760px) { .robot-posto { width: 92px; } .finale-robot .robot-posto { width: 120px; } .c-fumetto { font-size: 13.5px; max-width: 190px; } }
@@ -576,10 +579,10 @@ details.come p { margin: 8px 0; }
       </div>
       <div class="lato-hero">
         <div class="guida grande"><span class="robot-posto" data-robot="posto"></span><p class="fumetto">Ciao! Sono <b>Million Bot</b>. Scorri la pagina: quando mi vedi salutare, <b>cliccami</b> e ti racconto qualcosa.</p></div>
-        <div class="vetrina" data-robot-punto="centro" data-robot="Le discese su questa linea sono i periodi di perdite: <b>le ho superate tutte</b> e ho continuato a salire.">
-          <span class="etichetta">Bitcoin + Giappone 225 · 1.000 € nel 2020</span>
+        <div class="vetrina">
+          <span class="etichetta">1.000 €, dal 2020 ad oggi, adesso sono…</span>
           <p class="grande" id="h-saldo">—</p>
-          <div class="curva" id="h-curva"></div>
+          <div class="curva" id="h-curva" data-robot-punto="centro" data-robot-lato="sopra" data-robot="Questo grafico mostra cosa sarebbero diventati <b>1.000 €</b> affidati a me ad aprile 2020, <b>anno dopo anno</b>, fino a oggi."></div>
         </div>
       </div>
     </section>
@@ -1905,15 +1908,21 @@ dash.calc('strategie', {
   function posizione(e) {
     const r = e.getBoundingClientRect(), vw = document.documentElement.clientWidth;
     if (e.dataset.robot === 'posto') return { x: r.left + scrollX, y: r.top + scrollY, w: r.width, posto: true };
-    const w = vw < 760 ? 64 : 84, h = w * 184 / 160, centro = e.dataset.robotPunto === 'centro';
-    let x = r.right + scrollX - w * (centro ? 0.6 : 0.8);
-    x = Math.min(Math.max(x, scrollX + 6), scrollX + vw - w - 6);
-    return { x, y: centro ? r.top + scrollY + r.height / 2 - h * 0.6 : r.top + scrollY - h * 0.72, w };
+    const w = vw < 760 ? 64 : 84, h = w * 184 / 160;
+    let x, y;
+    if (e.dataset.robotLato === 'sopra') { x = r.left + r.width * 0.3 - w / 2; y = r.top - h * 0.08; }   // dentro il grafico, nella parte vuota in alto
+    else { x = r.right - w * 0.8; y = r.top - h * 0.72; }                                               // sull'angolo in alto a destra
+    x = Math.min(Math.max(x + scrollX, scrollX + 6), scrollX + vw - w - 6);
+    return { x, y: y + scrollY, w };
   }
   function chiudi() { fum.classList.remove('vede'); apertoA = null; }
   function apri() {
     if (!attuale || attuale.dataset.robot === 'posto') return;
     fum.innerHTML = attuale.dataset.robot;
+    const r = corpo.getBoundingClientRect(), vw = document.documentElement.clientWidth;
+    const sx = r.left - 14, dx = vw - r.right - 14, destra = dx > sx;
+    c.classList.toggle('f-destra', destra);
+    fum.style.maxWidth = Math.max(140, Math.min(230, destra ? dx : sx)) + 'px';
     fum.classList.add('vede'); apertoA = scrollY;
     letti.add(attuale); c.classList.remove('chiama');
   }
