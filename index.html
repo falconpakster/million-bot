@@ -579,10 +579,10 @@ details.come p { margin: 8px 0; }
       </div>
       <div class="lato-hero">
         <div class="guida grande"><span class="robot-posto" data-robot="posto"></span><p class="fumetto">Ciao! Sono <b>Million Bot</b>. Scorri la pagina: quando mi vedi salutare, <b>cliccami</b> e ti racconto qualcosa.</p></div>
-        <div class="vetrina">
+        <div class="vetrina" data-robot-lato="fuori" data-robot="Questo grafico mostra cosa sarebbero diventati <b>1.000 €</b> affidati a me ad aprile 2020, <b>anno dopo anno</b>, fino a oggi.">
           <span class="etichetta">1.000 €, dal 2020 ad oggi, adesso sono…</span>
           <p class="grande" id="h-saldo">—</p>
-          <div class="curva" id="h-curva" data-robot-punto="centro" data-robot-lato="sopra" data-robot="Questo grafico mostra cosa sarebbero diventati <b>1.000 €</b> affidati a me ad aprile 2020, <b>anno dopo anno</b>, fino a oggi."></div>
+          <div class="curva" id="h-curva"></div>
         </div>
       </div>
     </section>
@@ -1890,7 +1890,10 @@ dash.calc('strategie', {
   const letti = new WeakSet();
   let attuale = null, ultimoY = null, tVolo = null, tChiama = null, giro = 0, apertoA = null;
   const visibile = (e) => e.offsetParent !== null && !e.closest('[hidden]') && e.getBoundingClientRect().height > 0;
-  const punto = (e) => { const r = e.getBoundingClientRect(); return e.dataset.robotPunto === 'centro' ? r.top + r.height / 2 : r.top; };
+  const largo = () => document.documentElement.clientWidth < 760 ? 64 : 84;
+  // "fuori": accanto all'elemento, a destra, se c'è spazio (allora conta il suo centro); altrimenti sopra l'angolo
+  const fuoriLato = (e, r) => e.dataset.robotLato === 'fuori' && document.documentElement.clientWidth - r.right >= largo() + 10;
+  const punto = (e) => { const r = e.getBoundingClientRect(); return (e.dataset.robotPunto === 'centro' || fuoriLato(e, r)) ? r.top + r.height / 2 : r.top; };
   const docTop = (e) => punto(e) + scrollY;
   function bersagli() {
     if (!document.body.classList.contains('pub') || document.getElementById('pub').hidden) return [];
@@ -1899,19 +1902,28 @@ dash.calc('strategie', {
   }
   function scegli(L) {
     if (scrollY < 40) return L.find((e) => e.dataset.robot === 'posto') || L[0];
+    // il suo posto (in alto o nel riquadro finale) tutto in vista: va lì
+    const posti = L.filter((e) => e.dataset.robot === 'posto' && (() => { const r = e.getBoundingClientRect(); return r.top >= 70 && r.bottom <= innerHeight - 10; })());
+    if (posti.length) return posti[posti.length - 1];
     if (scrollY + innerHeight >= document.documentElement.scrollHeight - 30) return L[L.length - 1];
     const linea = innerHeight * 0.35;
     let s = L[0];
     for (const e of L) if (punto(e) < linea) s = e;
+    // salendo resta dov'è finché la sua parte non scende verso il fondo dello schermo
+    const i = L.indexOf(attuale);
+    if (i > L.indexOf(s) && i >= 0) {
+      const r = attuale.getBoundingClientRect();
+      if (r.bottom > 70 && punto(attuale) < innerHeight * 0.6) return attuale;
+    }
     return s;
   }
   function posizione(e) {
     const r = e.getBoundingClientRect(), vw = document.documentElement.clientWidth;
     if (e.dataset.robot === 'posto') return { x: r.left + scrollX, y: r.top + scrollY, w: r.width, posto: true };
-    const w = vw < 760 ? 64 : 84, h = w * 184 / 160;
+    const w = largo(), h = w * 184 / 160;
     let x, y;
-    if (e.dataset.robotLato === 'sopra') { x = r.left + r.width * 0.3 - w / 2; y = r.top - h * 0.08; }   // dentro il grafico, nella parte vuota in alto
-    else { x = r.right - w * 0.8; y = r.top - h * 0.72; }                                               // sull'angolo in alto a destra
+    if (fuoriLato(e, r)) { x = r.right + 6; y = r.top + r.height / 2 - h * 0.6; }   // fuori, a destra, a metà altezza
+    else { x = r.right - w * 0.8; y = r.top - h * 0.72; }                         // sull'angolo in alto a destra
     x = Math.min(Math.max(x + scrollX, scrollX + 6), scrollX + vw - w - 6);
     return { x, y: y + scrollY, w };
   }
