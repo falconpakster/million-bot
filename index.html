@@ -2813,7 +2813,9 @@ dash.calc('strategie', {
       ? ['Ogni barra è un anno, e <b>sono tutte sopra lo zero</b>. Toccane una per vedere i suoi mesi.', 'fiero']
       : ['I mesi rossi ci sono e <b>non li nascondo</b>: fanno parte del gioco.', 'sincero']],
   ];
-  const letti = new WeakSet();
+  // messaggi già letti (anche ricaricando la pagina nella stessa visita): lì il robottino non saluta più, ma se lo clicchi parla lo stesso
+  const letti = new Set((() => { try { return JSON.parse(sessionStorage.getItem('mb-letti') || '[]'); } catch (e) { return []; } })());
+  const segnaLetto = (m) => { letti.add(m); try { sessionStorage.setItem('mb-letti', JSON.stringify([...letti])); } catch (e) {} };
   let attuale = null, ultimoY = null, ultimoX = null, tVolo = null, tChiama = null, giro = 0, apertoA = null;
   const visibile = (e) => e.offsetParent !== null && !e.closest('[hidden]') && e.getBoundingClientRect().height > 0;
   const largo = () => document.documentElement.clientWidth < 760 ? 64 : 84;
@@ -2927,7 +2929,7 @@ dash.calc('strategie', {
     c.classList.toggle('f-destra', destra);
     fum.style.maxWidth = Math.max(140, Math.min(230, destra ? dx : sx)) + 'px';
     fum.classList.add('vede'); c.classList.add('dice'); apertoA = scrollY;
-    letti.add(attuale); c.classList.remove('chiama');
+    segnaLetto(attuale.dataset.robot); c.classList.remove('chiama');
   }
   function aggiorna() {
     giro = 0;
@@ -2954,7 +2956,7 @@ dash.calc('strategie', {
       c.classList.toggle('parla', msg);
       c.classList.toggle('a-inizio', !!p.posto && !!s.closest('.hero-pub'));   // al suo posto iniziale, in cima alla pagina
       // arrivato: saluta con la mano per dire "ho qualcosa da dirti"
-      if (msg) tChiama = setTimeout(() => c.classList.add('chiama'), lento.matches ? 600 : 1000);
+      if (msg && !letti.has(s.dataset.robot)) tChiama = setTimeout(() => c.classList.add('chiama'), lento.matches ? 600 : 1000);
     }
     c.style.width = p.w + 'px';
     c.style.transform = `translate3d(${Math.round(p.x)}px, ${Math.round(p.y)}px, 0)`;
