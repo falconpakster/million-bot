@@ -92,7 +92,10 @@ body.pub .solo-priv, body:not(.pub) .solo-pub, body:not(.con-j) .modo-j { displa
 .demo-striscia { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; border: 1px dashed var(--linea-forte); border-radius: var(--raggio); padding: 14px 18px; color: var(--grigio); font-size: 14.5px; margin: 0 0 24px; }
 .demo-striscia b { color: var(--inchiostro); font-weight: 600; }
 .punto { width: 8px; height: 8px; border-radius: 50%; background: var(--verde); box-shadow: 0 0 0 4px rgba(20, 137, 78, .15); display: inline-block; }
-.punto.fermo { background: var(--rosso); box-shadow: 0 0 0 4px rgba(200, 68, 58, .15); }
+.punto.fermo { background: var(--grigio-2); box-shadow: 0 0 0 4px rgba(85, 101, 91, .15); }
+.punto.rosso { background: #e0362c; box-shadow: 0 0 0 4px rgba(224, 54, 44, .18); animation: lampeggia 1.1s ease-in-out infinite; }
+@keyframes lampeggia { 0%, 100% { opacity: 1; } 50% { opacity: .2; } }
+@media (prefers-reduced-motion: reduce) { .punto.rosso { animation: none; } }
 
 .passi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; counter-reset: passo; }
 .passo { background: var(--pannello); border: 1px solid var(--linea); border-radius: var(--raggio); padding: 22px; }
@@ -444,6 +447,22 @@ strong { font-weight: 600; color: var(--inchiostro); }
 @keyframes fiamma-forte { from { transform: scaleY(1.2); } to { transform: scaleY(1.65); } }
 @keyframes fiamma { from { transform: scaleY(.78); opacity: .8; } to { transform: scaleY(1.12); opacity: 1; } }
 @keyframes scintille { 0%, 100% { opacity: 1; } 50% { opacity: .2; } }
+/* pulsanti in alto e sezione del conto demo */
+.btn-grande { font-size: 17px; padding: 14px 24px; }
+.btn-demo { background: #d93a30; color: #fff; box-shadow: 0 8px 22px rgba(217, 58, 48, .28); }
+.btn-demo:hover { background: #c22f26; }
+.btn-demo .punto.rosso { background: #fff; box-shadow: 0 0 0 4px rgba(255, 255, 255, .3); }
+.conto-demo { margin: 30px 0 8px; scroll-margin-top: 140px; }
+.conto-demo h2 { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; }
+.conto-demo .demo-striscia { margin: 0 0 14px; }
+.demo-perche { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.demo-perche > div { background: var(--pannello); border: 1px solid var(--linea); border-radius: var(--raggio); padding: 16px 18px; box-shadow: var(--ombra); }
+.demo-perche h3 { font-family: var(--serif); font-weight: 600; font-size: 19px; margin: 0 0 6px; }
+.demo-perche p { margin: 0; color: var(--grigio); font-size: 15px; }
+.demo-perche strong { color: var(--inchiostro); }
+.demo-link { margin: 14px 0 0; color: var(--grigio); font-size: 15px; }
+@media (max-width: 760px) { .demo-perche { grid-template-columns: 1fr; } }
+
 /* grafico a tutto schermo */
 .btn-ingrandisci { position: absolute; top: 18px; right: 18px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--linea-forte); background: #fff; color: var(--inchiostro); font: 600 13px/1 var(--sans); cursor: pointer; box-shadow: 0 4px 12px rgba(18, 36, 26, .08); }
 .btn-ingrandisci:hover { background: var(--pannello-2); }
@@ -581,7 +600,7 @@ details.come p { margin: 8px 0; }
     <button type="button" class="sg-chiudi" id="sg-chiudi" aria-label="Chiudi il grafico">✕</button>
   </div>
   <div class="curva" id="sg-curva"></div>
-  <p class="sg-nota">Tocca o trascina il dito sulla linea (o passa il mouse) per vedere il saldo di ogni giorno. Risultati simulati da aprile 2020, non garantiti per il futuro.</p>
+  <p class="sg-nota">Tocca o trascina il dito sulla linea (o passa il mouse) per vedere il saldo di ogni giorno. Risultati simulati da gennaio 2020, non garantiti per il futuro.</p>
  </div>
 </div>
 
@@ -611,12 +630,13 @@ details.come p { margin: 8px 0; }
         <p class="sotto"><mark>5 strategie su Bitcoin</mark> + <mark>1 sul Giappone 225</mark>, <mark>ottimizzate e ricontrollate</mark> anno per anno.</p>
         <div class="azioni">
           <a class="btn btn-oro" href="https://www.tiktok.com/@_roadto1milion_" target="_blank" rel="noopener"><svg><use href="#i-tt"/></svg>Seguimi su TikTok</a>
-          <button class="btn btn-vuoto" type="button" data-vai="risultati">Guarda i risultati</button>
+          <button class="btn btn-vuoto btn-grande" type="button" data-vai="risultati">Guarda i risultati tu stesso</button>
+          <button class="btn btn-demo" type="button" data-demo><span class="punto rosso"></span>Conto demo</button>
         </div>
       </div>
       <div class="lato-hero">
         <div class="guida grande"><span class="robot-posto" data-robot="posto"></span><p class="fumetto">Ciao! Sono <b>Million Bot</b>. Scorri la pagina: quando mi vedi salutare, <b>cliccami</b> e ti racconto qualcosa.</p></div>
-        <div class="vetrina" data-robot-lato="fuori" data-robot="Questo grafico mostra cosa sarebbero diventati <b>1.000 €</b> affidati a me ad aprile 2020, <b>anno dopo anno</b>, fino a oggi.">
+        <div class="vetrina" data-robot-lato="fuori" data-robot="Questo grafico mostra cosa sarebbero diventati <b>1.000 €</b> affidati a me a gennaio 2020, <b>anno dopo anno</b>, fino a oggi.">
           <span class="etichetta">1.000 €, dal 2020, adesso sono…</span>
           <button type="button" class="btn-ingrandisci" id="b-ingrandisci" aria-label="Ingrandisci il grafico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>Ingrandisci</span></button>
           <p class="grande" id="h-saldo">—</p>
@@ -625,7 +645,7 @@ details.come p { margin: 8px 0; }
       </div>
     </section>
     <div class="anni-striscia" id="h-anni-lista" data-robot="Tutti gli anni in positivo! <b>Tocca un anno</b> per vederlo da vicino." aria-label="Rendimento di ogni anno: tocca un anno per vederlo"></div>
-    <p class="nota-cifre" id="h-nota-num">Risultati simulati da aprile 2020, con costi e limiti reali del broker. Calo massimo: <span id="h-calo">—</span>. Non garantiti per il futuro.</p>
+    <p class="nota-cifre" id="h-nota-num">Risultati simulati da gennaio 2020, con costi e limiti reali del broker. Calo massimo: <span id="h-calo">—</span>. Non garantiti per il futuro.</p>
 
     <nav class="schede" id="schede" aria-label="Sezioni">
       <button type="button" class="scheda" data-pannello="risultati">Risultati</button>
@@ -636,8 +656,16 @@ details.come p { margin: 8px 0; }
     </nav>
 
     <section class="pannello" data-p="risultati" aria-label="Risultati" data-robot="Qui c'è tutto: <b>ogni trade</b>, anche quelli andati male. Usa i pulsanti per vedere il resto.">
-      <div class="demo-striscia" id="demo-striscia" hidden></div>
       <div id="posto-pub"></div>
+      <section class="conto-demo solo-pub" id="conto-demo" aria-label="Conto demo dal vivo" data-robot="Questo è il bot <b>dal vivo</b>, trade dopo trade: controllalo anche tu.">
+        <h2 class="bt-sez"><span class="punto rosso"></span> Conto demo dal vivo</h2>
+        <div class="demo-striscia" id="demo-striscia" hidden></div>
+        <div class="demo-perche">
+          <div><h3>Perché parte adesso</h3><p>Fino a ottobre 2026 ho costruito e ricontrollato le strategie sui prezzi del passato. Il <strong>26 ottobre 2026</strong> il bot è stato pronto ed è partito dal vivo: per questo il conto inizia da quel giorno.</p></div>
+          <div><h3>Perché un conto demo</h3><p>Prima di usare soldi veri voglio la prova che <strong>dal vivo il bot fa gli stessi trade della simulazione</strong>, con prezzi, spread ed esecuzioni reali. Il conto demo usa gli stessi prezzi del conto reale, ma senza rischiare capitale. Quando i risultati dal vivo confermeranno la simulazione passerò al conto reale, e lo annuncerò su TikTok.</p></div>
+        </div>
+        <p class="demo-link"><a class="btn btn-vuoto" id="b-myfxbook" href="" target="_blank" rel="noopener">Verifica il conto su Myfxbook ↗</a><span id="myfxbook-presto" hidden>Il collegamento al conto su <strong>Myfxbook</strong>, per verificarlo in modo indipendente, arriverà a breve.</span></p>
+      </section>
     </section>
 
     <section class="pannello scuro" data-p="perche" aria-label="Perché è diverso" data-robot="Ecco cosa mi rende <b>diverso dagli altri bot</b>." hidden>
@@ -687,7 +715,7 @@ details.come p { margin: 8px 0; }
     <section class="pannello" data-p="domande" aria-label="Domande" data-robot="Non trovi la tua domanda? <b>Scrivi a Samuel</b> su Telegram, risponde lui." hidden>
       <div class="faq">
         <details><summary>I guadagni sono garantiti?</summary><p><strong>No.</strong> Ci sono mesi negativi e periodi di perdite. Si può perdere anche tutto il capitale.</p></details>
-        <details><summary>I risultati sono reali?</summary><p>Sono una <strong>simulazione</strong> sui prezzi reali, da aprile 2020 a oggi, che si aggiorna ogni giorno con le regole del bot. Dal 26 ottobre 2026 il bot <strong>opera anche dal vivo</strong> su un conto demo e i suoi trade entrano nei risultati.</p></details>
+        <details><summary>I risultati sono reali?</summary><p>Sono una <strong>simulazione</strong> sui prezzi reali, da gennaio 2020 a oggi, che si aggiorna ogni giorno con le regole del bot. Dal 26 ottobre 2026 il bot <strong>opera anche dal vivo</strong> su un conto demo e i suoi trade entrano nei risultati.</p></details>
         <details><summary>Quanto rischia per operazione?</summary><p>Dall'<strong>1,5% al 5%</strong> del conto, sempre con lo stop loss. Il guadagno possibile è <strong>3 volte il rischio</strong>.</p></details>
         <details><summary>Posso usare Million Bot anch'io?</summary><p><strong>Non ancora.</strong> Lo annuncerò su TikTok.</p></details>
       </div>
@@ -758,7 +786,7 @@ details.come p { margin: 8px 0; }
 
   <section class="bt-card" id="andamento">
     <div class="bt-graf-head"><h2>Saldo nel tempo</h2><span class="bt-sub" id="curva-nota"></span></div>
-    <p class="bt-sub solo-pub">Simulazione con 1.000 € iniziali ad aprile 2020 e i guadagni reinvestiti, con i limiti reali del broker. Scala logaritmica: ogni riga vale 10 volte la precedente.</p>
+    <p class="bt-sub solo-pub">Simulazione con 1.000 € iniziali a gennaio 2020 e i guadagni reinvestiti, con i limiti reali del broker. Scala logaritmica: ogni riga vale 10 volte la precedente.</p>
     <div class="curva" id="curva-bt"></div>
   </section>
 
@@ -848,7 +876,7 @@ details.come p { margin: 8px 0; }
 
   <details class="come" id="calcolo">
     <summary>Come è calcolato</summary>
-    <p class="solo-pub">È una simulazione sui prezzi passati di Bitcoin a 15 minuti con le stesse regole del bot, gli spread e gli swap reali di XM e i guadagni reinvestiti, su un conto in euro con i limiti veri di XM: al massimo 80 lotti per ordine su Bitcoin, quindi quando il conto cresce il rischio di ogni trade scende. Parte da 1.000 € ad aprile 2020. Si aggiorna ogni giorno fino a oggi con le stesse regole: dal 26 ottobre 2026 entrano anche i trade chiusi dal bot dal vivo, calcolati allo stesso modo.</p>
+    <p class="solo-pub">È una simulazione sui prezzi passati di Bitcoin a 15 minuti con le stesse regole del bot, gli spread e gli swap reali di XM e i guadagni reinvestiti, su un conto in euro con i limiti veri di XM: al massimo 80 lotti per ordine su Bitcoin, quindi quando il conto cresce il rischio di ogni trade scende. Parte da 1.000 € il 1° gennaio 2020 (da gennaio a fine marzo 2020 i prezzi di Bitcoin sono quelli del contratto BTCUSD di Bybit, perché BTCUSDT è nato a fine marzo 2020). Si aggiorna ogni giorno fino a oggi con le stesse regole: dal 26 ottobre 2026 entrano anche i trade chiusi dal bot dal vivo, calcolati allo stesso modo.</p>
     <p class="solo-pub modo-j">Con il Giappone 225 si aggiungono i suoi trade sui prezzi XM, con spread di 7 punti e swap reale, sullo stesso saldo.</p>
     <p class="solo-priv">Rischi sul saldo del momento: doppia rottura 5%, seconda correzione 2%, continuazione dopo SL 2%, prima candela 2%, ritest della trend line 1,5%<span class="modo-j">, Giappone 225 prima candela 2%</span>. Lotti come il bot: rischio diviso per stop più spread, arrotondati per eccesso se il rischio resta entro il 20% in più, altrimenti per difetto, minimo 0,01, massimo 80 per ordine (Giappone 225: da 0,1 a 11.940), un solo ordine per trade, esposizione massima 50 volte il saldo, al massimo 6 posizioni insieme. Conto in euro con i cambi EUR/USD e EUR/JPY del giorno. Spread 15 $, swap reale di XM (long 0,043% e short 0,029% a notte). Dati Bybit BTCUSDT a 15 minuti, orari italiani.<span class="modo-j"> Giappone 225: prezzi XM, spread 7 punti, swap long −4,74 e short −1 punti a notte.</span> Dal 24 ottobre 2026 continuano i trade chiusi dal bot dal vivo, esiti sui prezzi di riferimento.</p>
     <p class="solo-priv">Il massimo per ordine si raggiunge dal 2025 (doppia rottura da circa 600.000 € di saldo): da lì il rischio reale della doppia rottura scende in media al 2,3–2,9%.</p>
@@ -1540,10 +1568,34 @@ dash.calc('strategie', {
     const c = puntiBt(); if (!c) return;
     const box = $('#curva-bt');
     if (box.offsetParent) curva(box, c.pts, { altezza: window.innerWidth < 600 ? 240 : 320, chiave: c.k, etichetta: 'Saldo del backtest nel tempo' });
-    $('#curva-nota').textContent = 'aprile 2020 – ' + giornoIt(c.ultimo);
+    $('#curva-nota').textContent = 'gennaio 2020 – ' + giornoIt(c.ultimo);
   }
 
   // ================================================================== parte pubblica: hero e striscia demo
+  // numeri che salgono da zero quando arrivano sullo schermo: più la cifra è grande, più tempo ci mette
+  const lentoNum = matchMedia('(prefers-reduced-motion: reduce)');
+  const ossNum = 'IntersectionObserver' in window ? new IntersectionObserver((L) => L.forEach((x) => {
+    if (!x.isIntersecting) return; ossNum.unobserve(x.target); avviaConta(x.target);
+  }), { threshold: 0.5 }) : null;
+  function avviaConta(e) {
+    const c = e._conta; if (!c) return;
+    if (lentoNum.matches) { e.textContent = c.fmt(c.v); return; }
+    const t0 = performance.now();
+    const passo = (t) => {
+      const k = Math.min(1, (t - t0) / c.durata), f = 1 - Math.pow(1 - k, 3);
+      e.textContent = c.fmt(c.da + (c.v - c.da) * f);
+      if (k < 1) requestAnimationFrame(passo); else e.textContent = c.fmt(c.v);
+    };
+    requestAnimationFrame(passo);
+  }
+  function conta(e, v, fmt, durata, da = 0) {
+    if (!e) return;
+    if (e.dataset.contato === String(v)) return;          // già mostrato con questo valore
+    const prima = e.dataset.contato; e.dataset.contato = String(v);
+    if (prima !== undefined) { e.textContent = fmt(v); return; }   // aggiornamento dopo: niente animazione
+    e._conta = { v, fmt, durata, da }; e.textContent = fmt(da);
+    if (ossNum) ossNum.observe(e); else e.textContent = fmt(v);
+  }
   function riempiHero() {
     if (!window.PUB) return;
     const TOT = dash.data('totale'), A = dash.data('anni'), c = puntiBt();
@@ -1552,21 +1604,26 @@ dash.calc('strategie', {
     const giorni = (c.pts[c.pts.length - 1].d - c.pts[0].d) / 864e5;
     const molt = t.saldo_finale / 1000;
     const media = (Math.pow(molt, 365.25 / giorni) - 1) * 100;
-    $('#h-titolo-num').textContent = '+' + num(media, 0) + '%';
-    $('#h-c-bot').textContent = '×' + num(molt, 0);
-    $('#h-saldo').textContent = euroIntero(t.saldo_finale);
+    conta($('#h-titolo-num'), media, (v) => '+' + num(v, 0) + '%', 1400);
+    conta($('#h-c-bot'), molt, (v) => '×' + num(v, 0), 1800, 1);
+    conta($('#h-saldo'), t.saldo_finale, (v) => euroIntero(v), 2000, 1000);
     $('#h-calo').textContent = '−' + num(t.calo_max * 100, 0) + '%';
     if (A.status === 'ok') {
       const pos = A.data.filter((r) => r.rendimento > 0).length;
       $('#h-anni').textContent = pos + ' su ' + A.data.length;
-      const box = $('#h-anni-lista'); box.replaceChildren();
-      A.data.forEach((r, k) => {
+      const box = $('#h-anni-lista'), kA = JSON.stringify(A.data.map((r) => r.rendimento));
+      const primaVolta = !box.dataset.k, uguale = box.dataset.k === kA;
+      if (!uguale) { box.dataset.k = kA; box.replaceChildren(); }
+      const vmax = Math.max(...A.data.map((r) => Math.abs(r.rendimento)), 1e-9);
+      if (!uguale) A.data.forEach((r, k) => {
         const d = el('button', 'anno-b'); d.type = 'button'; d.title = 'Vedi il ' + r.anno;
         d.addEventListener('click', () => { vai('risultati'); dash.setParams({ anno: r.anno }); });
-        const nota = k === 0 ? ' (da aprile)' : k === A.data.length - 1 ? ' (fino a oggi)' : '';
+        const d0 = c.pts[0].d, nota = k === 0 && d0.getMonth() > 0 ? ' (da ' + d0.toLocaleDateString('it-IT', { month: 'long' }) + ')' : k === A.data.length - 1 ? ' (fino a oggi)' : '';
         const s = el('span', '', String(r.anno)); if (nota) s.append(el('small', '', nota));
-        d.append(s, el('b', r.rendimento < 0 ? 'neg' : '', pctS(r.rendimento * 100, 0)));
+        const cifra = el('b', r.rendimento < 0 ? 'neg' : '', pctS(r.rendimento * 100, 0));
+        d.append(s, cifra);
         box.append(d);
+        if (primaVolta) conta(cifra, r.rendimento * 100, (v) => pctS(v, 0), 500 + 1700 * Math.abs(r.rendimento) / vmax);
       });
     }
     const box = $('#h-curva');
@@ -1578,7 +1635,7 @@ dash.calc('strategie', {
   function disegnaGrande() {
     const c = puntiBt(); if (!c || sg.hidden) return;
     const box = $('#sg-curva'); delete box.dataset.k;
-    $('#sg-saldo').textContent = $('#h-saldo').textContent;
+    const TOT = dash.data('totale'); $('#sg-saldo').textContent = TOT.status === 'ok' ? euroIntero(TOT.data[0].saldo_finale) : $('#h-saldo').textContent;
     box.querySelectorAll('svg').forEach((x) => x.remove());
     const H = Math.max(220, box.clientHeight);
     curva(box, c.pts, { altezza: H, chiave: c.k + 'g', blocca: true, etichetta: 'Saldo simulato da 1.000 € nel 2020 a oggi, ingrandito' });
@@ -1606,7 +1663,7 @@ dash.calc('strategie', {
     const fermo = P.aggiornato && Date.now() - P.aggiornato > 20 * 60000;
     s.replaceChildren();
     const b = (t) => el('b', '', t);
-    const p1 = el('span'); p1.append(el('span', 'punto' + (fermo ? ' fermo' : '')), ' ', b('Conto demo dal vivo'), ' dal ' + d.inizio);
+    const p1 = el('span'); p1.append(el('span', 'punto' + (fermo ? ' fermo' : ' rosso')), ' ', fermo ? b('Fermo') : b('Attivo'), ' dal ' + d.inizio);
     const p2 = el('span');
     if (d.trade_chiusi) p2.append(b(num(d.trade_chiusi)), ' trade chiusi (' + num(d.tp) + ' TP, ' + num(d.sl) + ' SL), rendimento ', b(pctS(d.rendimento_pct, 1)));
     else p2.append('nessun trade chiuso finora');
@@ -1615,6 +1672,12 @@ dash.calc('strategie', {
     s.hidden = false;
   }
   dash.onData(() => { disegnaCurvaBt(); riempiHero(); });
+  // pulsante rosso "Conto demo" in alto: porta alla sezione del conto demo
+  $$('[data-demo]').forEach((b) => b.addEventListener('click', () => {
+    mostraPannello('risultati');
+    requestAnimationFrame(() => $('#conto-demo').scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  }));
+  if (!$('#b-myfxbook').getAttribute('href')) { $('#b-myfxbook').hidden = true; $('#myfxbook-presto').hidden = false; }
   let pannello = 'risultati';
   function mostraPannello(p) {
     pannello = p;
@@ -1822,6 +1885,7 @@ dash.calc('strategie', {
     window.PUB = true; body.classList.add('pub');
     $('#v-login').hidden = true; $('#pub').hidden = false;
     $('#posto-pub').append(blocco);
+    $('#mesi').after($('#conto-demo'));        // il conto demo dopo i trade dell'anno
   }
   async function entra(bytes, salva) {
     CHIAVE = await crypto.subtle.importKey('raw', bytes, 'AES-GCM', false, ['decrypt']);
@@ -1909,7 +1973,7 @@ dash.calc('strategie', {
     voce('Trade chiusi', num(dopo.length) + ' (' + num(tp) + ' vinti)');
     voce('Calo massimo', '−' + num(calo * 100, 0) + '%');
     $('#calc-avviso').hidden = scritto >= MIN_EURO;
-    $('#calc-nota').textContent = `Simulazione con le regole del bot da aprile 2020 a oggi, aggiornata ogni giorno; dal 26 ottobre 2026 con i trade chiusi dal bot dal vivo. Ultimo trade chiuso il ${giornoIt(ultimo)}. Nel periodo il capitale è sceso al massimo del ${num(calo * 100, 1)}% dal suo punto più alto prima di risalire.`;
+    $('#calc-nota').textContent = `Simulazione con le regole del bot da gennaio 2020 a oggi, aggiornata ogni giorno; dal 26 ottobre 2026 con i trade chiusi dal bot dal vivo. Ultimo trade chiuso il ${giornoIt(ultimo)}. Nel periodo il capitale è sceso al massimo del ${num(calo * 100, 1)}% dal suo punto più alto prima di risalire.`;
     const g = $('#calc-graf');
     if (pts.length > 1 && g.offsetParent) curva(g, pts, { altezza: 280, chiave: calc.chiave + da + cap });
   }
