@@ -687,7 +687,7 @@ details.come p { margin: 8px 0; }
     <section class="pannello" data-p="domande" aria-label="Domande" data-robot="Non trovi la tua domanda? <b>Scrivi a Samuel</b> su Telegram, risponde lui." hidden>
       <div class="faq">
         <details><summary>I guadagni sono garantiti?</summary><p><strong>No.</strong> Ci sono mesi negativi e periodi di perdite. Si può perdere anche tutto il capitale.</p></details>
-        <details><summary>I risultati sono reali?</summary><p>Fino al 23 ottobre 2026 sono una <strong>simulazione</strong> sui prezzi reali. Dal 26 ottobre il bot <strong>opera dal vivo</strong> su un conto demo.</p></details>
+        <details><summary>I risultati sono reali?</summary><p>Sono una <strong>simulazione</strong> sui prezzi reali, da aprile 2020 a oggi, che si aggiorna ogni giorno con le regole del bot. Dal 26 ottobre 2026 il bot <strong>opera anche dal vivo</strong> su un conto demo e i suoi trade entrano nei risultati.</p></details>
         <details><summary>Quanto rischia per operazione?</summary><p>Dall'<strong>1,5% al 5%</strong> del conto, sempre con lo stop loss. Il guadagno possibile è <strong>3 volte il rischio</strong>.</p></details>
         <details><summary>Posso usare Million Bot anch'io?</summary><p><strong>Non ancora.</strong> Lo annuncerò su TikTok.</p></details>
       </div>
@@ -848,7 +848,7 @@ details.come p { margin: 8px 0; }
 
   <details class="come" id="calcolo">
     <summary>Come è calcolato</summary>
-    <p class="solo-pub">È una simulazione sui prezzi passati di Bitcoin a 15 minuti con le stesse regole del bot, gli spread e gli swap reali di XM e i guadagni reinvestiti, su un conto in euro con i limiti veri di XM: al massimo 80 lotti per ordine su Bitcoin, quindi quando il conto cresce il rischio di ogni trade scende. Parte da 1.000 € ad aprile 2020. Dal 24 ottobre 2026 la curva continua con i trade chiusi dal bot, calcolati allo stesso modo.</p>
+    <p class="solo-pub">È una simulazione sui prezzi passati di Bitcoin a 15 minuti con le stesse regole del bot, gli spread e gli swap reali di XM e i guadagni reinvestiti, su un conto in euro con i limiti veri di XM: al massimo 80 lotti per ordine su Bitcoin, quindi quando il conto cresce il rischio di ogni trade scende. Parte da 1.000 € ad aprile 2020. Si aggiorna ogni giorno fino a oggi con le stesse regole: dal 26 ottobre 2026 entrano anche i trade chiusi dal bot dal vivo, calcolati allo stesso modo.</p>
     <p class="solo-pub modo-j">Con il Giappone 225 si aggiungono i suoi trade sui prezzi XM, con spread di 7 punti e swap reale, sullo stesso saldo.</p>
     <p class="solo-priv">Rischi sul saldo del momento: doppia rottura 5%, seconda correzione 2%, continuazione dopo SL 2%, prima candela 2%, ritest della trend line 1,5%<span class="modo-j">, Giappone 225 prima candela 2%</span>. Lotti come il bot: rischio diviso per stop più spread, arrotondati per eccesso se il rischio resta entro il 20% in più, altrimenti per difetto, minimo 0,01, massimo 80 per ordine (Giappone 225: da 0,1 a 11.940), un solo ordine per trade, esposizione massima 50 volte il saldo, al massimo 6 posizioni insieme. Conto in euro con i cambi EUR/USD e EUR/JPY del giorno. Spread 15 $, swap reale di XM (long 0,043% e short 0,029% a notte). Dati Bybit BTCUSDT a 15 minuti, orari italiani.<span class="modo-j"> Giappone 225: prezzi XM, spread 7 punti, swap long −4,74 e short −1 punti a notte.</span> Dal 24 ottobre 2026 continuano i trade chiusi dal bot dal vivo, esiti sui prezzi di riferimento.</p>
     <p class="solo-priv">Il massimo per ordine si raggiunge dal 2025 (doppia rottura da circa 600.000 € di saldo): da lì il rischio reale della doppia rottura scende in media al 2,3–2,9%.</p>
@@ -1909,7 +1909,7 @@ dash.calc('strategie', {
     voce('Trade chiusi', num(dopo.length) + ' (' + num(tp) + ' vinti)');
     voce('Calo massimo', '−' + num(calo * 100, 0) + '%');
     $('#calc-avviso').hidden = scritto >= MIN_EURO;
-    $('#calc-nota').textContent = `Simulazione con le regole del bot fino al 23 ottobre 2026, poi i trade chiusi dal bot. Ultimo trade chiuso il ${giornoIt(ultimo)}. Nel periodo il capitale è sceso al massimo del ${num(calo * 100, 1)}% dal suo punto più alto prima di risalire.`;
+    $('#calc-nota').textContent = `Simulazione con le regole del bot da aprile 2020 a oggi, aggiornata ogni giorno; dal 26 ottobre 2026 con i trade chiusi dal bot dal vivo. Ultimo trade chiuso il ${giornoIt(ultimo)}. Nel periodo il capitale è sceso al massimo del ${num(calo * 100, 1)}% dal suo punto più alto prima di risalire.`;
     const g = $('#calc-graf');
     if (pts.length > 1 && g.offsetParent) curva(g, pts, { altezza: 280, chiave: calc.chiave + da + cap });
   }
