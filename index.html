@@ -458,14 +458,22 @@ strong { font-weight: 600; color: var(--inchiostro); }
 @keyframes fiamma { from { transform: scaleY(.78); opacity: .8; } to { transform: scaleY(1.12); opacity: 1; } }
 @keyframes scintille { 0%, 100% { opacity: 1; } 50% { opacity: .2; } }
 /* pulsanti in alto e sezione del conto demo */
-.scorri { display: inline-flex; align-items: center; gap: 10px; background: none; border: 0; padding: 4px 0; font: 600 18px/1.3 var(--sans); color: var(--inchiostro); cursor: pointer; text-align: left; }
-.scorri:hover { color: var(--oro); }
-.scorri .freccia { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--oro); color: #fff; font-size: 17px; animation: scendi 1.6s ease-in-out infinite; flex: none; }
-@keyframes scendi { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+.scorri { display: flex; align-items: center; gap: 18px; width: 100%; background: none; border: 0; padding: 6px 0; margin-top: 4px; color: var(--inchiostro); cursor: pointer; text-align: left; }
+.scorri-testo { font-family: var(--serif); font-weight: 600; font-size: clamp(24px, 2.6vw, 31px); line-height: 1.18; letter-spacing: -.01em; }
+.scorri-testo em { font-style: normal; color: var(--oro); background: linear-gradient(transparent 62%, rgba(31, 176, 107, .22) 62%); }
+.scorri-icona { position: relative; flex: none; display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; background: linear-gradient(160deg, #1fb06b, #0b6a3f); box-shadow: 0 10px 24px rgba(15, 122, 71, .3); }
+.scorri-icona::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid rgba(31, 176, 107, .35); animation: anello 2s ease-out infinite; }
+.scorri-icona svg { width: 26px; height: 26px; fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.scorri-icona path:first-child { animation: chevron 1.6s ease-in-out infinite; }
+.scorri-icona path:last-child { animation: chevron 1.6s ease-in-out .25s infinite; }
+.scorri:hover .scorri-testo { color: var(--oro); }
+@keyframes chevron { 0% { opacity: .2; transform: translateY(-3px); } 50% { opacity: 1; transform: translateY(1px); } 100% { opacity: .2; transform: translateY(4px); } }
+@keyframes anello { 0% { transform: scale(.85); opacity: .9; } 100% { transform: scale(1.25); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .scorri-icona::after, .scorri-icona path { animation: none; } }
+.hero-pub .btn-demo-mini { margin: 0 0 16px; }
 .btn-demo-mini { display: inline-flex; align-items: center; gap: 7px; align-self: center; padding: 5px 11px; border-radius: 999px; border: 1px solid rgba(217, 58, 48, .45); background: rgba(217, 58, 48, .07); color: #b42d24; font: 600 13px/1 var(--sans); cursor: pointer; }
 .btn-demo-mini:hover { background: rgba(217, 58, 48, .14); }
 .btn-demo-mini .punto { width: 7px; height: 7px; }
-@media (prefers-reduced-motion: reduce) { .scorri .freccia { animation: none; } }
 .btn-demo { background: #d93a30; color: #fff; box-shadow: 0 8px 22px rgba(217, 58, 48, .28); }
 .btn-demo:hover { background: #c22f26; }
 .btn-demo .punto.rosso { background: #fff; box-shadow: 0 0 0 4px rgba(255, 255, 255, .3); }
@@ -637,6 +645,7 @@ details.come p { margin: 8px 0; }
   <main class="pagina" id="inizio">
     <section class="hero-pub">
       <div>
+        <button class="btn-demo-mini" type="button" data-demo><span class="punto rosso"></span>Conto demo dal vivo</button>
         <h1>Il bot che ha vinto<br>ogni anno dal 2020.</h1>
         <p class="tris oro"><span>Sopra ogni media.</span> <span>Sopra ogni anno.</span></p>
         <div class="confronto" data-robot="Questi numeri non arrivano senza perdite: nel 2021 ho preso anche <b>20 stop loss di fila</b>. Non ho cambiato le regole e sono ripartito.">
@@ -646,8 +655,10 @@ details.come p { margin: 8px 0; }
         </div>
         <p class="sotto"><mark>5 strategie su Bitcoin</mark> + <mark>1 sul Giappone 225</mark>, <mark>ottimizzate e ricontrollate</mark> anno per anno.</p>
         <div class="azioni">
-          <button class="scorri" type="button" data-vai="risultati"><span class="freccia" aria-hidden="true">↓</span> Scorri in basso e guarda i risultati tu stesso</button>
-          <button class="btn-demo-mini" type="button" data-demo><span class="punto rosso"></span>Conto demo</button>
+          <button class="scorri" type="button" data-vai="risultati">
+            <span class="scorri-icona" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 6l6 6 6-6"/><path d="M6 12l6 6 6-6"/></svg></span>
+            <span class="scorri-testo">Scorri in basso e guarda<br><em>i risultati tu stesso</em></span>
+          </button>
         </div>
       </div>
       <div class="lato-hero">
