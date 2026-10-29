@@ -2222,6 +2222,20 @@ dash.calc('strategie', {
   const TITOLI = { panoramica: 'Panoramica', trade: 'Trade', strategie: 'Strategie', backtest: 'Backtest', sistema: 'Sistema', tema: 'Tema del sito' };
 
   // ================================================================== grafico a linea (saldo)
+  // numeri a sinistra della scala bilanciata: in alto l'ultimo milione raggiunto (o l'ultimo traguardo tondo),
+  // sotto pochi valori tondi (1-2-5 × 10^n) ben distanziati, scelti dove cadono a circa 3/4, 1/2 e 1/4 dell'altezza
+  function tacche(y, vmax, basso, alto) {
+    const m = 10 ** Math.floor(Math.log10(vmax)), cima = Math.floor(vmax / m) * m;
+    const tondi = []; for (let e = 2; e <= 9; e++) for (const k of [1, 2, 5]) tondi.push(k * 10 ** e);
+    const out = [cima], h = basso - alto;
+    for (const f of [0.74, 0.5, 0.27]) {
+      const v = y.invert(basso - f * h);
+      const best = tondi.filter((t) => t < cima).reduce((a, b) => (Math.abs(y(b) - y(v)) < Math.abs(y(a) - y(v)) ? b : a), tondi[0]);
+      if (out.every((t) => Math.abs(y(t) - y(best)) > 30)) out.push(best);
+    }
+    if (out.every((t) => Math.abs(y(t) - y(1000)) > 26)) out.push(1000);
+    return out.sort((a, b) => a - b);
+  }
   function curva(box, pts, o = {}) {
     const W = box.clientWidth, H = o.altezza || 260;
     if (!W) return;
@@ -2238,9 +2252,10 @@ dash.calc('strategie', {
     const [vmin, vmax] = d3.extent(pts, (p) => p.v);
     const logS = !o.lineare && vmin > 0 && vmax / vmin > 20;
     const basso = H - 26, alto = 12;
-    const y = logS ? d3.scaleLog([vmin * 0.8, vmax * 1.25], [basso, alto]) : o.lineare ? d3.scaleLinear([0, vmax * 1.06], [basso, alto]) : d3.scaleLinear([vmin, vmax], [basso, alto]).nice(4);
+    // o.lineare: scala "bilanciata" (potenza 0,27): la curva sale in modo regolare fino al punto finale, senza appiattire i primi anni
+    const y = logS ? d3.scaleLog([vmin * 0.8, vmax * 1.25], [basso, alto]) : o.lineare ? d3.scalePow().exponent(0.27).domain([0, vmax * 1.04]).range([basso, alto]) : d3.scaleLinear([vmin, vmax], [basso, alto]).nice(4);
     const tk = logS ? d3.range(Math.ceil(Math.log10(vmin * 0.8)), Math.floor(Math.log10(vmax * 1.25)) + 1).map((e) => 10 ** e)
-      : o.lineare && vmax >= 2e6 ? d3.range(0, Math.floor(vmax / 1e6) + 1).map((n) => n * 1e6)   // 0, 1 mln, 2 mln... fino all'ultimo milione raggiunto
+      : o.lineare ? tacche(y, vmax, basso, alto)
       : y.ticks(4);
     const eurT = (v) => (v === 0 ? '0 €' : v >= 1e6 ? num(v / 1e6, v >= 1e7 || Number.isInteger(v / 1e6) ? 0 : 1) + ' mln €' : v >= 1e5 ? num(v / 1e3, 0) + ' mila €' : num(v, 0) + ' €');
     const fs = o.piccolo ? 12 : 13;
