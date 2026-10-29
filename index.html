@@ -998,6 +998,16 @@ body.festa-halloween .compagno.a-inizio .v-base .r-occhi ellipse { animation: oc
 .p-goccia { width: 7px; height: 10px; margin: -5px 0 0 -3px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: radial-gradient(circle at 35% 30%, #fff, #7fd3ff 55%, #2f9fd8); }
 .p-tricolore { width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: var(--col); box-shadow: 0 0 0 1px rgba(0, 0, 0, .08); filter: blur(.4px); animation-name: sbuffo; }
 @keyframes sbuffo { 0% { opacity: 0; transform: scale(.4); } 15% { opacity: .95; } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(calc(var(--k) * 2.2)); } }
+/* riquadro media annua / capitale moltiplicato / anni in positivo: numeri d'oro con un riflesso che passa, "pop" quando arrivano */
+.confronto b { background: linear-gradient(100deg, #e3b23c 0%, #f8dc8a 20%, #fff6d8 28%, #f8dc8a 36%, #e3b23c 55%, #c9952a 75%, #f8dc8a 100%); background-size: 280% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent; animation: riflesso-oro 4.5s linear infinite; display: inline-block; }
+.confronto div:nth-child(2) b { animation-delay: -1.5s; } .confronto div:nth-child(3) b { animation-delay: -3s; }
+@keyframes riflesso-oro { from { background-position: 100% 0; } to { background-position: 0% 0; } }
+.confronto b.pop { animation: riflesso-oro 4.5s linear infinite, pop-oro .7s ease-out; }
+@keyframes pop-oro { 0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(248, 220, 138, 0)); } 35% { transform: scale(1.14); filter: drop-shadow(0 0 10px rgba(248, 220, 138, .8)); } 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(248, 220, 138, 0)); } }
+.confronto { position: relative; overflow: hidden; }
+.confronto::after { content: ""; position: absolute; inset: -40% -10%; pointer-events: none; background: radial-gradient(30% 50% at 50% 50%, rgba(248, 220, 138, .1), transparent 70%); animation: alone-oro 6s ease-in-out infinite alternate; }
+@keyframes alone-oro { from { transform: translateX(-35%); } to { transform: translateX(35%); } }
 </style>
 </head>
 <body class="pub">
@@ -2155,7 +2165,7 @@ dash.calc('strategie', {
       if (c.giro !== giro) return;                       // è uscito dallo schermo: si ferma
       const k = Math.min(1, (t - t0) / durata), f = 1 - Math.pow(1 - k, 2);
       e.textContent = c.fmt(c.da + (c.v - c.da) * f);
-      if (k < 1) requestAnimationFrame(passo); else { c.stato = 'fatto'; e.textContent = c.fmt(c.v); }
+      if (k < 1) requestAnimationFrame(passo); else { c.stato = 'fatto'; e.textContent = c.fmt(c.v); if (e.closest('.confronto')) { e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); } }
     };
     requestAnimationFrame(passo);
   }
@@ -2223,13 +2233,16 @@ dash.calc('strategie', {
     const giorni = (c.pts[c.pts.length - 1].d - c.pts[0].d) / 864e5;
     const molt = t.saldo_finale / 1000;
     const media = (Math.pow(molt, 365.25 / giorni) - 1) * 100;
-    conta($('#h-titolo-num'), media, (v) => '+' + num(v, 0) + '%', 3000);
-    conta($('#h-c-bot'), molt, (v) => '×' + num(v, 0), 3500, 1);
+    // media annua, capitale moltiplicato e anni in positivo partono insieme quando il riquadro è sullo schermo
+    const riq = $('.confronto');
+    conta($('#h-titolo-num'), media, (v) => '+' + num(v, 0) + '%', 3000, 0, riq);
+    conta($('#h-c-bot'), molt, (v) => '×' + num(v, 0), 3500, 1, riq);
     conta($('#h-saldo'), t.saldo_finale, (v) => euroIntero(v), 4000, 1000);
     $('#h-calo').textContent = '−' + num(t.calo_max * 100, 0) + '%';
     if (A.status === 'ok') {
       const pos = A.data.filter((r) => r.rendimento > 0).length;
-      $('#h-anni').textContent = pos + ' su ' + A.data.length;
+      const nA = A.data.length;
+      conta($('#h-anni'), pos, (v) => Math.round(v) + ' su ' + nA, 2200, 0, riq);
       // le caselle si creano una volta (per gli stessi anni) e poi si aggiornano: così il conteggio non si perde
       const box = $('#h-anni-lista'), kA = A.data.map((r) => r.anno).join(',');
       box.style.setProperty('--n', A.data.length);
