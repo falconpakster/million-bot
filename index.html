@@ -264,8 +264,6 @@ body.pub .bt-mesi.con-scelta { display: block; }
 @media (max-width: 600px) { button.anno-b .medaglia { top: 10px; right: 7px; width: 21px; height: 21px; font-size: 11px; } }
 @media (max-width: 600px) {
   .bt-mesi-scelta button { padding: 7px 9px; } .bt-mesi-scelta button b { font-size: 15px; }
-  body.pub .bt-mese-vista .bt-t th:nth-child(1), body.pub .bt-mese-vista .bt-t td:nth-child(1),
-  body.pub .bt-mese-vista .bt-t th:nth-child(4), body.pub .bt-mese-vista .bt-t td:nth-child(4) { display: none; }
   body.pub .bt-mese-vista .bt-t { font-size: 14px; }
   body.pub .bt-mese-vista .bt-card { padding-left: 12px; padding-right: 12px; }
 }
@@ -1476,7 +1474,7 @@ body.pub.festa-natale .testata::before, body.pub.festa-natale .testata::after { 
 
   <header class="bt-head sez-mesi">
     <h2 class="bt-sez">I trade mese per mese</h2>
-    <p class="bt-sub solo-pub">Ogni riga è un trade chiuso nell'anno scelto: il giorno di chiusura, se ha preso il TP o lo SL, quanto ha fatto guadagnare o perdere (in % del saldo e in euro) e il saldo subito dopo.</p>
+    <p class="bt-sub solo-pub">Ogni riga è un trade chiuso nell'anno scelto: il giorno di chiusura, se ha preso il TP o lo SL, quanto ha fatto guadagnare o perdere in % del saldo. In alto l'ultimo trade.</p>
   </header>
   <section class="bt-mesi" id="mesi"></section>
 
@@ -2027,8 +2025,8 @@ dash.calc('strategie', {
       : 'Ogni barra è un mese dell\'anno scelto: sopra lo zero il mese ha chiuso in guadagno, sotto in perdita. I numeri a sinistra sono quanto è cresciuto (o sceso) il saldo nel mese, in %. Le medaglie sono i tre mesi migliori. Passa sopra una barra per i dettagli.';
     const sm = root.querySelector('.sez-mesi h2'); if (sm) sm.textContent = tutti ? 'I trade anno per anno' : 'I trade mese per mese';
     const smp = root.querySelector('.sez-mesi .bt-sub.solo-pub');
-    if (smp) smp.textContent = tutti ? 'Apri un anno per vedere i suoi trade mese per mese: il giorno di chiusura, se ha preso il TP o lo SL, quanto ha fatto guadagnare o perdere (in % del saldo e in euro) e il saldo subito dopo.'
-      : 'Ogni riga è un trade chiuso nell\'anno scelto: il giorno di chiusura, se ha preso il TP o lo SL, quanto ha fatto guadagnare o perdere (in % del saldo e in euro) e il saldo subito dopo.';
+    if (smp) smp.textContent = tutti ? 'Apri un anno per vedere i suoi trade mese per mese: il giorno di chiusura, se ha preso il TP o lo SL e quanto ha fatto guadagnare o perdere in % del saldo. In alto l\'ultimo trade.'
+      : 'Ogni riga è un trade chiuso nell\'anno scelto: il giorno di chiusura, se ha preso il TP o lo SL e quanto ha fatto guadagnare o perdere in % del saldo. In alto l\'ultimo trade.';
     const bm = document.getElementById('b-mesi');
     if (bm && !root.querySelector('#mesi').classList.contains('aperto')) bm.textContent = tutti ? 'Mostra tutti i trade' : 'Mostra tutti i trade dell’anno';
 
@@ -2062,7 +2060,7 @@ dash.calc('strategie', {
     const tAnno = rows.filter((r) => Number(r.anno) === anno);
     const primo = anno === d3.min(anni, (r) => Number(r.anno)) ? d3.min(tAnno, (r) => Number(r.mese)) : 1;
     const fine = anno === ultimo ? d3.max(tAnno, (r) => Number(r.mese)) : 12;
-    const COLS = window.PUB ? [['id', '#', 'l'], ['chiusura', 'Chiuso il', 'l'], ['esito', 'Esito'], ['pct', '%'], ['euro', '€'], ['saldo', 'Saldo dopo']]
+    const COLS = window.PUB ? [['chiusura', 'Chiuso il', 'l'], ['esito', 'Esito'], ['pct', '%']]
       : [['id', '#', 'l'], ['strategia', 'Strategia', 'l'], ['direzione', 'Direzione', 'l'], ['entrata', 'Entrata', 'l'], ['chiusura', 'Chiusura', 'l'],
       ['prezzo_entrata', 'Prezzo'], ['stop_loss', 'Stop loss'], ['take_profit', 'Take profit'], ['lotti', 'Lotti'], ['rischio_pct', 'Rischio'],
       ['esito', 'Esito'], ['R', 'R'], ['euro', '€'], ['saldo', 'Saldo dopo']];
@@ -2089,10 +2087,12 @@ dash.calc('strategie', {
       for (const [f, l, c] of COLS) { const th = document.createElement('th'); th.dataset.field = f; th.textContent = l; if (c) th.className = c; htr.append(th); }
       thead.append(htr);
       const tbody = document.createElement('tbody');
-      for (const x of tAnno.filter((t) => Number(t.mese) === m).sort((a, b) => a.id - b.id)) {
+      // sul sito pubblico in alto l'ultimo trade chiuso del mese
+      const ord = window.PUB ? (a, b) => (a.chiusura < b.chiusura ? 1 : a.chiusura > b.chiusura ? -1 : b.id - a.id) : (a, b) => a.id - b.id;
+      for (const x of tAnno.filter((t) => Number(t.mese) === m).sort(ord)) {
         const tr = document.createElement('tr');
         if (Number(x.id) === Number(dash.params().grafico || 0)) tr.className = 'sel';
-        cella(tr, String(x.id), 'l');
+        if (!window.PUB) cella(tr, String(x.id), 'l');
         if (window.PUB) cella(tr, x.chiusura.slice(8, 10) + '/' + x.chiusura.slice(5, 7), 'l');
         else {
           cella(tr, x.strategia, 'l'); cella(tr, x.direzione, 'l');
@@ -2103,7 +2103,7 @@ dash.calc('strategie', {
         const e = cella(tr, ''); const pill = document.createElement('span'); pill.className = 'bt-pill ' + x.esito.toLowerCase(); pill.textContent = x.esito; e.append(pill);
         if (window.PUB) { const pp = Number(x.saldo) - Number(x.euro) > 0 ? Number(x.euro) / (Number(x.saldo) - Number(x.euro)) : 0; segno(cella(tr, pctS(pp)), pp); }   // % del saldo che aveva prima del trade
         else segno(cella(tr, rS(x.R)), x.R);
-        segno(cella(tr, eurS(x.euro)), x.euro); cella(tr, eur(x.saldo));
+        if (!window.PUB) { segno(cella(tr, eurS(x.euro)), x.euro); cella(tr, eur(x.saldo)); }
         tbody.append(tr);
       }
       tab.append(thead, tbody); wrap.append(tab); sec.append(wrap); return sec;
@@ -2253,10 +2253,19 @@ dash.calc('strategie', {
     const logS = !o.lineare && vmin > 0 && vmax / vmin > 20;
     const basso = H - 26, alto = 12;
     // o.lineare: scala "bilanciata" (potenza 0,27): la curva sale in modo regolare fino al punto finale, senza appiattire i primi anni
-    const y = logS ? d3.scaleLog([vmin * 0.8, vmax * 1.25], [basso, alto]) : o.lineare ? d3.scalePow().exponent(0.27).domain([0, vmax * 1.04]).range([basso, alto]) : d3.scaleLinear([vmin, vmax], [basso, alto]).nice(4);
+    let y = logS ? d3.scaleLog([vmin * 0.8, vmax * 1.25], [basso, alto]) : o.lineare ? d3.scalePow().exponent(0.27).domain([0, vmax * 1.04]).range([basso, alto]) : d3.scaleLinear([vmin, vmax], [basso, alto]).nice(4);
     const tk = logS ? d3.range(Math.ceil(Math.log10(vmin * 0.8)), Math.floor(Math.log10(vmax * 1.25)) + 1).map((e) => 10 ** e)
       : o.lineare ? tacche(y, vmax, basso, alto)
       : y.ticks(4);
+    if (o.lineare && tk.length > 1) {
+      // numeri a sinistra tutti alla stessa distanza: la scala va dritta da un numero al successivo (a tratti),
+      // sotto il primo resta una fascia piccola, sopra l'ultimo lo spazio per arrivare al saldo di oggi
+      const n = tk.length - 1, fondo = 14, cimaV = vmax * 1.04, ult = tk[n] - tk[n - 1];
+      const gap = (basso - alto - fondo) / (n + Math.max(0, cimaV - tk[n]) / ult);
+      const dom = [0, ...tk], rng = [basso, ...tk.map((_, i) => basso - fondo - i * gap)];
+      if (cimaV > tk[n]) { dom.push(cimaV); rng.push(alto); }
+      y = d3.scaleLinear(dom, rng);
+    }
     const eurT = (v) => (v === 0 ? '0 €' : v >= 1e6 ? num(v / 1e6, v >= 1e7 || Number.isInteger(v / 1e6) ? 0 : 1) + ' mln €' : v >= 1e5 ? num(v / 1e3, 0) + ' mila €' : num(v, 0) + ' €');
     const fs = o.piccolo ? 12 : 13;
     let left = 0;
