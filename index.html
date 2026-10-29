@@ -2240,7 +2240,11 @@ dash.calc('strategie', {
     const basso = H - 26, alto = 12;
     const y = logS ? d3.scaleLog([vmin * 0.8, vmax * 1.25], [basso, alto]) : d3.scaleLinear([vmin, vmax], [basso, alto]).nice(4);
     const tk = logS ? d3.range(Math.ceil(Math.log10(vmin * 0.8)), Math.floor(Math.log10(vmax * 1.25)) + 1).map((e) => 10 ** e) : y.ticks(4);
-    const eurT = (v) => (v >= 1e6 ? num(v / 1e6, v >= 1e7 ? 0 : 1) + ' mln €' : v >= 1e5 ? num(v / 1e3, 0) + ' mila €' : num(v, 0) + ' €');
+    if (logS) {   // in alto anche l'ultimo traguardo raggiunto (es. 4 mln €), non solo le potenze di 10
+      const m = 10 ** Math.floor(Math.log10(vmax)), cima = Math.floor(vmax / m) * m;
+      if (cima / Math.max(...tk) >= 2) tk.push(cima);
+    }
+    const eurT = (v) => (v >= 1e6 ? num(v / 1e6, v >= 1e7 || Number.isInteger(v / 1e6) ? 0 : 1) + ' mln €' : v >= 1e5 ? num(v / 1e3, 0) + ' mila €' : num(v, 0) + ' €');
     const fs = o.piccolo ? 12 : 13;
     let left = 0;
     tk.forEach((v) => { const pr = svg.append('text').attr('font-size', fs).text(eurT(v)); left = Math.max(left, pr.node().getComputedTextLength()); pr.remove(); });
