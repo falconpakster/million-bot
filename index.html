@@ -2236,15 +2236,13 @@ dash.calc('strategie', {
     const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H).attr('role', 'img')
       .attr('aria-label', o.etichetta || 'Andamento del saldo');
     const [vmin, vmax] = d3.extent(pts, (p) => p.v);
-    const logS = vmin > 0 && vmax / vmin > 20;
+    const logS = !o.lineare && vmin > 0 && vmax / vmin > 20;
     const basso = H - 26, alto = 12;
-    const y = logS ? d3.scaleLog([vmin * 0.8, vmax * 1.25], [basso, alto]) : d3.scaleLinear([vmin, vmax], [basso, alto]).nice(4);
-    const tk = logS ? d3.range(Math.ceil(Math.log10(vmin * 0.8)), Math.floor(Math.log10(vmax * 1.25)) + 1).map((e) => 10 ** e) : y.ticks(4);
-    if (logS) {   // in alto anche l'ultimo traguardo raggiunto (es. 4 mln €), non solo le potenze di 10
-      const m = 10 ** Math.floor(Math.log10(vmax)), cima = Math.floor(vmax / m) * m;
-      if (cima / Math.max(...tk) >= 2) tk.push(cima);
-    }
-    const eurT = (v) => (v >= 1e6 ? num(v / 1e6, v >= 1e7 || Number.isInteger(v / 1e6) ? 0 : 1) + ' mln €' : v >= 1e5 ? num(v / 1e3, 0) + ' mila €' : num(v, 0) + ' €');
+    const y = logS ? d3.scaleLog([vmin * 0.8, vmax * 1.25], [basso, alto]) : o.lineare ? d3.scaleLinear([0, vmax * 1.06], [basso, alto]) : d3.scaleLinear([vmin, vmax], [basso, alto]).nice(4);
+    const tk = logS ? d3.range(Math.ceil(Math.log10(vmin * 0.8)), Math.floor(Math.log10(vmax * 1.25)) + 1).map((e) => 10 ** e)
+      : o.lineare && vmax >= 2e6 ? d3.range(0, Math.floor(vmax / 1e6) + 1).map((n) => n * 1e6)   // 0, 1 mln, 2 mln... fino all'ultimo milione raggiunto
+      : y.ticks(4);
+    const eurT = (v) => (v === 0 ? '0 €' : v >= 1e6 ? num(v / 1e6, v >= 1e7 || Number.isInteger(v / 1e6) ? 0 : 1) + ' mln €' : v >= 1e5 ? num(v / 1e3, 0) + ' mila €' : num(v, 0) + ' €');
     const fs = o.piccolo ? 12 : 13;
     let left = 0;
     tk.forEach((v) => { const pr = svg.append('text').attr('font-size', fs).text(eurT(v)); left = Math.max(left, pr.node().getComputedTextLength()); pr.remove(); });
@@ -2499,7 +2497,7 @@ dash.calc('strategie', {
       });
     }
     const box = $('#h-curva');
-    if (box.offsetParent) curva(box, c.pts, { altezza: 230, chiave: c.k, piccolo: true, etichetta: 'Saldo simulato da 1.000 € nel 2020 a oggi' });
+    if (box.offsetParent) curva(box, c.pts, { altezza: 230, chiave: c.k, piccolo: true, lineare: true, etichetta: 'Saldo simulato da 1.000 € nel 2020 a oggi' });
   }
   // grafico della pagina iniziale ingrandito in una finestra
   const sg = $('#schermo-grafico'), sgFin = sg.querySelector('.sg-finestra');
@@ -2510,7 +2508,7 @@ dash.calc('strategie', {
     const TOT = dash.data('totale'); $('#sg-saldo').textContent = TOT.status === 'ok' ? euroIntero(TOT.data[0].saldo_finale) : $('#h-saldo').textContent;
     box.querySelectorAll('svg').forEach((x) => x.remove());
     const H = Math.max(220, box.clientHeight);
-    curva(box, c.pts, { altezza: H, chiave: c.k + 'g', blocca: true, etichetta: 'Saldo simulato da 1.000 € nel 2020 a oggi, ingrandito' });
+    curva(box, c.pts, { altezza: H, chiave: c.k + 'g', blocca: true, lineare: true, etichetta: 'Saldo simulato da 1.000 € nel 2020 a oggi, ingrandito' });
   }
   function apriGrafico() {
     if (!puntiBt()) return;
