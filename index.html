@@ -1149,6 +1149,8 @@ body.pub.festa-natale .testata::before, body.pub.festa-natale .testata::after { 
 #mesi > .bt-anno-det > summary { padding: 10px 14px; gap: 4px 12px; align-items: center; flex-wrap: nowrap; }
 #mesi > .bt-anno-det > summary h3 { font-size: 17px; }
 #mesi > .bt-anno-det > summary .bt-mese-sum { font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bt-tip-link { border: 0; background: none; padding: 0; font: inherit; color: var(--oro, #0f7a47); font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; cursor: pointer; }
+.bt-mese-vista { scroll-margin-top: 84px; }
 </style>
 </head>
 <body class="pub">
@@ -1648,6 +1650,15 @@ dash.calc('strategie', {
   const MESI = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
   const INIZIALI = ['G', 'F', 'M', 'A', 'M', 'G', 'L', 'A', 'S', 'O', 'N', 'D'];
   const meseScelto = new Map();          // mese aperto per ogni anno (resta quando i dati si aggiornano)
+  // apre la sezione "I trade mese per mese" sul mese scelto e ci scorre
+  function vaiAlMese(anno, m) {
+    meseScelto.set(anno, m);
+    const box = root.querySelector('#mesi'), bm = document.getElementById('b-mesi');
+    if (bm && !box.classList.contains('aperto')) bm.click();
+    const b = box.querySelector(`.bt-mesi-scelta button[data-m="${m}"]`);
+    if (b) b.click();
+    requestAnimationFrame(() => { const v = box.querySelector('.bt-mese-vista') || box; v.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  }
   const ORDINE = ['Doppia rottura', 'Seconda correzione', 'Continuazione dopo SL', 'Prima candela', 'Ritest trend line', 'Giappone 225 prima candela'];
   const nf = (d) => new Intl.NumberFormat('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: 'always' });
   const num = (v, d = 0) => nf(d).format(v);
@@ -1674,9 +1685,18 @@ dash.calc('strategie', {
         if (t.classList.contains('fisso') && !azione) return;
         t.replaceChildren();
         const a = document.createElement('div'); a.className = 'd'; a.textContent = data;
-        const b = document.createElement('div'); b.textContent = testo;
+        const b = document.createElement('div');
+        // testo può essere un elenco di pezzi: stringhe o {link, fn} (un pezzo cliccabile, sottolineato)
+        let conLink = false;
+        for (const p of [].concat(testo)) {
+          if (typeof p === 'string') { b.append(p); continue; }
+          conLink = true;
+          const l = document.createElement('button'); l.type = 'button'; l.className = 'bt-tip-link'; l.textContent = p.link;
+          l.addEventListener('click', (e) => { e.stopPropagation(); chiudi(); p.fn(); });
+          b.append(l);
+        }
         t.append(a, b); t.hidden = false;
-        t.classList.toggle('fisso', !!azione);
+        t.classList.toggle('fisso', !!azione || conLink);
         if (azione) {
           const p = document.createElement('button'); p.type = 'button'; p.className = 'bt-tip-btn'; p.textContent = azione.testo;
           p.addEventListener('click', (e) => { e.stopPropagation(); chiudi(); azione.fn(); });
@@ -1903,7 +1923,9 @@ dash.calc('strategie', {
       .on('mousemove click', (e, d) => {
         const [px, py] = d3.pointer(e, box);
         const pm = podio.indexOf(d.m);
-        tt.show(px, py, MESI[d.m - 1] + ' ' + anno + (pm >= 0 ? ' · ' + (pm + 1) + '° mese migliore' : ''), pctS(Number(d.r.rendimento)) + ' · ' + d.r.trade + ' trade · ' + eurS(Number(d.r.euro)));
+        // "25 trade" sottolineato: porta ai trade di quel mese, nella sezione sotto
+        const pezzi = [pctS(Number(d.r.rendimento)) + ' · ', ...(e.type === 'click' ? [{ link: d.r.trade + ' trade', fn: () => vaiAlMese(anno, d.m) }] : [d.r.trade + ' trade']), ' · ' + eurS(Number(d.r.euro))];
+        tt.show(px, py, MESI[d.m - 1] + ' ' + anno + (pm >= 0 ? ' · ' + (pm + 1) + '° mese migliore' : ''), pezzi);
       })
       .on('mouseleave', () => tt.hide());
     podioMedaglie(svg, podio.map((m, k) => ({ cx: x(m) + x.bandwidth() / 2, top: y(P(per.get(m))), pos: k })));
