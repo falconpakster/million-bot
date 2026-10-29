@@ -1158,6 +1158,9 @@ body.pub.festa-natale .testata::before, body.pub.festa-natale .testata::after { 
 .sez-mesi-azioni { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .sez-mesi-azioni .btn { margin: 0 !important; }
 .sez-mesi { scroll-margin-top: 84px; }
+/* sul telefono, quando la barra del browser si nasconde scorrendo, lo schermo si allunga: il cielo deve coprire anche quella parte
+   (prima in fondo restava una striscia chiara) */
+.cielo { bottom: auto !important; height: calc(100vh + 120px); height: max(100lvh, 100vh); }
 </style>
 </head>
 <body class="pub">
@@ -2052,7 +2055,7 @@ dash.calc('strategie', {
       if (f === 'mesi_pos') { el.textContent = mesiPos ?? '—'; return; }
       const v = ra ? ra[f] : null;
       if (v == null) { el.textContent = '—'; return; }
-      el.textContent = f === 'calo_max' ? (el.classList.contains('v') ? '−' : '') + pct(v) : f === 'pct_tp' ? pct(v) : f === 'rendimento' ? (tutti ? '×' + num(v + 1, 0) : pctS(v)) : f === 'R' ? rS(v)
+      el.textContent = f === 'calo_max' ? (el.classList.contains('v') ? '−' : '') + pct(v) : f === 'pct_tp' ? pct(v) : f === 'rendimento' ? (Math.abs(v) >= 10 ? (v > 0 ? '+' : '') + num(v * 100, 0) + '%' : pctS(v)) : f === 'R' ? rS(v)
         : f === 'euro' ? eurS(v) + (el.classList.contains('v') ? '' : ' dai trade') : f.startsWith('saldo') ? eur(v) : num(v);
     });
 
