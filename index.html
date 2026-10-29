@@ -1067,11 +1067,53 @@ body.pub .hero-pub > div:first-child::before { content: ""; position: absolute; 
 body.pub .btn-demo-mini { background: #fbecea; }
 body.pub .piede .rischio { text-shadow: none; background: #fff6f4; }   /* riquadro del rischio: pieno, così coriandoli e pioggia non passano */
 body.pub.buio .piede .rischio { background: #fff6f4; }
+
+/* ---- Barra in alto (29/10/2026): riquadro verde bosco con bordo oro, come il riquadro dei numeri ---- */
+body.pub .testata { background: transparent !important; border-bottom: 0; padding: 10px clamp(10px, 3vw, 24px) 0; }
+body.pub .testata-in { position: relative; overflow: hidden; padding: 9px 10px 9px 10px; gap: 14px;
+  background: radial-gradient(120% 160% at 0% 0%, #2a7451 0%, #17503a 38%, #0e3c2a 70%, #0b3122 100%);
+  border: 1px solid rgba(232, 190, 92, .45); border-radius: 22px;
+  box-shadow: 0 12px 30px rgba(9, 44, 29, .22), inset 0 1px 0 rgba(255, 255, 255, .1); }
+body.pub .testata-in::after { content: ""; position: absolute; left: 18px; right: 18px; bottom: 0; height: 1px; pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(246, 214, 128, .85), transparent); }
+body.pub .testata .marchio img { width: 42px; height: 42px; box-shadow: 0 0 0 2px #e3b23c, 0 0 14px rgba(240, 196, 84, .45); }
+body.pub .testata .marchio span { color: #ffffff; font-size: 19px; }
+body.pub .testata .marchio span small { color: #f2cf73; letter-spacing: .12em; font-weight: 600; }
+body.pub .testata .menu button { color: #d5e8dc; font-weight: 500; }
+body.pub .testata .menu button:hover { color: #f6d680; }
+.testata .social { display: flex; gap: 8px; }
+.testata .soc { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; color: #ffffff; text-decoration: none;
+  background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .22); transition: background .2s, color .2s, transform .2s; }
+.testata .soc svg { width: 19px; height: 19px; }
+.testata .soc:hover { background: linear-gradient(135deg, #f8dc8a, #e3b23c 55%, #c18f22); color: #10402b; transform: translateY(-1px); border-color: transparent; }
+body.pub .testata .link-ris { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 999px; font: 600 13px/1 var(--sans);
+  color: #f6dc8f; background: rgba(240, 196, 84, .1); border: 1px solid rgba(240, 196, 84, .55); }
+body.pub .testata .link-ris svg { width: 15px; height: 15px; }
+body.pub .testata .link-ris:hover { background: rgba(240, 196, 84, .22); color: #fff3c9; }
+@media (max-width: 430px) {
+  body.pub .testata-in { gap: 8px; padding: 8px; }
+  body.pub .testata .marchio { gap: 8px; }
+  body.pub .testata .marchio img { width: 36px; height: 36px; }
+  body.pub .testata .marchio span { font-size: 16px; }
+  body.pub .testata .marchio span small { font-size: 9.5px; letter-spacing: .08em; }
+  .testata .social { gap: 6px; }
+  .testata .soc { width: 34px; height: 34px; } .testata .soc svg { width: 17px; height: 17px; }
+  body.pub .testata .link-ris { padding: 8px 9px; }
+  body.pub .testata .link-ris span { display: none; }   /* sul telefono solo il lucchetto */
+}
+/* Natale: le lucine pendono dal bordo del riquadro */
+body.pub.festa-natale .testata::before, body.pub.festa-natale .testata::after { left: clamp(10px, 3vw, 24px); right: clamp(10px, 3vw, 24px); bottom: -14px; }
+/* pulsanti Instagram: oro, accanto a quelli verdi di TikTok */
+.btn-ig { background: linear-gradient(135deg, #f8dc8a, #e3b23c 55%, #c18f22) !important; color: #3d2a05 !important; box-shadow: 0 6px 18px rgba(193, 143, 34, .25); }
+.btn-ig svg { color: #3d2a05; }
+.barra-mobile { gap: 8px; }
 </style>
 </head>
 <body class="pub">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-tt" viewBox="0 0 24 24"><path fill="currentColor" d="M16.6 2h-3.4v13.3a2.9 2.9 0 1 1-2.9-2.9c.3 0 .6 0 .9.1V9a6.3 6.3 0 1 0 5.4 6.3V8.6a8 8 0 0 0 4.4 1.4V6.6a4.5 4.5 0 0 1-4.4-4.6Z"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.25" fill="currentColor"/></symbol>
+  <symbol id="i-lucchetto" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M8.2 10.5V8a3.8 3.8 0 0 1 7.6 0v2.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="12" cy="15.4" r="1.3" fill="currentColor"/></symbol>
   <symbol id="i-tg" viewBox="0 0 24 24"><path fill="currentColor" d="M21.9 4.3 18.7 19.5c-.2 1-.9 1.3-1.7.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.5 13.3 1.8 11.8c-1-.3-1-1 .2-1.5L20.6 3.2c.9-.3 1.6.2 1.3 1.1Z"/></symbol>
   <symbol id="i-pano" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 13h6V4H4zM14 20h6v-9h-6zM14 4h6v3h-6zM4 20h6v-3H4z"/></symbol>
   <symbol id="i-trade" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M7 4v16M7 8h3v6H7M17 4v16M17 10h-3v5h3"/></symbol>
@@ -1105,8 +1147,11 @@ body.pub.buio .piede .rischio { background: #fff6f4; }
       <nav class="menu" aria-label="Sezioni">
         <button type="button" data-vai="risultati">Risultati</button><button type="button" data-vai="perche">Perché è diverso</button><button type="button" data-vai="come">Come funziona</button><button type="button" data-vai="chi">Chi sono</button>
       </nav>
-      <a class="btn btn-oro" href="https://www.tiktok.com/@_roadto1milion_" target="_blank" rel="noopener"><svg><use href="#i-tt"/></svg><span class="lungo">Seguimi su TikTok</span></a>
-      <button class="link-ris" id="b-entra" type="button">Area riservata</button>
+      <div class="social" aria-label="Seguimi">
+        <a class="soc soc-tt" href="https://www.tiktok.com/@_roadto1milion_" target="_blank" rel="noopener" aria-label="Seguimi su TikTok" title="TikTok"><svg><use href="#i-tt"/></svg></a>
+        <a class="soc soc-ig" href="https://www.instagram.com/_roadto1milion_/" target="_blank" rel="noopener" aria-label="Seguimi su Instagram" title="Instagram"><svg><use href="#i-ig"/></svg></a>
+      </div>
+      <button class="link-ris" id="b-entra" type="button"><svg aria-hidden="true"><use href="#i-lucchetto"/></svg><span>Area riservata</span></button>
     </div>
   </header>
 
@@ -1157,7 +1202,7 @@ body.pub.buio .piede .rischio { background: #fff6f4; }
         <div class="demo-striscia" id="demo-striscia" hidden></div>
         <div class="demo-perche">
           <div><h3>Perché parte adesso</h3><p>Fino a ottobre 2026 ho costruito e ricontrollato le strategie sui prezzi del passato. Il <strong>26 ottobre 2026</strong> il bot è stato pronto ed è partito dal vivo: per questo il conto inizia da quel giorno.</p></div>
-          <div><h3>Perché un conto demo</h3><p>Prima di usare soldi veri voglio la prova che <strong>dal vivo il bot fa gli stessi trade della simulazione</strong>, con prezzi, spread ed esecuzioni reali. Il conto demo usa gli stessi prezzi del conto reale, ma senza rischiare capitale. Quando i risultati dal vivo confermeranno la simulazione passerò al conto reale, e lo annuncerò su TikTok.</p></div>
+          <div><h3>Perché un conto demo</h3><p>Prima di usare soldi veri voglio la prova che <strong>dal vivo il bot fa gli stessi trade della simulazione</strong>, con prezzi, spread ed esecuzioni reali. Il conto demo usa gli stessi prezzi del conto reale, ma senza rischiare capitale. Quando i risultati dal vivo confermeranno la simulazione passerò al conto reale, e lo annuncerò su TikTok e Instagram.</p></div>
         </div>
         <p class="demo-link"><a class="btn btn-vuoto" id="b-myfxbook" href="" target="_blank" rel="noopener">Verifica il conto su Myfxbook ↗</a><span id="myfxbook-presto" hidden>Il collegamento al conto su <strong>Myfxbook</strong>, per verificarlo in modo indipendente, arriverà a breve.</span></p>
       </section>
@@ -1213,7 +1258,7 @@ body.pub.buio .piede .rischio { background: #fff6f4; }
         <details><summary>I guadagni sono garantiti?</summary><p><strong>No.</strong> Ci sono mesi negativi e periodi di perdite. Si può perdere anche tutto il capitale.</p></details>
         <details><summary>I risultati sono reali?</summary><p>Sono una <strong>simulazione</strong> sui prezzi reali, da gennaio 2020 a oggi, che si aggiorna ogni giorno con le regole del bot. Dal 26 ottobre 2026 il bot <strong>opera anche dal vivo</strong> su un conto demo e i suoi trade entrano nei risultati.</p></details>
         <details><summary>Quanto rischia per operazione?</summary><p>Da circa l'<strong>1,5% a circa il 5%</strong> del conto, sempre con lo stop loss. Il guadagno possibile è <strong>3 volte il rischio</strong>.</p></details>
-        <details><summary>Posso usare Million Bot anch'io?</summary><p><strong>Non ancora.</strong> Lo annuncerò su TikTok.</p></details>
+        <details><summary>Posso usare Million Bot anch'io?</summary><p><strong>Non ancora.</strong> Lo annuncerò su TikTok e Instagram.</p></details>
       </div>
     </section>
 
@@ -1237,16 +1282,17 @@ body.pub.buio .piede .rischio { background: #fff6f4; }
       <h2>Segui la scalata verso il primo <span class="milione">milione</span></h2>
       <div class="azioni">
         <a class="btn btn-oro" href="https://www.tiktok.com/@_roadto1milion_" target="_blank" rel="noopener"><svg><use href="#i-tt"/></svg>Seguimi su TikTok</a>
+        <a class="btn btn-oro btn-ig" href="https://www.instagram.com/_roadto1milion_/" target="_blank" rel="noopener"><svg><use href="#i-ig"/></svg>Seguimi su Instagram</a>
         <a class="btn btn-chiaro" href="https://t.me/Samu7740" target="_blank" rel="noopener"><svg><use href="#i-tg"/></svg>Scrivimi su Telegram</a>
       </div>
     </section>
 
     <footer class="piede">
       <div class="rischio">I CFD sono strumenti complessi con un alto rischio di perdere denaro a causa della leva: tra il 74% e l'89% dei conti al dettaglio perde denaro con i CFD. Risultati in gran parte simulati; i risultati passati non garantiscono quelli futuri. Non è una consulenza finanziaria.</div>
-      <div class="righe"><span>© 2026 Samuel Cavalera · Million Bot · Road to 1 Million</span><span><a href="https://t.me/Samu7740" target="_blank" rel="noopener">Telegram</a> · <a href="https://www.tiktok.com/@_roadto1milion_" target="_blank" rel="noopener">TikTok</a></span></div>
+      <div class="righe"><span>© 2026 Samuel Cavalera · Million Bot · Road to 1 Million</span><span><a href="https://t.me/Samu7740" target="_blank" rel="noopener">Telegram</a> · <a href="https://www.tiktok.com/@_roadto1milion_" target="_blank" rel="noopener">TikTok</a> · <a href="https://www.instagram.com/_roadto1milion_/" target="_blank" rel="noopener">Instagram</a></span></div>
     </footer>
   </main>
-  <div class="barra-mobile"><a class="btn btn-oro" href="https://www.tiktok.com/@_roadto1milion_" target="_blank" rel="noopener"><svg><use href="#i-tt"/></svg>Seguimi su TikTok</a></div>
+  <div class="barra-mobile"><a class="btn btn-oro" href="https://www.tiktok.com/@_roadto1milion_" target="_blank" rel="noopener"><svg><use href="#i-tt"/></svg>TikTok</a><a class="btn btn-oro btn-ig" href="https://www.instagram.com/_roadto1milion_/" target="_blank" rel="noopener"><svg><use href="#i-ig"/></svg>Instagram</a></div>
 </div>
 
 <!-- ======================= ACCESSO ======================= -->
@@ -1374,11 +1420,11 @@ body.pub.buio .piede .rischio { background: #fff6f4; }
   </div>
 
   <section class="bt-head bt-numeri" id="anno-numeri">
-    <p class="bt-sub solo-pub">I numeri dell'anno scelto: trade fatti, percentuale di trade chiusi in guadagno, risultato, saldo, rendimento e calo massimo.</p>
+    <p class="bt-sub solo-pub">I numeri dell'anno scelto: trade fatti, percentuale di trade chiusi in guadagno, guadagno, saldo, rendimento e calo massimo.</p>
     <div class="bt-tiles">
       <div class="bt-tile"><span class="k">Trade</span><span class="v" data-k="trade">—</span><span class="s"><span data-k="tp">—</span> TP · <span data-k="sl">—</span> SL</span></div>
       <div class="bt-tile"><span class="k">% TP</span><span class="v" data-k="pct_tp">—</span><span class="s">SL di fila al massimo: <span data-k="max_sl_fila">—</span></span></div>
-      <div class="bt-tile"><span class="k">Risultato</span><span class="v" data-k="R">—</span><span class="s" data-k="euro">—</span></div>
+      <div class="bt-tile"><span class="k">Guadagno</span><span class="v" data-k="euro">—</span><span class="s">dai trade chiusi</span></div>
       <div class="bt-tile"><span class="k bt-tile-saldo">Saldo a fine anno</span><span class="v" data-k="saldo_fine">—</span><span class="s">da <span data-k="saldo_inizio">—</span></span></div>
       <div class="bt-tile"><span class="k">Rendimento</span><span class="v" data-k="rendimento">—</span><span class="s bt-tile-rend">sul saldo di inizio anno</span></div>
       <div class="bt-tile"><span class="k">Calo massimo</span><span class="v" data-k="calo_max">—</span><span class="s">dal punto più alto del saldo</span></div>
@@ -1387,7 +1433,7 @@ body.pub.buio .piede .rischio { background: #fff6f4; }
 
   <header class="bt-head sez-mesi">
     <h2 class="bt-sez">I trade mese per mese</h2>
-    <p class="bt-sub solo-pub">Ogni riga è un trade chiuso nell'anno scelto: il giorno di chiusura, se ha preso il TP o lo SL, il risultato in R e in euro e il saldo subito dopo.</p>
+    <p class="bt-sub solo-pub">Ogni riga è un trade chiuso nell'anno scelto: il giorno di chiusura, se ha preso il TP o lo SL, quanto ha fatto guadagnare o perdere (in % del saldo e in euro) e il saldo subito dopo.</p>
   </header>
   <section class="bt-mesi" id="mesi"></section>
 
@@ -1806,7 +1852,7 @@ dash.calc('strategie', {
       .on('mousemove click', (e, d) => {
         const [px, py] = d3.pointer(e, box);
         const pm = podio.indexOf(d.m);
-        tt.show(px, py, MESI[d.m - 1] + ' ' + anno + (pm >= 0 ? ' · ' + (pm + 1) + '° mese migliore' : ''), pctS(Number(d.r.rendimento)) + ' · ' + rS(Number(d.r.R)) + ' · ' + d.r.trade + ' trade · ' + eurS(Number(d.r.euro)));
+        tt.show(px, py, MESI[d.m - 1] + ' ' + anno + (pm >= 0 ? ' · ' + (pm + 1) + '° mese migliore' : ''), pctS(Number(d.r.rendimento)) + ' · ' + d.r.trade + ' trade · ' + eurS(Number(d.r.euro)));
       })
       .on('mouseleave', () => tt.hide());
     podioMedaglie(svg, podio.map((m, k) => ({ cx: x(m) + x.bandwidth() / 2, top: y(P(per.get(m))), pos: k })));
@@ -1844,13 +1890,13 @@ dash.calc('strategie', {
       .on('click', (e, r) => {          // prima la descrizione dell'anno, poi i mesi con il pulsante
         const [px, py] = d3.pointer(e, box);
         const pa = podio.indexOf(Number(r.anno));
-        tt.show(px, py, String(r.anno) + (pa >= 0 ? ' · ' + (pa + 1) + '° anno migliore' : ''), pctS(Number(r.rendimento)) + ' · ' + rS(Number(r.R)) + ' · ' + r.trade + ' trade',
+        tt.show(px, py, String(r.anno) + (pa >= 0 ? ' · ' + (pa + 1) + '° anno migliore' : ''), pctS(Number(r.rendimento)) + ' · ' + r.trade + ' trade',
           { testo: 'Vedi i mesi del ' + r.anno + ' →', fn: () => scegli(Number(r.anno)) });
       })
       .on('mousemove', (e, r) => {
         const [px, py] = d3.pointer(e, box);
         const pa = podio.indexOf(Number(r.anno));
-        tt.show(px, py, String(r.anno) + (pa >= 0 ? ' · ' + (pa + 1) + '° anno migliore' : ''), pctS(Number(r.rendimento)) + ' · ' + rS(Number(r.R)) + ' · ' + r.trade + ' trade');
+        tt.show(px, py, String(r.anno) + (pa >= 0 ? ' · ' + (pa + 1) + '° anno migliore' : ''), pctS(Number(r.rendimento)) + ' · ' + r.trade + ' trade');
       })
       .on('mouseleave', () => tt.hide());
     podioMedaglie(svg, podio.map((a, k) => { const r = anni.find((z) => Number(z.anno) === a); return { cx: x(a) + x.bandwidth() / 2, top: y(P(r)), pos: k }; }));
@@ -1922,7 +1968,7 @@ dash.calc('strategie', {
       const v = ra ? ra[f] : null;
       if (v == null) { el.textContent = '—'; return; }
       el.textContent = f === 'calo_max' ? (el.classList.contains('v') ? '−' : '') + pct(v) : f === 'pct_tp' ? pct(v) : f === 'rendimento' ? (tutti ? '×' + num(v + 1, 0) : pctS(v)) : f === 'R' ? rS(v)
-        : f === 'euro' ? eurS(v) + ' dai trade' : f.startsWith('saldo') ? eur(v) : num(v);
+        : f === 'euro' ? eurS(v) + (el.classList.contains('v') ? '' : ' dai trade') : f.startsWith('saldo') ? eur(v) : num(v);
     });
 
     if (tutti) disegnaBarreAnni(anni); else disegnaBarre(M.data, anno);
@@ -1933,8 +1979,8 @@ dash.calc('strategie', {
       : 'Ogni barra è un mese dell\'anno scelto: sopra lo zero il mese ha chiuso in guadagno, sotto in perdita. I numeri a sinistra sono quanto è cresciuto (o sceso) il saldo nel mese, in %. Le medaglie sono i tre mesi migliori. Passa sopra una barra per i dettagli.';
     const sm = root.querySelector('.sez-mesi h2'); if (sm) sm.textContent = tutti ? 'I trade anno per anno' : 'I trade mese per mese';
     const smp = root.querySelector('.sez-mesi .bt-sub.solo-pub');
-    if (smp) smp.textContent = tutti ? 'Apri un anno per vedere i suoi trade mese per mese: il giorno di chiusura, se ha preso il TP o lo SL, il risultato in R e in euro e il saldo subito dopo.'
-      : 'Ogni riga è un trade chiuso nell\'anno scelto: il giorno di chiusura, se ha preso il TP o lo SL, il risultato in R e in euro e il saldo subito dopo.';
+    if (smp) smp.textContent = tutti ? 'Apri un anno per vedere i suoi trade mese per mese: il giorno di chiusura, se ha preso il TP o lo SL, quanto ha fatto guadagnare o perdere (in % del saldo e in euro) e il saldo subito dopo.'
+      : 'Ogni riga è un trade chiuso nell\'anno scelto: il giorno di chiusura, se ha preso il TP o lo SL, quanto ha fatto guadagnare o perdere (in % del saldo e in euro) e il saldo subito dopo.';
     const bm = document.getElementById('b-mesi');
     if (bm && !root.querySelector('#mesi').classList.contains('aperto')) bm.textContent = tutti ? 'Mostra tutti i trade' : 'Mostra tutti i trade dell’anno';
 
@@ -1968,7 +2014,7 @@ dash.calc('strategie', {
     const tAnno = rows.filter((r) => Number(r.anno) === anno);
     const primo = anno === d3.min(anni, (r) => Number(r.anno)) ? d3.min(tAnno, (r) => Number(r.mese)) : 1;
     const fine = anno === ultimo ? d3.max(tAnno, (r) => Number(r.mese)) : 12;
-    const COLS = window.PUB ? [['id', '#', 'l'], ['chiusura', 'Chiuso il', 'l'], ['esito', 'Esito'], ['R', 'R'], ['euro', '€'], ['saldo', 'Saldo dopo']]
+    const COLS = window.PUB ? [['id', '#', 'l'], ['chiusura', 'Chiuso il', 'l'], ['esito', 'Esito'], ['pct', '%'], ['euro', '€'], ['saldo', 'Saldo dopo']]
       : [['id', '#', 'l'], ['strategia', 'Strategia', 'l'], ['direzione', 'Direzione', 'l'], ['entrata', 'Entrata', 'l'], ['chiusura', 'Chiusura', 'l'],
       ['prezzo_entrata', 'Prezzo'], ['stop_loss', 'Stop loss'], ['take_profit', 'Take profit'], ['lotti', 'Lotti'], ['rischio_pct', 'Rischio'],
       ['esito', 'Esito'], ['R', 'R'], ['euro', '€'], ['saldo', 'Saldo dopo']];
@@ -1987,7 +2033,7 @@ dash.calc('strategie', {
       const w = 'chiave=' + r.chiave;
       const pezzo = (field, testo) => { const b = document.createElement('b'); mark(b, 'mesi', field, w); b.textContent = testo; return b; };
       sum.append(pezzo('trade', num(r.trade)), ' trade · ', pezzo('tp', num(r.tp)), ' TP / ', pezzo('sl', num(r.sl)), ' SL · ',
-        pezzo('R', rS(r.R)), ' · ', pezzo('euro', eurS(r.euro)), ' · saldo a fine mese ', pezzo('saldo_fine', eur(r.saldo_fine)));
+        pezzo('rendimento', pctS(Number(r.rendimento))), ' · ', pezzo('euro', eurS(r.euro)), ' · saldo a fine mese ', pezzo('saldo_fine', eur(r.saldo_fine)));
       head.append(sum);
       const wrap = document.createElement('div'); wrap.className = 'bt-scroll';
       const tab = document.createElement('table'); tab.className = 'bt-t'; tab.dataset.source = 'trade'; tab.dataset.rowKey = 'id';
@@ -2007,7 +2053,9 @@ dash.calc('strategie', {
           cella(tr, Number(x.lotti) ? num(x.lotti, 2) : '—'); cella(tr, num(x.rischio_pct, 2) + '%');
         }
         const e = cella(tr, ''); const pill = document.createElement('span'); pill.className = 'bt-pill ' + x.esito.toLowerCase(); pill.textContent = x.esito; e.append(pill);
-        segno(cella(tr, rS(x.R)), x.R); segno(cella(tr, eurS(x.euro)), x.euro); cella(tr, eur(x.saldo));
+        if (window.PUB) { const pp = Number(x.saldo) - Number(x.euro) > 0 ? Number(x.euro) / (Number(x.saldo) - Number(x.euro)) : 0; segno(cella(tr, pctS(pp)), pp); }   // % del saldo che aveva prima del trade
+        else segno(cella(tr, rS(x.R)), x.R);
+        segno(cella(tr, eurS(x.euro)), x.euro); cella(tr, eur(x.saldo));
         tbody.append(tr);
       }
       tab.append(thead, tbody); wrap.append(tab); sec.append(wrap); return sec;
@@ -2033,7 +2081,7 @@ dash.calc('strategie', {
       const v = document.createElement('b'); const rp = r ? Number(r.rendimento) : 0;
       v.textContent = r ? (rp > 0 ? '+' : rp < 0 ? '−' : '') + num(Math.abs(rp) * 100, Math.abs(rp) >= .1 ? 0 : 1) + '%' : '—';
       if (r) segno(v, rp); else b.disabled = true;
-      b.title = r ? MESI[m - 1] + ' ' + anno + ': ' + pctS(rp) + ' · ' + rS(Number(r.R)) + ' · ' + r.trade + ' trade' : MESI[m - 1] + ' ' + anno + ': nessun trade';
+      b.title = r ? MESI[m - 1] + ' ' + anno + ': ' + pctS(rp) + ' · ' + r.trade + ' trade' : MESI[m - 1] + ' ' + anno + ': nessun trade';
       b.append(n, v); b.addEventListener('click', () => mostra(m));
       const pm = podioM.indexOf(m);
       if (pm >= 0) {
@@ -2055,7 +2103,7 @@ dash.calc('strategie', {
       const su = document.createElement('summary');
       const h = document.createElement('h3'); h.textContent = String(r.anno);
       const sum = document.createElement('span'); sum.className = 'bt-mese-sum';
-      sum.append(num(r.trade) + ' trade · ' + num(r.tp) + ' TP / ' + num(r.sl) + ' SL · ' + rS(r.R) + ' · saldo a fine anno ' + eur(r.saldo_fine));
+      sum.append(num(r.trade) + ' trade · ' + num(r.tp) + ' TP / ' + num(r.sl) + ' SL · ' + pctS(Number(r.rendimento)) + ' · saldo a fine anno ' + eur(r.saldo_fine));
       su.append(h, sum); det.append(su);
       const dentro = document.createElement('div'); dentro.className = 'bt-mesi';
       det.append(dentro);
