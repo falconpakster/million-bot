@@ -1008,6 +1008,34 @@ body.festa-halloween .compagno.a-inizio .v-base .r-occhi ellipse { animation: oc
 .confronto { position: relative; overflow: hidden; }
 .confronto::after { content: ""; position: absolute; inset: -40% -10%; pointer-events: none; background: radial-gradient(30% 50% at 50% 50%, rgba(248, 220, 138, .1), transparent 70%); animation: alone-oro 6s ease-in-out infinite alternate; }
 @keyframes alone-oro { from { transform: translateX(-35%); } to { transform: translateX(35%); } }
+/* ===================== leggerezza: stessi effetti, ma calcolati dalla scheda grafica (spostamenti invece di ridisegnare) ===================== */
+/* niente sfocatura dietro la barra dei pulsanti (pesante sui telefoni): sfondo quasi pieno, aspetto uguale */
+.testata { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(244, 247, 242, .97); }
+.schede { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(255, 255, 255, .97); }
+/* animazioni ferme quando la loro parte di pagina non è sullo schermo */
+.fermo-anim, .fermo-anim *, .fermo-anim::before, .fermo-anim::after, .fermo-anim *::before, .fermo-anim *::after { animation-play-state: paused !important; }
+/* sfondi che scorrono: si sposta lo strato intero (veloce) invece di ridisegnarlo a ogni fotogramma */
+.cielo i, .festa-sfondo i { will-change: transform, opacity; }
+@keyframes giu-360 { to { transform: translateY(360px); } }
+@keyframes giu-220 { to { transform: translateY(220px); } }
+@keyframes giu-240 { to { transform: translateY(240px); } }
+@keyframes su-240 { to { transform: translateY(-240px); } }
+@keyframes destra-240 { to { transform: translateX(240px); } }
+@keyframes diag-pip { to { transform: translate(300px, -220px); } }
+@keyframes pioggia-t { to { transform: translate(-19px, 110px); } }
+body.cielo-neve .cielo .c1, body.buio.cielo-neve .cielo .c1 { inset: -360px 0 0 0; background-size: 120px 120px, 90px 90px, 180px 180px; animation: giu-360 25s linear infinite; }
+body.festa-natale .festa-sfondo .f1 { inset: -360px 0 0 0; background-size: 120px 120px, 90px 90px, 180px 180px; animation: giu-360 25s linear infinite; }
+body.festa-capodanno .festa-sfondo .f1 { inset: -360px 0 0 0; background-size: 120px 120px, 90px 90px, 180px 180px; animation: giu-360 17s linear infinite; }
+body.festa-befana .festa-sfondo .f1 { inset: -220px 0 0 0; animation: giu-220 14s linear infinite; }
+body.festa-carnevale .festa-sfondo .f1 { inset: -360px 0 0 0; background-size: 120px 120px, 90px 90px, 180px 180px, 72px 72px, 120px 120px; animation: giu-360 24s linear infinite; }
+body.festa-sanvalentino .festa-sfondo .f1 { inset: 0 0 -240px 0; animation: su-240 12s linear infinite; }
+body.festa-donna .festa-sfondo .f1 { inset: -240px 0 0 0; background-size: 120px 120px, 80px 80px; animation: giu-240 24s linear infinite; }
+body.festa-ferragosto .festa-sfondo .f2 { left: -240px; animation: destra-240 6s linear infinite; }
+body.festa-halloween .festa-sfondo .f2 { inset: 0 0 -220px -300px; animation: diag-pip 18s linear infinite; }
+body.cielo-pioggia .cielo .c1, body.cielo-temporale .cielo .c1 { inset: -120px -20% -10% -20%; animation: pioggia-t .45s linear infinite; }
+/* stelle, luna e alone: strati propri, così brillano senza ridisegnare la pagina */
+body.buio .cielo .c2 { will-change: transform; }
+.confronto::after { will-change: transform; }
 </style>
 </head>
 <body class="pub">
@@ -2214,9 +2242,9 @@ dash.calc('strategie', {
     tasse[anno] = imposta(anno); saldoA[anno] = eq - tasse[anno];
     const netto = saldoA[anno], tot = Object.values(tasse).reduce((x, y) => x + y, 0);
     const senza = Number(righe[righe.length - 1].saldo);
-    conta($('#tx-senza'), senza, (v) => euroIntero(v), 3000, 1000);
-    conta($('#tx-tasse'), tot, (v) => (Math.round(v) > 0 ? '−' : '') + euroIntero(v), 2500);
-    conta($('#tx-netto'), netto, (v) => euroIntero(v), 3500, 1000);
+    conta($('#tx-senza'), senza, (v) => euroIntero(v), 3000, 1000, $('.tasse-tot'));
+    conta($('#tx-tasse'), tot, (v) => (Math.round(v) > 0 ? '−' : '') + euroIntero(v), 2500, 0, $('.tasse-tot'));
+    conta($('#tx-netto'), netto, (v) => euroIntero(v), 3500, 1000, $('.tasse-tot'));
     const n0 = (v) => num(Math.round(v), 0), eu = '<span class="eu"> €</span>';
     box.innerHTML = Object.keys(saldoA).map(Number).sort((x, y) => x - y).map((a) =>
       `<tr><td>${a}${a === anno ? '<small class="solo-largo"> (fino a oggi)</small>' : ''}</td>` +
@@ -2619,6 +2647,11 @@ dash.calc('strategie', {
   // ================================================================== dati dal vivo
   // ================================================================== meteo di Ugento: il robottino si veste e lo sfondo cambia
   // (dati Open-Meteo scaricati dal bot ogni 20 minuti; ?meteo=freddo, caldo, sole, pioggia, temporale, neve, nebbia, notte, nuvole, fresco per provarlo)
+  // le animazioni di una parte della pagina si fermano quando quella parte non è sullo schermo (il sito resta uguale, ma più leggero)
+  if ('IntersectionObserver' in window) {
+    const ossAnim = new IntersectionObserver((L) => L.forEach((x) => x.target.classList.toggle('fermo-anim', !x.isIntersecting)), { rootMargin: '120px 0px' });
+    ['#h-anni-lista', '.confronto', '.finale', '.scorri', '.vetrina', '#curva-bt', '.tris', '.btn-demo-mini', '.conto-demo', '#mesi-grafico'].forEach((q) => document.querySelectorAll(q).forEach((e) => ossAnim.observe(e)));
+  }
   const cielo = el('div', 'cielo'); cielo.setAttribute('aria-hidden', 'true');
   cielo.append(el('i', 'c1'), el('i', 'c2'), el('i', 'c3'), el('i', 'c4')); document.body.prepend(cielo);
   const addobbi = el('div', 'festa-sfondo'); addobbi.setAttribute('aria-hidden', 'true');
