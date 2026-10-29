@@ -1345,14 +1345,6 @@ body.pub.buio .piede .rischio { background: #fff6f4; }
   <section class="bt-head" id="anno">
     <div class="bt-tabs" role="group" aria-label="Anno"></div>
     <h2 class="bt-year-title"></h2>
-    <p class="bt-sub solo-pub">I numeri dell'anno scelto: trade fatti, percentuale di trade chiusi in guadagno, risultato, saldo a fine anno e rendimento.</p>
-    <div class="bt-tiles">
-      <div class="bt-tile"><span class="k">Trade</span><span class="v" data-k="trade">—</span><span class="s"><span data-k="tp">—</span> TP · <span data-k="sl">—</span> SL</span></div>
-      <div class="bt-tile"><span class="k">% TP</span><span class="v" data-k="pct_tp">—</span><span class="s">SL di fila al massimo: <span data-k="max_sl_fila">—</span></span></div>
-      <div class="bt-tile"><span class="k">Risultato</span><span class="v" data-k="R">—</span><span class="s" data-k="euro">—</span></div>
-      <div class="bt-tile"><span class="k bt-tile-saldo">Saldo a fine anno</span><span class="v" data-k="saldo_fine">—</span><span class="s">da <span data-k="saldo_inizio">—</span></span></div>
-      <div class="bt-tile"><span class="k">Rendimento</span><span class="v" data-k="rendimento">—</span><span class="s">calo massimo <span data-k="calo_max">—</span></span></div>
-    </div>
   </section>
 
   <div class="bt-grid">
@@ -1380,6 +1372,18 @@ body.pub.buio .piede .rischio { background: #fff6f4; }
       </div>
     </section>
   </div>
+
+  <section class="bt-head bt-numeri" id="anno-numeri">
+    <p class="bt-sub solo-pub">I numeri dell'anno scelto: trade fatti, percentuale di trade chiusi in guadagno, risultato, saldo, rendimento e calo massimo.</p>
+    <div class="bt-tiles">
+      <div class="bt-tile"><span class="k">Trade</span><span class="v" data-k="trade">—</span><span class="s"><span data-k="tp">—</span> TP · <span data-k="sl">—</span> SL</span></div>
+      <div class="bt-tile"><span class="k">% TP</span><span class="v" data-k="pct_tp">—</span><span class="s">SL di fila al massimo: <span data-k="max_sl_fila">—</span></span></div>
+      <div class="bt-tile"><span class="k">Risultato</span><span class="v" data-k="R">—</span><span class="s" data-k="euro">—</span></div>
+      <div class="bt-tile"><span class="k bt-tile-saldo">Saldo a fine anno</span><span class="v" data-k="saldo_fine">—</span><span class="s">da <span data-k="saldo_inizio">—</span></span></div>
+      <div class="bt-tile"><span class="k">Rendimento</span><span class="v" data-k="rendimento">—</span><span class="s bt-tile-rend">sul saldo di inizio anno</span></div>
+      <div class="bt-tile"><span class="k">Calo massimo</span><span class="v" data-k="calo_max">—</span><span class="s">dal punto più alto del saldo</span></div>
+    </div>
+  </section>
 
   <header class="bt-head sez-mesi">
     <h2 class="bt-sez">I trade mese per mese</h2>
@@ -1912,11 +1916,12 @@ dash.calc('strategie', {
     };
     const ra = tutti ? tot : anni.find((r) => Number(r.anno) === anno);
     root.querySelectorAll('.bt-tile-saldo').forEach((e) => { e.textContent = tutti ? 'Saldo oggi' : 'Saldo a fine anno'; });
+    root.querySelectorAll('.bt-tile-rend').forEach((e) => { e.textContent = tutti ? 'sui 1.000 € di partenza' : 'sul saldo di inizio anno'; });
     root.querySelectorAll('.bt-tiles [data-k]').forEach((el) => {
       const f = el.dataset.k; if (tutti) mark(el, 'totale', f); else mark(el, 'anni', f, 'anno=' + anno);
       const v = ra ? ra[f] : null;
       if (v == null) { el.textContent = '—'; return; }
-      el.textContent = f === 'pct_tp' || f === 'calo_max' ? pct(v) : f === 'rendimento' ? (tutti ? '×' + num(v + 1, 0) : pctS(v)) : f === 'R' ? rS(v)
+      el.textContent = f === 'calo_max' ? (el.classList.contains('v') ? '−' : '') + pct(v) : f === 'pct_tp' ? pct(v) : f === 'rendimento' ? (tutti ? '×' + num(v + 1, 0) : pctS(v)) : f === 'R' ? rS(v)
         : f === 'euro' ? eurS(v) + ' dai trade' : f.startsWith('saldo') ? eur(v) : num(v);
     });
 
