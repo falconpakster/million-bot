@@ -1155,6 +1155,9 @@ body.pub.festa-natale .testata::before, body.pub.festa-natale .testata::after { 
 #mesi > .bt-anno-det .nw { white-space: nowrap; }
 #mesi > .bt-anno-det .bt-anno-pct.pos, #mesi > .bt-anno-det .bt-anno-pct:not(.neg) { color: #0f7a47; }
 #mesi > .bt-anno-det .bt-anno-pct.neg { color: var(--rosso); }
+.sez-mesi-azioni { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.sez-mesi-azioni .btn { margin: 0 !important; }
+.sez-mesi { scroll-margin-top: 84px; }
 </style>
 </head>
 <body class="pub">
@@ -2055,7 +2058,8 @@ dash.calc('strategie', {
 
     if (tutti) disegnaBarreAnni(anni); else disegnaBarre(M.data, anno);
     root.querySelector('#mesi-grafico h3').textContent = tutti ? 'Risultato di ogni anno' : 'Risultato di ogni mese del ' + anno;
-    root.querySelector('#mesi-indietro').hidden = tutti;   // dal grafico dei mesi si torna a quello di tutti gli anni
+    root.querySelector('#mesi-indietro').hidden = tutti;
+    const ba = document.getElementById('b-mesi-anni'); if (ba) ba.hidden = tutti;   // dal grafico dei mesi si torna a quello di tutti gli anni
     const sp = root.querySelector('#mesi-grafico .bt-sub.solo-pub');
     if (sp) sp.textContent = tutti ? 'Ogni barra è un anno: sopra lo zero l\'anno ha chiuso in guadagno, sotto in perdita. I numeri a sinistra sono il rendimento in % del saldo nell\'anno, come nei riquadri in alto. Le medaglie sono i tre anni migliori. Tocca una barra per i dettagli e per aprire i mesi di quell\'anno.'
       : 'Ogni barra è un mese dell\'anno scelto: sopra lo zero il mese ha chiuso in guadagno, sotto in perdita. I numeri a sinistra sono quanto è cresciuto (o sceso) il saldo nel mese, in %. Le medaglie sono i tre mesi migliori. Passa sopra una barra per i dettagli.';
@@ -2624,7 +2628,10 @@ dash.calc('strategie', {
   mostraPannello('risultati');
   const bMesi = el('button', 'btn btn-vuoto solo-pub', 'Mostra tutti i trade dell’anno'); bMesi.type = 'button'; bMesi.id = 'b-mesi';
   bMesi.setAttribute('aria-expanded', 'false');
-  $('.sez-mesi').append(bMesi);
+  // accanto: "← Tutti gli anni" (solo quando è scelto un anno) per tornare alla scelta dell'anno
+  const bAnni = el('button', 'btn btn-vuoto solo-pub', '← Tutti gli anni'); bAnni.type = 'button'; bAnni.id = 'b-mesi-anni'; bAnni.hidden = true;
+  const az = el('div', 'sez-mesi-azioni'); az.append(bMesi, bAnni); $('.sez-mesi').append(az);
+  bAnni.addEventListener('click', () => { $('#mesi-indietro').click(); requestAnimationFrame(() => $('.sez-mesi').scrollIntoView({ block: 'start', behavior: 'smooth' })); });
   bMesi.addEventListener('click', () => {
     const ap = !$('#mesi').classList.contains('aperto');
     $('#mesi').classList.toggle('aperto', ap); bMesi.setAttribute('aria-expanded', String(ap));
