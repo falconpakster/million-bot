@@ -2199,7 +2199,11 @@ dash.calc('strategie', {
       su.append(h, sum); det.append(su);
       const dentro = document.createElement('div'); dentro.className = 'bt-mesi';
       det.append(dentro);
-      det.addEventListener('toggle', () => { if (det.open && !dentro.childElementCount) disegnaMesi(dentro, Number(r.anno)); });
+      det.addEventListener('toggle', () => {
+        if (det.open && !dentro.childElementCount) disegnaMesi(dentro, Number(r.anno));
+        // con un anno aperto compare "← Tutti gli anni" accanto a "Nascondi i trade"
+        const ba = document.getElementById('b-mesi-anni'); if (ba) ba.hidden = !box.querySelector('.bt-anno-det[open]');
+      });
       box.append(det);
     }
 
@@ -2634,7 +2638,12 @@ dash.calc('strategie', {
   // accanto: "← Tutti gli anni" (solo quando è scelto un anno) per tornare alla scelta dell'anno
   const bAnni = el('button', 'btn btn-vuoto solo-pub', '← Tutti gli anni'); bAnni.type = 'button'; bAnni.id = 'b-mesi-anni'; bAnni.hidden = true;
   const az = el('div', 'sez-mesi-azioni'); az.append(bMesi, bAnni); $('.sez-mesi').append(az);
-  bAnni.addEventListener('click', () => { $('#mesi-indietro').click(); requestAnimationFrame(() => $('.sez-mesi').scrollIntoView({ block: 'start', behavior: 'smooth' })); });
+  bAnni.addEventListener('click', () => {
+    const pa = dash.params().anno;
+    if (pa == null || pa === 'tutti') { $$('#mesi .bt-anno-det[open]').forEach((d) => { d.open = false; }); bAnni.hidden = true; }   // Complessivo: chiude l'anno aperto
+    else $('#mesi-indietro').click();                                                                                                 // anno scelto: torna al Complessivo
+    requestAnimationFrame(() => $('.sez-mesi').scrollIntoView({ block: 'start', behavior: 'smooth' }));
+  });
   bMesi.addEventListener('click', () => {
     const ap = !$('#mesi').classList.contains('aperto');
     $('#mesi').classList.toggle('aperto', ap); bMesi.setAttribute('aria-expanded', String(ap));
