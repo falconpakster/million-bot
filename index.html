@@ -1139,6 +1139,11 @@ body.pub.festa-natale .testata::before, body.pub.festa-natale .testata::after { 
   .priv-btn { display: inline-flex; align-items: center; gap: 7px; padding: 8px 13px; border-radius: 999px; border: 1px solid var(--linea-forte); background: #fff; color: var(--inchiostro); font: 600 13px/1 var(--sans); cursor: pointer; }
   .priv-btn svg { width: 17px; height: 17px; }
 }
+.bt-anno-aperto:empty { display: none; }
+.bt-anno-aperto { margin-top: 14px; }
+.bt-anno-det .bt-anno-testa { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; padding: 16px 18px 6px; }
+.bt-anno-det .bt-anno-testa h3 { margin: 0; font-family: var(--serif); font-weight: 600; font-size: 21px; }
+@media (max-width: 600px) { .bt-anni-scelta { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 </style>
 </head>
 <body class="pub">
@@ -2079,7 +2084,7 @@ dash.calc('strategie', {
       const w = 'chiave=' + r.chiave;
       const pezzo = (field, testo) => { const b = document.createElement('b'); mark(b, 'mesi', field, w); b.textContent = testo; return b; };
       sum.append(pezzo('trade', num(r.trade)), ' trade · ', pezzo('tp', num(r.tp)), ' TP / ', pezzo('sl', num(r.sl)), ' SL · ',
-        pezzo('rendimento', pctS(Number(r.rendimento))), ' · ', pezzo('euro', eurS(r.euro)), ' · saldo a fine mese ', pezzo('saldo_fine', eur(r.saldo_fine)));
+        pezzo('rendimento', pctS(Number(r.rendimento))));
       head.append(sum);
       const wrap = document.createElement('div'); wrap.className = 'bt-scroll';
       const tab = document.createElement('table'); tab.className = 'bt-t'; tab.dataset.source = 'trade'; tab.dataset.rowKey = 'id';
@@ -2145,18 +2150,39 @@ dash.calc('strategie', {
     };
     box.classList.add('con-scelta');
     if (!tutti) disegnaMesi(box, anno);
-    else for (const r of anni) {
-      // complessivo: un anno per riquadro, i mesi si disegnano quando lo apri
-      const det = document.createElement('details'); det.className = 'bt-card bt-anno-det';
-      const su = document.createElement('summary');
-      const h = document.createElement('h3'); h.textContent = String(r.anno);
-      const sum = document.createElement('span'); sum.className = 'bt-mese-sum';
-      sum.append(num(r.trade) + ' trade · ' + num(r.tp) + ' TP / ' + num(r.sl) + ' SL · ' + pctS(Number(r.rendimento)) + ' · saldo a fine anno ' + eur(r.saldo_fine));
-      su.append(h, sum); det.append(su);
-      const dentro = document.createElement('div'); dentro.className = 'bt-mesi';
-      det.append(dentro);
-      det.addEventListener('toggle', () => { if (det.open && !dentro.childElementCount) disegnaMesi(dentro, Number(r.anno)); });
-      box.append(det);
+    else {
+      // complessivo: gli anni in piccoli riquadri (come i mesi); toccandone uno si aprono sotto i suoi mesi
+      const barra = document.createElement('div'); barra.className = 'bt-mesi-scelta bt-anni-scelta'; barra.setAttribute('role', 'group'); barra.setAttribute('aria-label', 'Anni');
+      const sotto = document.createElement('div'); sotto.className = 'bt-anno-aperto';
+      const apri = (a) => {
+        window.__btAnnoAperto = window.__btAnnoAperto === a ? null : a;
+        barra.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.a) === window.__btAnnoAperto)));
+        sotto.replaceChildren();
+        if (window.__btAnnoAperto == null) return;
+        const r = anni.find((z) => Number(z.anno) === a);
+        const card = document.createElement('section'); card.className = 'bt-card bt-anno-det';
+        const testa = document.createElement('div'); testa.className = 'bt-anno-testa';
+        const h = document.createElement('h3'); h.textContent = String(r.anno);
+        const sum = document.createElement('span'); sum.className = 'bt-mese-sum';
+        sum.append(num(r.trade) + ' trade · ' + num(r.tp) + ' TP / ' + num(r.sl) + ' SL · ' + pctS(Number(r.rendimento)));
+        testa.append(h, sum);
+        const dentro = document.createElement('div'); dentro.className = 'bt-mesi';
+        card.append(testa, dentro); sotto.append(card);
+        disegnaMesi(dentro, a);
+      };
+      for (const r of anni) {
+        const a = Number(r.anno);
+        const b = document.createElement('button'); b.type = 'button'; b.dataset.a = a; b.setAttribute('aria-pressed', 'false');
+        const n = document.createElement('span'); n.textContent = String(a);
+        const rr = Number(r.rendimento);
+        const v = document.createElement('b'); v.textContent = (rr > 0 ? '+' : rr < 0 ? '−' : '') + num(Math.abs(rr) * 100, Math.abs(rr) >= .1 ? 0 : 1) + '%'; segno(v, rr);
+        b.title = a + ': ' + num(r.trade) + ' trade · tocca per vedere i mesi';
+        b.append(n, v); b.addEventListener('click', () => apri(a));
+        barra.append(b);
+      }
+      box.append(barra, sotto);
+      const gia = window.__btAnnoAperto; window.__btAnnoAperto = null;
+      if (gia != null && anni.some((z) => Number(z.anno) === gia)) apri(gia);
     }
 
     // grafico del trade toccato
