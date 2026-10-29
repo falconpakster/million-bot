@@ -1060,7 +1060,7 @@ body.pub.buio .hero-pub h1 .chiave { background: linear-gradient(transparent 64%
 .hero-pub .sotto mark { background: linear-gradient(transparent 54%, rgba(23, 163, 98, .34) 54%); }
 /* velo morbido dietro il blocco di testo in alto: le decorazioni del tema si vedono attorno ma non attraversano le scritte */
 body.pub { --velo: rgba(243, 248, 243, .74); }
-body.pub.buio { --velo: rgba(9, 16, 40, .5); }
+body.pub.buio { --velo: transparent; }   /* di notte il velo si vedeva come un riquadro scuro: basta l'alone attorno alle lettere */
 body.pub .hero-pub > div:first-child { position: relative; isolation: isolate; }
 body.pub .hero-pub > div:first-child::before { content: ""; position: absolute; inset: -6px -4px 0; z-index: -1; pointer-events: none;
   border-radius: 26px; background: var(--velo); box-shadow: 0 0 26px 18px var(--velo); }
