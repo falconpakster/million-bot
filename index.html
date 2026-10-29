@@ -1107,6 +1107,20 @@ body.pub.festa-natale .testata::before, body.pub.festa-natale .testata::after { 
 .btn-ig { background: linear-gradient(135deg, #f8dc8a, #e3b23c 55%, #c18f22) !important; color: #3d2a05 !important; box-shadow: 0 6px 18px rgba(193, 143, 34, .25); }
 .btn-ig svg { color: #3d2a05; }
 .barra-mobile { gap: 8px; }
+
+/* ---- Fluidità (29/10/2026) ---- */
+/* le facce e gli accessori nascosti non si animano (prima giravano lo stesso, pesando a ogni fotogramma) */
+.compagno:not(.u-felice) .v-felice *, .compagno:not(.u-wow) .v-wow *, .compagno:not(.u-determinato) .v-determinato *, .compagno:not(.u-spiega) .v-spiega *, .compagno:not(.u-vigile) .v-vigile *, .compagno:not(.u-fiero) .v-fiero *, .compagno:not(.u-sveglio) .v-sveglio *, .compagno:not(.u-robot) .v-robot *, .compagno:not(.u-curioso) .v-curioso *, .compagno:not(.u-sincero) .v-sincero *, .compagno[class*=" u-"]:not(.u-base) .v-base *, body:not(.m-babbo) .acc-babbo *, body:not(.m-bandiera) .acc-bandiera *, body:not(.m-cappello) .acc-cappello *, body:not(.m-cuore) .acc-cuore *, body:not(.m-cuoricino) .acc-cuoricino *, body:not(.m-festa) .acc-festa *, body:not(.m-fiato) .acc-fiato *, body:not(.m-gelato) .acc-gelato *, body:not(.m-giubbotto) .acc-giubbotto *, body:not(.m-guanti) .acc-guanti *, body:not(.m-maschera) .acc-maschera *, body:not(.m-mimosa) .acc-mimosa *, body:not(.m-naso) .acc-naso *, body:not(.m-occhiali) .acc-occhiali *, body:not(.m-ombrello) .acc-ombrello *, body:not(.m-paraorecchie) .acc-paraorecchie *, body:not(.m-salvagente) .acc-salvagente *, body:not(.m-sciarpa) .acc-sciarpa *, body:not(.m-secchiello) .acc-secchiello *, body:not(.m-strega) .acc-strega *, body:not(.m-sudore) .acc-sudore *, body:not(.m-uovo) .acc-uovo *, body:not(.m-ventaglio) .acc-ventaglio *, body:not(.m-zucca) .acc-zucca * { animation: none !important; }
+/* mentre scorri la pagina il robottino ferma i movimenti interni: lo scorrimento resta liscio */
+.compagno.scorre .robot *, .compagno.scorre .c-corpo { animation-play-state: paused !important; }
+/* i riflessi d'oro sulle scritte passano qualche volta e poi si fermano (ridisegnarli sempre costa molto) */
+.milione { animation-iteration-count: 3 !important; }
+.confronto b, .confronto b.pop { animation-iteration-count: 2, 1 !important; }
+.scia-box { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 17; pointer-events: none; contain: layout style; }
+.particella { will-change: transform, opacity; }
+.p-pipistrello .p-ala { animation-duration: .2s; }
+.compagno { transition: transform 1s cubic-bezier(.5, .05, .25, 1), opacity .4s !important; }   /* niente transizione della larghezza: ricalcolava la pagina a ogni fotogramma del volo */
+.compagno .c-corpo { will-change: transform; }
 </style>
 </head>
 <body class="pub">
@@ -1158,7 +1172,7 @@ body.pub.festa-natale .testata::before, body.pub.festa-natale .testata::after { 
   <main class="pagina" id="inizio">
     <section class="hero-pub">
       <div>
-        <button class="btn-demo-mini" type="button" data-demo><span class="punto rosso"></span>Conto demo dal vivo</button>
+        <button class="btn-demo-mini" type="button" data-demo><span class="punto rosso"></span>Conto demo attivo</button>
         <h1>Il bot che ha vinto<br><span class="chiave">ogni anno</span> dal 2020.</h1>
         <p class="tris oro"><span>Sopra ogni media.</span> <span>Sopra ogni anno.</span></p>
         <div class="confronto" data-robot-umore="determinato" data-robot="Questi numeri non arrivano senza perdite: nel 2021 ho preso anche <b>20 stop loss di fila</b>. Non ho cambiato le regole e sono ripartito.">
@@ -1197,8 +1211,8 @@ body.pub.festa-natale .testata::before, body.pub.festa-natale .testata::after { 
 
     <section class="pannello" data-p="risultati" aria-label="Risultati" data-robot-umore="spiega" data-robot="Qui c'è tutto: <b>ogni trade</b>, anche quelli andati male. Usa i pulsanti per vedere il resto.">
       <div id="posto-pub"></div>
-      <section class="conto-demo solo-pub" id="conto-demo" aria-label="Conto demo dal vivo" data-robot-umore="vigile" data-robot="Questo è il bot <b>dal vivo</b>, trade dopo trade: controllalo anche tu.">
-        <h2 class="bt-sez"><span class="punto rosso"></span> Conto demo dal vivo</h2>
+      <section class="conto-demo solo-pub" id="conto-demo" aria-label="Conto demo attivo" data-robot-umore="vigile" data-robot="Questo è il bot <b>dal vivo</b>, trade dopo trade: controllalo anche tu.">
+        <h2 class="bt-sez"><span class="punto rosso"></span> Conto demo attivo</h2>
         <div class="demo-striscia" id="demo-striscia" hidden></div>
         <div class="demo-perche">
           <div><h3>Perché parte adesso</h3><p>Fino a ottobre 2026 ho costruito e ricontrollato le strategie sui prezzi del passato. Il <strong>26 ottobre 2026</strong> il bot è stato pronto ed è partito dal vivo: per questo il conto inizia da quel giorno.</p></div>
@@ -1292,7 +1306,6 @@ body.pub.festa-natale .testata::before, body.pub.festa-natale .testata::after { 
       <div class="righe"><span>© 2026 Samuel Cavalera · Million Bot · Road to 1 Million</span><span><a href="https://t.me/Samu7740" target="_blank" rel="noopener">Telegram</a> · <a href="https://www.tiktok.com/@_roadto1milion_" target="_blank" rel="noopener">TikTok</a> · <a href="https://www.instagram.com/_roadto1milion_/" target="_blank" rel="noopener">Instagram</a></span></div>
     </footer>
   </main>
-  <div class="barra-mobile"><a class="btn btn-oro" href="https://www.tiktok.com/@_roadto1milion_" target="_blank" rel="noopener"><svg><use href="#i-tt"/></svg>TikTok</a><a class="btn btn-oro btn-ig" href="https://www.instagram.com/_roadto1milion_/" target="_blank" rel="noopener"><svg><use href="#i-ig"/></svg>Instagram</a></div>
 </div>
 
 <!-- ======================= ACCESSO ======================= -->
@@ -1420,11 +1433,11 @@ body.pub.festa-natale .testata::before, body.pub.festa-natale .testata::after { 
   </div>
 
   <section class="bt-head bt-numeri" id="anno-numeri">
-    <p class="bt-sub solo-pub">I numeri dell'anno scelto: trade fatti, percentuale di trade chiusi in guadagno, guadagno, saldo, rendimento e calo massimo.</p>
+    <p class="bt-sub solo-pub">I numeri dell'anno scelto: trade fatti, percentuale di trade chiusi in guadagno, mesi in positivo, saldo, rendimento e calo massimo.</p>
     <div class="bt-tiles">
       <div class="bt-tile"><span class="k">Trade</span><span class="v" data-k="trade">—</span><span class="s"><span data-k="tp">—</span> TP · <span data-k="sl">—</span> SL</span></div>
       <div class="bt-tile"><span class="k">% TP</span><span class="v" data-k="pct_tp">—</span><span class="s">SL di fila al massimo: <span data-k="max_sl_fila">—</span></span></div>
-      <div class="bt-tile"><span class="k">Guadagno</span><span class="v" data-k="euro">—</span><span class="s">dai trade chiusi</span></div>
+      <div class="bt-tile"><span class="k">Mesi in positivo</span><span class="v" data-k="mesi_pos">—</span><span class="s bt-tile-mesi">mesi chiusi in guadagno</span></div>
       <div class="bt-tile"><span class="k bt-tile-saldo">Saldo a fine anno</span><span class="v" data-k="saldo_fine">—</span><span class="s">da <span data-k="saldo_inizio">—</span></span></div>
       <div class="bt-tile"><span class="k">Rendimento</span><span class="v" data-k="rendimento">—</span><span class="s bt-tile-rend">sul saldo di inizio anno</span></div>
       <div class="bt-tile"><span class="k">Calo massimo</span><span class="v" data-k="calo_max">—</span><span class="s">dal punto più alto del saldo</span></div>
@@ -1961,10 +1974,15 @@ dash.calc('strategie', {
       rendimento: Math.round((T0.saldo_finale / 1000 - 1) * 1000) / 1000, calo_max: T0.calo_max, max_sl_fila: T0.max_sl_fila,
     };
     const ra = tutti ? tot : anni.find((r) => Number(r.anno) === anno);
+    // mesi chiusi in guadagno (variazione del saldo nel mese > 0), dell'anno scelto o di tutto il periodo
+    const mm = M.status === 'ok' ? M.data.filter((r) => tutti || Number(r.anno) === anno) : [];
+    const mesiPos = mm.length ? mm.filter((r) => Number(r.rendimento) > 0).length + ' su ' + mm.length : null;
     root.querySelectorAll('.bt-tile-saldo').forEach((e) => { e.textContent = tutti ? 'Saldo oggi' : 'Saldo a fine anno'; });
     root.querySelectorAll('.bt-tile-rend').forEach((e) => { e.textContent = tutti ? 'sui 1.000 € di partenza' : 'sul saldo di inizio anno'; });
+    root.querySelectorAll('.bt-tile-mesi').forEach((e) => { e.textContent = tutti ? 'mesi chiusi in guadagno dal 2020' : 'mesi chiusi in guadagno'; });
     root.querySelectorAll('.bt-tiles [data-k]').forEach((el) => {
       const f = el.dataset.k; if (tutti) mark(el, 'totale', f); else mark(el, 'anni', f, 'anno=' + anno);
+      if (f === 'mesi_pos') { el.textContent = mesiPos ?? '—'; return; }
       const v = ra ? ra[f] : null;
       if (v == null) { el.textContent = '—'; return; }
       el.textContent = f === 'calo_max' ? (el.classList.contains('v') ? '−' : '') + pct(v) : f === 'pct_tp' ? pct(v) : f === 'rendimento' ? (tutti ? '×' + num(v + 1, 0) : pctS(v)) : f === 'R' ? rS(v)
@@ -3084,6 +3102,9 @@ dash.calc('strategie', {
   const COLORI = { coriandolo: ['#ff5d8f', '#2fd0ff', '#f6c95a', '#7cdc5a', '#a66bff'], pastello: ['#c9a2ff', '#8fe0b8', '#ffd27a', '#ffb3c7'],
     stella: ['#f6c95a', '#ffe08a', '#fff4c2'], tricolore: ['#169b4b', '#ffffff', '#d42e3b'] };
   let semi = 0;
+  // contenitore unico per la scia: aggiungere e togliere i pezzetti non fa ricalcolare tutta la pagina
+  let _scia = null;
+  const sciaBox = () => { if (!_scia || !_scia.isConnected) { _scia = document.createElement('div'); _scia.className = 'scia-box'; _scia.setAttribute('aria-hidden', 'true'); document.body.append(_scia); } return _scia; };
   function semina() {
     const tipo = tipoScia(); if (!tipo) return;
     const giro = ++semi, t0 = performance.now(); let ultimo = 0, n = 0, px = 0, py = 0;
@@ -3093,19 +3114,19 @@ dash.calc('strategie', {
         const r = corpo.getBoundingClientRect(), x = r.left + r.width / 2 + scrollX, y = r.top + r.height * .9 + scrollY;
         if (!ultimo) { ultimo = t; px = x; py = y; }
         const vx = x - px, vy = y - py, L = Math.hypot(vx, vy);
-        if (L > 6) {
+        if (L > 14) {
           const sg = vy > 0 ? -1 : 1, ux = sg * -vy / L, uy = sg * vx / L, d = r.width * .12, ang = Math.atan2(vy, vx) * 180 / Math.PI;
           COLORI.tricolore.forEach((col, k) => {
             const e = document.createElement('i'); e.className = 'particella p-tricolore'; e.setAttribute('aria-hidden', 'true');
             e.style.left = (px + ux * d * (k - 1)) + 'px'; e.style.top = (py + uy * d * (k - 1)) + 'px';
             e.style.width = (L + 4) + 'px'; e.style.setProperty('--ang', ang + 'deg'); e.style.setProperty('--col', col);
-            document.body.append(e); setTimeout(() => e.remove(), 1300);
+            sciaBox().append(e); setTimeout(() => e.remove(), 1300);
           });
           px = x; py = y;
         }
         requestAnimationFrame(passo); return;
       }
-      if (t - ultimo > (tipo === 'pipistrello' ? 70 : 45) && n < 26) {
+      if (t - ultimo > (tipo === 'pipistrello' ? 110 : 80) && n < 13) {
         ultimo = t; n++;
         const r = corpo.getBoundingClientRect();
         const e = document.createElement('i'); e.className = 'particella p-' + tipo; e.setAttribute('aria-hidden', 'true');
@@ -3117,7 +3138,7 @@ dash.calc('strategie', {
         e.style.setProperty('--k', (0.7 + Math.random() * 0.6).toFixed(2));
         const col = COLORI[tipo]; if (col) e.style.setProperty('--col', col[Math.floor(Math.random() * col.length)]);
         if (tipo === 'pipistrello') e.innerHTML = PIPISTRELLO; else if (tipo === 'cuore') e.innerHTML = CUORE; else if (tipo === 'stella') e.innerHTML = STELLA;
-        document.body.append(e);
+        sciaBox().append(e);
         setTimeout(() => e.remove(), 1700);
       }
       requestAnimationFrame(passo);
@@ -3167,10 +3188,21 @@ dash.calc('strategie', {
     ultimoY = p.y; ultimoX = p.x;
     if (!c.classList.contains('pronto')) requestAnimationFrame(() => c.classList.add('pronto'));
   }
-  const presto = () => { if (!giro) giro = requestAnimationFrame(aggiorna); };
+  // al massimo circa 9 volte al secondo mentre si scorre (prima era a ogni fotogramma: era la parte più pesante della pagina)
+  let ultimoAgg = 0, tRit = 0, tScorre = 0;
+  const presto = () => {
+    if (giro) return;
+    const attesa = 110 - (performance.now() - ultimoAgg);
+    if (attesa > 0) { clearTimeout(tRit); tRit = setTimeout(presto, attesa + 5); return; }
+    giro = requestAnimationFrame(() => { ultimoAgg = performance.now(); aggiorna(); });
+  };
   corpo.addEventListener('click', (e) => { e.stopPropagation(); fum.classList.contains('vede') ? chiudi() : apri(); });
   corpo.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fum.classList.contains('vede') ? chiudi() : apri(); } });
-  addEventListener('scroll', () => { if (apertoA !== null && Math.abs(scrollY - apertoA) > 8) chiudi(); presto(); }, { passive: true });
+  addEventListener('scroll', () => {
+    if (apertoA !== null && Math.abs(scrollY - apertoA) > 8) chiudi();
+    c.classList.add('scorre'); clearTimeout(tScorre); tScorre = setTimeout(() => c.classList.remove('scorre'), 220);   // mentre scorri il robottino sta fermo dentro
+    presto();
+  }, { passive: true });
   addEventListener('resize', presto);
   if (window.ResizeObserver) new ResizeObserver(presto).observe(document.body);
   document.addEventListener('click', (e) => { if (!c.contains(e.target)) chiudi(); setTimeout(presto, 50); });
