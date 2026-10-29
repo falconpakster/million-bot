@@ -284,6 +284,9 @@ body.pub .bt-mese-head { flex-direction: column; gap: 2px; }
 .bt-vuoto { font-size: 15px; color: var(--grigio); margin: 0; }
 .bt-tip { position: absolute; pointer-events: none; background: #ffffff; border: 1px solid var(--linea-forte); border-radius: 8px; box-shadow: 0 10px 30px rgba(18, 36, 26, .12); padding: 6px 10px; font-size: 13px; white-space: nowrap; z-index: 3; }
 .bt-tip .d { color: var(--grigio); }
+.bt-tip.fisso { pointer-events: auto; z-index: 5; }
+.bt-tip-btn { display: block; margin-top: 8px; width: 100%; padding: 7px 12px; border: 0; border-radius: 999px; background: var(--inchiostro, #12241a); color: #fff; font: 600 13px/1.1 var(--sans); cursor: pointer; }
+.bt-tip-btn:hover { background: #1f6b4a; }
 .bt-fail { display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--grigio); font-size: 14px; min-height: inherit; }
 .bt-chiudi, .bt-zoom button { font-size: 14px; background: transparent; border: 1px solid var(--linea-forte); border-radius: 999px; padding: 5px 14px; cursor: pointer; }
 .bt-zoom { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
@@ -1559,19 +1562,33 @@ dash.calc('strategie', {
   const tip = (box) => {
     let t = box.querySelector('.bt-tip');
     if (!t) { t = document.createElement('div'); t.className = 'bt-tip'; t.hidden = true; box.append(t); }
+    const chiudi = () => { t.hidden = true; t.classList.remove('fisso'); };
     return {
-      show(x, y, data, testo) {
+      // azione = {testo, fn}: il riquadro resta aperto con un pulsante (si chiude toccando fuori)
+      show(x, y, data, testo, azione) {
+        if (t.classList.contains('fisso') && !azione) return;
         t.replaceChildren();
         const a = document.createElement('div'); a.className = 'd'; a.textContent = data;
         const b = document.createElement('div'); b.textContent = testo;
         t.append(a, b); t.hidden = false;
+        t.classList.toggle('fisso', !!azione);
+        if (azione) {
+          const p = document.createElement('button'); p.type = 'button'; p.className = 'bt-tip-btn'; p.textContent = azione.testo;
+          p.addEventListener('click', (e) => { e.stopPropagation(); chiudi(); azione.fn(); });
+          t.append(p);
+        }
         const w = t.offsetWidth, W = box.clientWidth;
         const sl = box.scrollLeft || 0; t.style.left = Math.max(sl, Math.min(sl + W - w, x + 12)) + 'px';
-        t.style.top = Math.max(0, y - 44) + 'px';
+        t.style.top = Math.max(0, y - (azione ? 84 : 44)) + 'px';
       },
-      hide() { t.hidden = true; },
+      hide(forza) { if (forza || !t.classList.contains('fisso')) chiudi(); },
     };
   };
+  // un tocco fuori chiude il riquadro aperto con il pulsante
+  document.addEventListener('click', (e) => {
+    if (e.target.closest && e.target.closest('rect.b')) return;
+    document.querySelectorAll('.bt-tip.fisso').forEach((t) => { if (!t.contains(e.target)) { t.hidden = true; t.classList.remove('fisso'); } });
+  });
 
   const scegli = (a) => dash.setParams({ anno: a, grafico: null });
   root.querySelector('#mesi').addEventListener('click', (e) => {
@@ -1749,6 +1766,7 @@ dash.calc('strategie', {
 
   function disegnaBarre(mesi, anno) {
     const box = root.querySelector('#barre');
+    box.querySelectorAll('.bt-tip').forEach((t) => t.remove());   // niente riquadro rimasto dal grafico di prima
     box.querySelectorAll('svg').forEach((s) => s.remove());
     const W = box.clientWidth, H = 200;
     if (!W) return;
@@ -1772,11 +1790,11 @@ dash.calc('strategie', {
     svg.selectAll('text.x').data(dati).join('text').attr('x', (d) => x(d.m) + x.bandwidth() / 2).attr('y', H - 6).attr('text-anchor', 'middle')
       .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text((d) => INIZIALI[d.m - 1]);
     const tt = tip(box);
-    svg.selectAll('rect.b').data(dati.filter((d) => d.r)).join('rect')
+    svg.selectAll('rect.b').data(dati.filter((d) => d.r)).join('rect').attr('class', 'b')
       .attr('x', (d) => x(d.m)).attr('width', x.bandwidth())
       .attr('y', (d) => y(Math.max(0, P(d.r)))).attr('height', (d) => Math.max(1, Math.abs(y(P(d.r)) - y(0))))
       .attr('rx', 4).attr('fill', (d) => (podio.includes(d.m) ? `url(#pod-b${podio.indexOf(d.m)})` : P(d.r) >= 0 ? dash.colors[0] : 'var(--cds-chart-status-critical)'))
-      .on('mousemove', (e, d) => {
+      .on('mousemove click', (e, d) => {
         const [px, py] = d3.pointer(e, box);
         const pm = podio.indexOf(d.m);
         tt.show(px, py, MESI[d.m - 1] + ' ' + anno + (pm >= 0 ? ' · ' + (pm + 1) + '° mese migliore' : ''), pctS(Number(d.r.rendimento)) + ' · ' + rS(Number(d.r.R)) + ' · ' + d.r.trade + ' trade · ' + eurS(Number(d.r.euro)));
@@ -1787,6 +1805,7 @@ dash.calc('strategie', {
 
   function disegnaBarreAnni(anni) {
     const box = root.querySelector('#barre');
+    box.querySelectorAll('.bt-tip').forEach((t) => t.remove());   // niente riquadro rimasto dal grafico di prima
     box.querySelectorAll('svg').forEach((s) => s.remove());
     const W = box.clientWidth, H = 200;
     if (!W) return;
@@ -1808,12 +1827,17 @@ dash.calc('strategie', {
     svg.selectAll('text.x').data(anni).join('text').attr('x', (r) => x(Number(r.anno)) + x.bandwidth() / 2).attr('y', H - 6).attr('text-anchor', 'middle')
       .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text((r) => (W < 420 ? "'" + String(r.anno).slice(2) : r.anno));
     const tt = tip(box);
-    svg.selectAll('rect.b').data(anni).join('rect')
+    svg.selectAll('rect.b').data(anni).join('rect').attr('class', 'b')
       .attr('x', (r) => x(Number(r.anno))).attr('width', x.bandwidth())
       .attr('y', (r) => y(Math.max(0, P(r)))).attr('height', (r) => Math.max(1, Math.abs(y(P(r)) - y(0))))
       .attr('rx', 4).attr('fill', (r) => (podio.includes(Number(r.anno)) ? `url(#pod-b${podio.indexOf(Number(r.anno))})` : P(r) >= 0 ? dash.colors[0] : 'var(--cds-chart-status-critical)'))
       .style('cursor', 'pointer')
-      .on('click', (e, r) => scegli(Number(r.anno)))
+      .on('click', (e, r) => {          // prima la descrizione dell'anno, poi i mesi con il pulsante
+        const [px, py] = d3.pointer(e, box);
+        const pa = podio.indexOf(Number(r.anno));
+        tt.show(px, py, String(r.anno) + (pa >= 0 ? ' · ' + (pa + 1) + '° anno migliore' : ''), pctS(Number(r.rendimento)) + ' · ' + rS(Number(r.R)) + ' · ' + r.trade + ' trade',
+          { testo: 'Vedi i mesi del ' + r.anno + ' →', fn: () => scegli(Number(r.anno)) });
+      })
       .on('mousemove', (e, r) => {
         const [px, py] = d3.pointer(e, box);
         const pa = podio.indexOf(Number(r.anno));
@@ -1894,7 +1918,7 @@ dash.calc('strategie', {
     if (tutti) disegnaBarreAnni(anni); else disegnaBarre(M.data, anno);
     root.querySelector('#mesi-grafico h3').textContent = tutti ? 'Risultato di ogni anno' : 'Risultato di ogni mese';
     const sp = root.querySelector('#mesi-grafico .bt-sub.solo-pub');
-    if (sp) sp.textContent = tutti ? 'Ogni barra è un anno: sopra lo zero l\'anno ha chiuso in guadagno, sotto in perdita. I numeri a sinistra sono il rendimento in % del saldo nell\'anno, come nei riquadri in alto. Le medaglie sono i tre anni migliori. Passa sopra una barra per i dettagli.'
+    if (sp) sp.textContent = tutti ? 'Ogni barra è un anno: sopra lo zero l\'anno ha chiuso in guadagno, sotto in perdita. I numeri a sinistra sono il rendimento in % del saldo nell\'anno, come nei riquadri in alto. Le medaglie sono i tre anni migliori. Tocca una barra per i dettagli e per aprire i mesi di quell\'anno.'
       : 'Ogni barra è un mese dell\'anno scelto: sopra lo zero il mese ha chiuso in guadagno, sotto in perdita. I numeri a sinistra sono quanto è cresciuto (o sceso) il saldo nel mese, in %. Le medaglie sono i tre mesi migliori. Passa sopra una barra per i dettagli.';
     const sm = root.querySelector('.sez-mesi h2'); if (sm) sm.textContent = tutti ? 'I trade anno per anno' : 'I trade mese per mese';
     const smp = root.querySelector('.sez-mesi .bt-sub.solo-pub');
