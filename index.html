@@ -1352,7 +1352,7 @@ body.pub.buio .piede .rischio { background: #fff6f4; }
     <section class="bt-card" id="mesi-grafico">
       <h3>Risultato di ogni mese</h3>
       <p class="bt-sub solo-pub">Ogni barra è un mese dell'anno scelto: sopra lo zero il mese ha chiuso in guadagno, sotto in perdita. Passa sopra una barra per i dettagli.</p>
-      <p class="bt-sub solo-priv">In R: +3 per ogni TP, −1 per ogni SL, spread e swap già tolti.</p>
+      <p class="bt-sub solo-priv">In % del saldo (variazione nel mese, o nell'anno in Complessivo); passa sopra una barra per vedere anche gli R.</p>
       <div class="bt-chart bt-small" id="barre" data-source="mesi"></div>
     </section>
     <section class="bt-card solo-priv" id="per-strategia">
@@ -1492,7 +1492,7 @@ dash.calc('anni', {
 dash.calc('mesi', {
   inputs: ['trade'],
   title: 'Riepilogo per mese',
-  description: 'Per mese di entrata: trade, TP, SL, R, somma in euro e saldo a fine mese.',
+  description: 'Per mese di entrata: trade, TP, SL, R, somma in euro, saldo a fine mese e variazione % del saldo nel mese.',
   fn: (trade) => {
     const t = trade.map((r) => ({ id: Number(r.id), anno: Number(r.anno), mese: Number(r.mese), R: Number(r.R), euro: Number(r.euro), saldo: Number(r.saldo), chiusura: String(r.chiusura) }));
     const uscite = [...t].sort((a, b) => (a.chiusura < b.chiusura ? -1 : a.chiusura > b.chiusura ? 1 : a.id - b.id));
@@ -1509,6 +1509,7 @@ dash.calc('mesi', {
         R: Math.round(k.reduce((s, r) => s + r.R, 0) * 100) / 100,
         euro: Math.round(k.reduce((s, r) => s + r.euro, 0) * 100) / 100,
         saldo_fine: Math.round(saldoPrima(dopo) * 100) / 100,
+        rendimento: saldoPrima(c + '-01') > 0 ? Math.round((saldoPrima(dopo) / saldoPrima(c + '-01') - 1) * 10000) / 10000 : 0,
       };
     });
   },
@@ -1753,34 +1754,35 @@ dash.calc('strategie', {
     if (!W) return;
     const per = new Map(mesi.filter((r) => Number(r.anno) === anno).map((r) => [Number(r.mese), r]));
     const dati = d3.range(1, 13).map((m) => ({ m, r: per.get(m) }));
-    const vals = dati.filter((d) => d.r).map((d) => Number(d.r.R));
+    const P = (r) => Number(r.rendimento) * 100;   // variazione % del saldo nel mese
+    const vals = dati.filter((d) => d.r).map((d) => P(d.r));
     const lo = Math.min(0, d3.min(vals) ?? 0), hi = Math.max(0, d3.max(vals) ?? 0);
     const svg = d3.select(box).insert('svg', ':first-child').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
     const y = d3.scaleLinear([lo, hi || 1], [H - 24, 30]).nice(4);
     const ticks = y.ticks(4);
-    const probe = svg.append('text').attr('font-size', 12).text(ticks.map((t) => (t > 0 ? '+' : '') + num(t)).reduce((a, b) => (a.length >= b.length ? a : b)));
+    const probe = svg.append('text').attr('font-size', 12).text(ticks.map((t) => (t > 0 ? '+' : t < 0 ? '−' : '') + num(Math.abs(t)) + '%').reduce((a, b) => (a.length >= b.length ? a : b)));
     const left = probe.node().getComputedTextLength() + 10; probe.remove();
     const x = d3.scaleBand(d3.range(1, 13), [left, W - 8]).padding(0.25);
     podioDefs(svg);
-    const podio = dati.filter((d) => d.r && Number(d.r.R) > 0).sort((p, q) => Number(q.r.R) - Number(p.r.R)).slice(0, 3).map((d) => d.m);
+    const podio = dati.filter((d) => d.r && P(d.r) > 0).sort((p, q) => P(q.r) - P(p.r)).slice(0, 3).map((d) => d.m);
     svg.selectAll('line.g').data(ticks).join('line').attr('x1', left).attr('x2', W - 8).attr('y1', y).attr('y2', y)
       .attr('stroke', (t) => (t === 0 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)'));
     svg.selectAll('text.y').data(ticks).join('text').attr('x', left - 8).attr('y', y).attr('dy', '0.32em').attr('text-anchor', 'end')
-      .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text((t) => (t > 0 ? '+' : '') + num(t));
+      .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text((t) => (t > 0 ? '+' : t < 0 ? '−' : '') + num(Math.abs(t)) + '%');
     svg.selectAll('text.x').data(dati).join('text').attr('x', (d) => x(d.m) + x.bandwidth() / 2).attr('y', H - 6).attr('text-anchor', 'middle')
       .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text((d) => INIZIALI[d.m - 1]);
     const tt = tip(box);
     svg.selectAll('rect.b').data(dati.filter((d) => d.r)).join('rect')
       .attr('x', (d) => x(d.m)).attr('width', x.bandwidth())
-      .attr('y', (d) => y(Math.max(0, Number(d.r.R)))).attr('height', (d) => Math.max(1, Math.abs(y(Number(d.r.R)) - y(0))))
-      .attr('rx', 4).attr('fill', (d) => (podio.includes(d.m) ? `url(#pod-b${podio.indexOf(d.m)})` : Number(d.r.R) >= 0 ? dash.colors[0] : 'var(--cds-chart-status-critical)'))
+      .attr('y', (d) => y(Math.max(0, P(d.r)))).attr('height', (d) => Math.max(1, Math.abs(y(P(d.r)) - y(0))))
+      .attr('rx', 4).attr('fill', (d) => (podio.includes(d.m) ? `url(#pod-b${podio.indexOf(d.m)})` : P(d.r) >= 0 ? dash.colors[0] : 'var(--cds-chart-status-critical)'))
       .on('mousemove', (e, d) => {
         const [px, py] = d3.pointer(e, box);
         const pm = podio.indexOf(d.m);
-        tt.show(px, py, MESI[d.m - 1] + ' ' + anno + (pm >= 0 ? ' · ' + (pm + 1) + '° mese migliore' : ''), rS(Number(d.r.R)) + ' · ' + d.r.trade + ' trade · ' + eurS(Number(d.r.euro)));
+        tt.show(px, py, MESI[d.m - 1] + ' ' + anno + (pm >= 0 ? ' · ' + (pm + 1) + '° mese migliore' : ''), pctS(Number(d.r.rendimento)) + ' · ' + rS(Number(d.r.R)) + ' · ' + d.r.trade + ' trade · ' + eurS(Number(d.r.euro)));
       })
       .on('mouseleave', () => tt.hide());
-    podioMedaglie(svg, podio.map((m, k) => ({ cx: x(m) + x.bandwidth() / 2, top: y(Number(per.get(m).R)), pos: k })));
+    podioMedaglie(svg, podio.map((m, k) => ({ cx: x(m) + x.bandwidth() / 2, top: y(P(per.get(m))), pos: k })));
   }
 
   function disegnaBarreAnni(anni) {
@@ -1788,12 +1790,13 @@ dash.calc('strategie', {
     box.querySelectorAll('svg').forEach((s) => s.remove());
     const W = box.clientWidth, H = 200;
     if (!W) return;
-    const vals = anni.map((r) => Number(r.R));
+    const P = (r) => Number(r.rendimento) * 100;   // rendimento % dell'anno, come nei riquadri in alto
+    const vals = anni.map((r) => P(r));
     const lo = Math.min(0, d3.min(vals) ?? 0), hi = Math.max(0, d3.max(vals) ?? 0);
     const svg = d3.select(box).insert('svg', ':first-child').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
     const y = d3.scaleLinear([lo, hi || 1], [H - 24, 30]).nice(4);
     const ticks = y.ticks(4);
-    const probe = svg.append('text').attr('font-size', 12).text(ticks.map((t) => (t > 0 ? '+' : '') + num(t)).reduce((a, b) => (a.length >= b.length ? a : b)));
+    const probe = svg.append('text').attr('font-size', 12).text(ticks.map((t) => (t > 0 ? '+' : t < 0 ? '−' : '') + num(Math.abs(t)) + '%').reduce((a, b) => (a.length >= b.length ? a : b)));
     const left = probe.node().getComputedTextLength() + 10; probe.remove();
     const x = d3.scaleBand(anni.map((r) => Number(r.anno)), [left, W - 8]).padding(0.3);
     podioDefs(svg);
@@ -1801,23 +1804,23 @@ dash.calc('strategie', {
     svg.selectAll('line.g').data(ticks).join('line').attr('x1', left).attr('x2', W - 8).attr('y1', y).attr('y2', y)
       .attr('stroke', (t) => (t === 0 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)'));
     svg.selectAll('text.y').data(ticks).join('text').attr('x', left - 8).attr('y', y).attr('dy', '0.32em').attr('text-anchor', 'end')
-      .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text((t) => (t > 0 ? '+' : '') + num(t));
+      .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text((t) => (t > 0 ? '+' : t < 0 ? '−' : '') + num(Math.abs(t)) + '%');
     svg.selectAll('text.x').data(anni).join('text').attr('x', (r) => x(Number(r.anno)) + x.bandwidth() / 2).attr('y', H - 6).attr('text-anchor', 'middle')
       .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text((r) => (W < 420 ? "'" + String(r.anno).slice(2) : r.anno));
     const tt = tip(box);
     svg.selectAll('rect.b').data(anni).join('rect')
       .attr('x', (r) => x(Number(r.anno))).attr('width', x.bandwidth())
-      .attr('y', (r) => y(Math.max(0, Number(r.R)))).attr('height', (r) => Math.max(1, Math.abs(y(Number(r.R)) - y(0))))
-      .attr('rx', 4).attr('fill', (r) => (podio.includes(Number(r.anno)) ? `url(#pod-b${podio.indexOf(Number(r.anno))})` : Number(r.R) >= 0 ? dash.colors[0] : 'var(--cds-chart-status-critical)'))
+      .attr('y', (r) => y(Math.max(0, P(r)))).attr('height', (r) => Math.max(1, Math.abs(y(P(r)) - y(0))))
+      .attr('rx', 4).attr('fill', (r) => (podio.includes(Number(r.anno)) ? `url(#pod-b${podio.indexOf(Number(r.anno))})` : P(r) >= 0 ? dash.colors[0] : 'var(--cds-chart-status-critical)'))
       .style('cursor', 'pointer')
       .on('click', (e, r) => scegli(Number(r.anno)))
       .on('mousemove', (e, r) => {
         const [px, py] = d3.pointer(e, box);
         const pa = podio.indexOf(Number(r.anno));
-        tt.show(px, py, String(r.anno) + (pa >= 0 ? ' · ' + (pa + 1) + '° anno migliore' : ''), rS(Number(r.R)) + ' · ' + r.trade + ' trade · ' + pctS(Number(r.rendimento)));
+        tt.show(px, py, String(r.anno) + (pa >= 0 ? ' · ' + (pa + 1) + '° anno migliore' : ''), pctS(Number(r.rendimento)) + ' · ' + rS(Number(r.R)) + ' · ' + r.trade + ' trade');
       })
       .on('mouseleave', () => tt.hide());
-    podioMedaglie(svg, podio.map((a, k) => { const r = anni.find((z) => Number(z.anno) === a); return { cx: x(a) + x.bandwidth() / 2, top: y(Number(r.R)), pos: k }; }));
+    podioMedaglie(svg, podio.map((a, k) => { const r = anni.find((z) => Number(z.anno) === a); return { cx: x(a) + x.bandwidth() / 2, top: y(P(r)), pos: k }; }));
   }
 
   dash.onData(() => {
@@ -1891,8 +1894,8 @@ dash.calc('strategie', {
     if (tutti) disegnaBarreAnni(anni); else disegnaBarre(M.data, anno);
     root.querySelector('#mesi-grafico h3').textContent = tutti ? 'Risultato di ogni anno' : 'Risultato di ogni mese';
     const sp = root.querySelector('#mesi-grafico .bt-sub.solo-pub');
-    if (sp) sp.textContent = tutti ? 'Ogni barra è un anno: sopra lo zero l\'anno ha chiuso in guadagno, sotto in perdita. Le medaglie sono i tre anni con il rendimento in % più alto, come nei riquadri in alto. Passa sopra una barra per i dettagli.'
-      : 'Ogni barra è un mese dell\'anno scelto: sopra lo zero il mese ha chiuso in guadagno, sotto in perdita. Le medaglie sono i tre mesi migliori. Passa sopra una barra per i dettagli.';
+    if (sp) sp.textContent = tutti ? 'Ogni barra è un anno: sopra lo zero l\'anno ha chiuso in guadagno, sotto in perdita. I numeri a sinistra sono il rendimento in % del saldo nell\'anno, come nei riquadri in alto. Le medaglie sono i tre anni migliori. Passa sopra una barra per i dettagli.'
+      : 'Ogni barra è un mese dell\'anno scelto: sopra lo zero il mese ha chiuso in guadagno, sotto in perdita. I numeri a sinistra sono quanto è cresciuto (o sceso) il saldo nel mese, in %. Le medaglie sono i tre mesi migliori. Passa sopra una barra per i dettagli.';
     const sm = root.querySelector('.sez-mesi h2'); if (sm) sm.textContent = tutti ? 'I trade anno per anno' : 'I trade mese per mese';
     const smp = root.querySelector('.sez-mesi .bt-sub.solo-pub');
     if (smp) smp.textContent = tutti ? 'Apri un anno per vedere i suoi trade mese per mese: il giorno di chiusura, se ha preso il TP o lo SL, il risultato in R e in euro e il saldo subito dopo.'
@@ -1987,14 +1990,15 @@ dash.calc('strategie', {
       vista.replaceChildren(sezione(m));
     };
     // podio dei mesi dell'anno: i tre migliori (solo positivi) in oro, argento e bronzo con la medaglia
-    const podioM = mesiCon.filter((m) => mesiAnno.get(m).R > 0).sort((x, y) => mesiAnno.get(y).R - mesiAnno.get(x).R).slice(0, 3);
+    const podioM = mesiCon.filter((m) => Number(mesiAnno.get(m).rendimento) > 0).sort((x, y) => Number(mesiAnno.get(y).rendimento) - Number(mesiAnno.get(x).rendimento)).slice(0, 3);   // come nel grafico: per % del saldo
     for (let m = primo; m <= fine; m++) {
       const r = mesiAnno.get(m);
       const b = document.createElement('button'); b.type = 'button'; b.dataset.m = m;
       const n = document.createElement('span'); n.textContent = MESI[m - 1].slice(0, 3);
-      const v = document.createElement('b'); v.textContent = r ? (r.R > 0 ? '+' : r.R < 0 ? '−' : '') + num(Math.abs(r.R), 1) + 'R' : '—';
-      if (r) segno(v, r.R); else b.disabled = true;
-      b.title = r ? MESI[m - 1] + ' ' + anno + ': ' + r.trade + ' trade' : MESI[m - 1] + ' ' + anno + ': nessun trade';
+      const v = document.createElement('b'); const rp = r ? Number(r.rendimento) : 0;
+      v.textContent = r ? (rp > 0 ? '+' : rp < 0 ? '−' : '') + num(Math.abs(rp) * 100, Math.abs(rp) >= .1 ? 0 : 1) + '%' : '—';
+      if (r) segno(v, rp); else b.disabled = true;
+      b.title = r ? MESI[m - 1] + ' ' + anno + ': ' + pctS(rp) + ' · ' + rS(Number(r.R)) + ' · ' + r.trade + ' trade' : MESI[m - 1] + ' ' + anno + ': nessun trade';
       b.append(n, v); b.addEventListener('click', () => mostra(m));
       const pm = podioM.indexOf(m);
       if (pm >= 0) {
