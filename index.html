@@ -287,6 +287,10 @@ body.pub .bt-mese-head { flex-direction: column; gap: 2px; }
 .bt-tip.fisso { pointer-events: auto; z-index: 5; }
 .bt-tip-btn { display: block; margin-top: 8px; width: 100%; padding: 7px 12px; border: 0; border-radius: 999px; background: var(--inchiostro, #12241a); color: #fff; font: 600 13px/1.1 var(--sans); cursor: pointer; }
 .bt-tip-btn:hover { background: #1f6b4a; }
+.bt-card-testa { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.bt-card-testa h3 { margin: 0; }
+.bt-indietro { padding: 7px 13px; border-radius: 999px; border: 1px solid var(--linea-forte); background: #fff; color: var(--inchiostro); font: 600 13px/1.1 var(--sans); cursor: pointer; white-space: nowrap; }
+.bt-indietro:hover { background: #eef5ef; }
 .bt-fail { display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--grigio); font-size: 14px; min-height: inherit; }
 .bt-chiudi, .bt-zoom button { font-size: 14px; background: transparent; border: 1px solid var(--linea-forte); border-radius: 999px; padding: 5px 14px; cursor: pointer; }
 .bt-zoom { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
@@ -1353,7 +1357,7 @@ body.pub.buio .piede .rischio { background: #fff6f4; }
 
   <div class="bt-grid">
     <section class="bt-card" id="mesi-grafico">
-      <h3>Risultato di ogni mese</h3>
+      <div class="bt-card-testa"><h3>Risultato di ogni mese</h3><button type="button" class="bt-indietro" id="mesi-indietro" hidden>← Tutti gli anni</button></div>
       <p class="bt-sub solo-pub">Ogni barra è un mese dell'anno scelto: sopra lo zero il mese ha chiuso in guadagno, sotto in perdita. Passa sopra una barra per i dettagli.</p>
       <p class="bt-sub solo-priv">In % del saldo (variazione nel mese, o nell'anno in Complessivo); passa sopra una barra per vedere anche gli R.</p>
       <div class="bt-chart bt-small" id="barre" data-source="mesi"></div>
@@ -1591,6 +1595,7 @@ dash.calc('strategie', {
   });
 
   const scegli = (a) => dash.setParams({ anno: a, grafico: null });
+  root.querySelector('#mesi-indietro').addEventListener('click', () => scegli('tutti'));
   root.querySelector('#mesi').addEventListener('click', (e) => {
     if (e.target.closest('.bt-chiudi')) { dash.setParams({ grafico: null }); return; }
     const zb = e.target.closest('.bt-zoom button');
@@ -1916,7 +1921,8 @@ dash.calc('strategie', {
     });
 
     if (tutti) disegnaBarreAnni(anni); else disegnaBarre(M.data, anno);
-    root.querySelector('#mesi-grafico h3').textContent = tutti ? 'Risultato di ogni anno' : 'Risultato di ogni mese';
+    root.querySelector('#mesi-grafico h3').textContent = tutti ? 'Risultato di ogni anno' : 'Risultato di ogni mese del ' + anno;
+    root.querySelector('#mesi-indietro').hidden = tutti;   // dal grafico dei mesi si torna a quello di tutti gli anni
     const sp = root.querySelector('#mesi-grafico .bt-sub.solo-pub');
     if (sp) sp.textContent = tutti ? 'Ogni barra è un anno: sopra lo zero l\'anno ha chiuso in guadagno, sotto in perdita. I numeri a sinistra sono il rendimento in % del saldo nell\'anno, come nei riquadri in alto. Le medaglie sono i tre anni migliori. Tocca una barra per i dettagli e per aprire i mesi di quell\'anno.'
       : 'Ogni barra è un mese dell\'anno scelto: sopra lo zero il mese ha chiuso in guadagno, sotto in perdita. I numeri a sinistra sono quanto è cresciuto (o sceso) il saldo nel mese, in %. Le medaglie sono i tre mesi migliori. Passa sopra una barra per i dettagli.';
