@@ -1037,6 +1037,29 @@ body.cielo-pioggia .cielo .c1, body.cielo-temporale .cielo .c1 { inset: -120px -
 /* stelle, luna e alone: strati propri, così brillano senza ridisegnare la pagina */
 body.buio .cielo .c2 { will-change: transform; }
 .confronto::after { will-change: transform; }
+
+/* ---- Leggibilità sugli sfondi dei temi (29/10/2026): alone del colore dello sfondo dietro le scritte che stanno
+   direttamente sul cielo (non nelle schede), così pipistrelli, coriandoli, pioggia e zucche non le coprono ---- */
+body.pub { --alone: rgba(243, 248, 243, .96); --alone-2: rgba(243, 248, 243, .7); }
+body.pub.buio { --alone: rgba(9, 16, 40, .92); --alone-2: rgba(9, 16, 40, .62); }
+body.pub :is(.hero-pub h1, .scorri-testo, h2.bt-sez, .demo-link, .come summary, .piede) {
+  text-shadow: 0 0 2px var(--alone), 0 0 7px var(--alone), 0 0 16px var(--alone-2); }
+body.pub :is(.hero-pub .sotto, .nota-cifre, .sg-nota) { text-shadow: 0 0 2px var(--alone), 0 0 5px var(--alone); }
+body.pub .hero-pub .tris.oro { filter: drop-shadow(0 0 2px var(--alone)) drop-shadow(0 0 6px var(--alone)); }
+/* parole più importanti */
+.hero-pub .tris.oro { background: linear-gradient(100deg, #0f8a4f, #0a6a3c 55%, #07502d); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero-pub h1 .chiave { background: linear-gradient(transparent 64%, rgba(240, 196, 84, .55) 64%, rgba(240, 196, 84, .55) 92%, transparent 92%); padding: 0 2px; margin: 0 -2px; }
+body.pub.buio .hero-pub h1 .chiave { background: linear-gradient(transparent 64%, rgba(244, 210, 122, .4) 64%, rgba(244, 210, 122, .4) 92%, transparent 92%); }
+.hero-pub .sotto mark { background: linear-gradient(transparent 54%, rgba(23, 163, 98, .34) 54%); }
+/* velo morbido dietro il blocco di testo in alto: le decorazioni del tema si vedono attorno ma non attraversano le scritte */
+body.pub { --velo: rgba(243, 248, 243, .74); }
+body.pub.buio { --velo: rgba(9, 16, 40, .5); }
+body.pub .hero-pub > div:first-child { position: relative; isolation: isolate; }
+body.pub .hero-pub > div:first-child::before { content: ""; position: absolute; inset: -6px -4px 0; z-index: -1; pointer-events: none;
+  border-radius: 26px; background: var(--velo); box-shadow: 0 0 26px 18px var(--velo); }
+body.pub .btn-demo-mini { background: #fbecea; }
+body.pub .piede .rischio { text-shadow: none; background: #fff6f4; }   /* riquadro del rischio: pieno, così coriandoli e pioggia non passano */
+body.pub.buio .piede .rischio { background: #fff6f4; }
 </style>
 </head>
 <body class="pub">
@@ -1084,7 +1107,7 @@ body.buio .cielo .c2 { will-change: transform; }
     <section class="hero-pub">
       <div>
         <button class="btn-demo-mini" type="button" data-demo><span class="punto rosso"></span>Conto demo dal vivo</button>
-        <h1>Il bot che ha vinto<br>ogni anno dal 2020.</h1>
+        <h1>Il bot che ha vinto<br><span class="chiave">ogni anno</span> dal 2020.</h1>
         <p class="tris oro"><span>Sopra ogni media.</span> <span>Sopra ogni anno.</span></p>
         <div class="confronto" data-robot-umore="determinato" data-robot="Questi numeri non arrivano senza perdite: nel 2021 ho preso anche <b>20 stop loss di fila</b>. Non ho cambiato le regole e sono ripartito.">
           <div><span>Media annua</span><b id="h-titolo-num">—</b></div>
