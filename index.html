@@ -1121,6 +1121,26 @@ body.pub.festa-natale .testata::before, body.pub.festa-natale .testata::after { 
 .p-pipistrello .p-ala { animation-duration: .2s; }
 .compagno { transition: transform 1s cubic-bezier(.5, .05, .25, 1), opacity .4s !important; }   /* niente transizione della larghezza: ricalcolava la pagina a ogni fotogramma del volo */
 .compagno .c-corpo { will-change: transform; }
+.pw-campo { position: relative; display: grid; }
+.pw-campo input { padding-right: 48px !important; padding: 12px 48px 12px 14px; border-radius: 12px; border: 1px solid var(--linea-forte); background: var(--carta); font-size: 16px; }
+.pw-occhio { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; border: 0; border-radius: 10px; background: transparent; color: var(--grigio); cursor: pointer; display: grid; place-items: center; }
+.pw-occhio:hover { background: rgba(23, 163, 98, .1); color: var(--inchiostro); }
+.pw-occhio svg { width: 21px; height: 21px; }
+.pw-occhio .o-chiudi, .pw-occhio[aria-pressed="true"] .o-apri { display: none; }
+.pw-occhio[aria-pressed="true"] .o-chiudi { display: block; }
+/* ---- Area riservata sul telefono (29/10/2026): in basso le 6 sezioni con il nome sotto l'icona; "Sito pubblico" ed "Esci" in alto ---- */
+.priv-su { display: none; }
+@media (max-width: 860px) {
+  .lato .fondo { display: none; }
+  .lato { justify-content: stretch; gap: 2px; padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); }
+  .lato .voce { flex: 1 1 0; min-width: 0; gap: 3px; padding: 7px 2px 6px; border-radius: 12px; font-size: 10.5px; font-weight: 600; letter-spacing: -.01em; }
+  .lato .voce span { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lato .voce svg { width: 21px; height: 21px; }
+  .lato .voce[aria-current="page"] { background: rgba(227, 178, 60, .18); color: #f6d680; }
+  .priv-su { display: flex; justify-content: space-between; gap: 8px; margin: -8px 0 16px; }
+  .priv-btn { display: inline-flex; align-items: center; gap: 7px; padding: 8px 13px; border-radius: 999px; border: 1px solid var(--linea-forte); background: #fff; color: var(--inchiostro); font: 600 13px/1 var(--sans); cursor: pointer; }
+  .priv-btn svg { width: 17px; height: 17px; }
+}
 </style>
 </head>
 <body class="pub">
@@ -1312,7 +1332,13 @@ body.pub.festa-natale .testata::before, body.pub.festa-natale .testata::after { 
 <section class="accesso-box" id="v-login" hidden>
   <h2>Area riservata</h2>
   <p class="bt-sub">Inserisci la password. I dati si aprono solo qui, nel tuo browser.</p>
-  <input id="pw" type="password" autocomplete="current-password" placeholder="Password" aria-label="Password">
+  <div class="pw-campo">
+    <input id="pw" type="password" autocomplete="current-password" placeholder="Password" aria-label="Password">
+    <button type="button" class="pw-occhio" id="pw-occhio" aria-label="Mostra la password" aria-pressed="false">
+      <svg class="o-apri" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
+      <svg class="o-chiudi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18M10.6 5.1A10.6 10.6 0 0 1 12 5c6.4 0 10 7 10 7a17.7 17.7 0 0 1-3.2 4.2M6.6 6.6C3.8 8.4 2 12 2 12s3.6 7 10 7c1.8 0 3.4-.5 4.8-1.3M9.9 9.9a3.2 3.2 0 0 0 4.2 4.2" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
   <label><input id="ricorda" type="checkbox"> Ricorda su questo dispositivo</label>
   <p class="err" id="msg" role="alert"></p>
   <div style="display:flex;gap:8px"><button class="btn btn-oro" id="b-apri" type="button">Entra</button>
@@ -1336,6 +1362,10 @@ body.pub.festa-natale .testata::before, body.pub.festa-natale .testata::after { 
     </div>
   </aside>
   <main class="contenuto">
+    <div class="priv-su">
+      <button type="button" class="priv-btn" data-clic="b-pub"><svg><use href="#i-casa"/></svg>Sito pubblico</button>
+      <button type="button" class="priv-btn" data-clic="b-esci"><svg><use href="#i-esci"/></svg>Esci</button>
+    </div>
     <div class="vista-testa"><h1 id="vista-titolo">Panoramica</h1><span class="agg" id="vista-agg"></span></div>
     <div class="vista" data-v="panoramica"></div>
     <div class="vista" data-v="trade" hidden></div>
@@ -2798,11 +2828,16 @@ dash.calc('strategie', {
     try {
       const k = await deriva($('#pw').value);
       if (!k) { $('#msg').textContent = 'Password sbagliata.'; return; }
-      $('#msg').textContent = ''; $('#pw').value = '';
+      $('#msg').textContent = ''; $('#pw').value = ''; mostraPw(false);
       await entra(k, $('#ricorda').checked);
     } catch (e) { $('#msg').textContent = 'Dati non raggiungibili: ' + e.message; }
   });
   $('#pw').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#b-apri').click(); });
+  // sul telefono "Sito pubblico" ed "Esci" stanno in alto: fanno lo stesso dei pulsanti della barra laterale
+  document.querySelectorAll('.priv-btn[data-clic]').forEach((b) => b.addEventListener('click', () => document.getElementById(b.dataset.clic).click()));
+  // occhiolino: mostra o nasconde la password mentre la scrivi
+  const mostraPw = (si) => { $('#pw').type = si ? 'text' : 'password'; const o = $('#pw-occhio'); o.setAttribute('aria-pressed', String(si)); o.setAttribute('aria-label', si ? 'Nascondi la password' : 'Mostra la password'); };
+  $('#pw-occhio').addEventListener('click', () => { mostraPw($('#pw').type === 'password'); $('#pw').focus(); });
 
   // ================================================================== dati dal vivo
   // ================================================================== meteo di Ugento: il robottino si veste e lo sfondo cambia
