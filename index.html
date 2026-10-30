@@ -1393,6 +1393,22 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
 @media (prefers-reduced-motion: reduce) { .compagno.a-fine .c-corpo, .compagno.a-fine .r-braccio-d, .compagno.a-fine .r-viso { animation-duration: 8s !important; } }
 /* nel riquadro finale niente punto di domanda: il robottino guarda la scenetta, non fa domande */
 .compagno.a-fine .r-domanda { display: none; }
+/* menu delle sezioni sul telefono: pulsante a tre righe nel riquadro in alto e tendina sotto (30/10/2026) */
+.menu-apri { display: none !important; cursor: pointer; padding: 0; }
+.menu-apri.attivo { background: linear-gradient(135deg, #f8dc8a, #e3b23c 55%, #c18f22) !important; color: #10402b !important; border-color: transparent !important; }
+.menu-tel { position: absolute; left: clamp(10px, 3vw, 24px); right: clamp(10px, 3vw, 24px); top: calc(100% + 8px); z-index: 30; display: grid; gap: 2px; padding: 8px;
+  background: radial-gradient(120% 160% at 0% 0%, #2a7451 0%, #17503a 38%, #0e3c2a 70%, #0b3122 100%); border: 1px solid rgba(232, 190, 92, .45); border-radius: 20px;
+  box-shadow: 0 18px 40px rgba(9, 44, 29, .35); animation: menu-giu .18s ease-out; }
+.menu-tel[hidden] { display: none; }
+.menu-tel button { display: flex; align-items: center; gap: 10px; text-align: left; padding: 13px 14px; border: 0; border-radius: 13px; background: transparent; color: #e8f3ec; font: 600 16px/1.2 var(--sans); cursor: pointer; }
+.menu-tel button:hover, .menu-tel button:focus-visible { background: rgba(246, 214, 128, .14); color: #f6d680; }
+.menu-tel button + button { border-top: 1px solid rgba(255, 255, 255, .07); }
+.menu-tel .punto { width: 8px; height: 8px; }
+@keyframes menu-giu { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@media (max-width: 860px) { .menu-apri { display: grid !important; } }
+@media (min-width: 861px) { .menu-tel { display: none !important; } }
+/* anni scelti dal grafico iniziale: la riga degli anni si ferma subito sotto le schede */
+.bt-tabs { scroll-margin-top: 84px; }
 </style>
 </head>
 <body class="pub">
@@ -1438,7 +1454,16 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
         <a class="soc soc-ig" href="https://www.instagram.com/_roadto1milion_/" target="_blank" rel="noopener" aria-label="Seguimi su Instagram" title="Instagram"><svg><use href="#i-ig"/></svg></a>
       </div>
       <button class="link-ris" id="b-entra" type="button"><svg aria-hidden="true"><use href="#i-lucchetto"/></svg><span>Area riservata</span></button>
+      <button class="soc menu-apri" id="b-menu" type="button" aria-label="Apri il menu delle sezioni" aria-expanded="false" aria-controls="menu-tel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
     </div>
+    <nav class="menu-tel" id="menu-tel" aria-label="Sezioni" hidden>
+      <button type="button" data-vai="risultati">Risultati</button>
+      <button type="button" data-demo><span class="punto rosso"></span>Conto demo</button>
+      <button type="button" data-vai="perche">Perché è diverso</button>
+      <button type="button" data-vai="come">Come funziona</button>
+      <button type="button" data-vai="chi">Chi sono</button>
+      <button type="button" data-vai="domande">Domande</button>
+    </nav>
   </header>
 
   <main class="pagina" id="inizio">
@@ -2817,7 +2842,11 @@ dash.calc('strategie', {
       } else { box.dataset.k = kA; box.replaceChildren(); if (box._membri) box._membri.clear(); }
       if (box.childElementCount === 0) A.data.forEach((r, k) => {
         const d = el('button', 'anno-b'); d.type = 'button'; d.title = 'Vedi il ' + r.anno;
-        d.addEventListener('click', () => { vai('risultati'); dash.setParams({ anno: r.anno }); });
+        d.addEventListener('click', () => {
+          mostraPannello('risultati'); dash.setParams({ anno: r.anno });
+          // scorre fino agli anni: in alto restano le schede e subito sotto la riga degli anni, con l'anno scelto
+          requestAnimationFrame(() => requestAnimationFrame(() => { const t = $('#posto-pub .bt-tabs') || $('.bt-tabs'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }));
+        });
         const d0 = c.pts[0].d, nota = k === 0 && d0.getMonth() > 0 ? ' (da ' + d0.toLocaleDateString('it-IT', { month: 'long' }) + ')' : k === A.data.length - 1 ? ' (fino a oggi)' : '';
         const s = el('span', '', String(r.anno)); if (nota) s.append(el('small', '', nota));
         const cifra = el('b', r.rendimento < 0 ? 'neg' : '', pctS(r.rendimento * 100, 0));
@@ -2892,6 +2921,13 @@ dash.calc('strategie', {
   function vai(p) { mostraPannello(p); $('#schede').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
   $$('.scheda').forEach((b) => b.addEventListener('click', () => mostraPannello(b.dataset.pannello)));
   $$('[data-vai]').forEach((b) => b.addEventListener('click', () => vai(b.dataset.vai)));
+  // menu delle sezioni nel riquadro in alto (telefono): si apre col pulsante a tre righe, si chiude scegliendo una sezione o toccando fuori
+  const bMenu = $('#b-menu'), mTel = $('#menu-tel');
+  const menuTel = (si) => { mTel.hidden = !si; bMenu.setAttribute('aria-expanded', String(si)); bMenu.classList.toggle('attivo', si); };
+  bMenu.addEventListener('click', (e) => { e.stopPropagation(); menuTel(mTel.hidden); });
+  mTel.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => menuTel(false)));
+  document.addEventListener('click', (e) => { if (!mTel.hidden && !mTel.contains(e.target)) menuTel(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !mTel.hidden) { menuTel(false); bMenu.focus(); } });
   mostraPannello('risultati');
   const bMesi = el('button', 'btn btn-vuoto solo-pub', 'Mostra tutti i trade dell’anno'); bMesi.type = 'button'; bMesi.id = 'b-mesi';
   bMesi.setAttribute('aria-expanded', 'false');
