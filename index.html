@@ -1556,6 +1556,10 @@ body.pub.buio .hero-pub .tris .tris-crollo { background: linear-gradient(100deg,
 /* "ogni anno" nel titolo: in verde, senza la sottolineatura gialla */
 body.pub .hero-pub h1 .chiave { background: none; padding: 0; margin: 0; --base: #0f7a47; }
 body.pub.buio .hero-pub h1 .chiave { background: none; --base: #8ff0bf; }
+/* "Il lavoro dietro Million Bot": riquadri sempre della stessa larghezza (una scritta lunga non allarga più la sua colonna) */
+.lav-griglia { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 860px) { .lav-griglia { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .lav > b { white-space: normal; } }
 </style>
 </head>
 <body class="pub">
