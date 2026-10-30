@@ -1196,6 +1196,7 @@ body.pub.festa-natale .testata-in { border-color: rgba(246, 214, 128, .55); }
 .r-mantello { transform-box: view-box; transform-origin: 80px 93px; animation: mantello 2.4s ease-in-out infinite; }
 @keyframes mantello { 0%, 100% { transform: skewX(0deg) scaleX(1); } 25% { transform: skewX(-6deg) scaleX(1.04); } 75% { transform: skewX(6deg) scaleX(.97); } }
 .compagno.in-volo .r-mantello { animation-duration: .8s; }
+.compagno.scorre .robot .r-mantello { animation-play-state: running !important; }   /* il mantello sventola anche mentre scorri */
 @media (prefers-reduced-motion: reduce) { .r-mantello { animation-duration: 5s; } }
 </style>
 </head>
