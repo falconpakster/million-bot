@@ -1510,18 +1510,18 @@ body.pub.buio .hero-pub h1 { --base: #f2f5ff; --luce: #ffd96a; }
   .crollo-a { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 12px; padding: 8px 12px; }
   .ca-calo, .ca-fine { font-size: 16.5px; } .ca-calo small, .ca-fine small { white-space: normal; } }
 /* il grafico sopra gli anni: il conto scende in rosso, poi risale piano piano in verde e supera il punto di partenza */
-.crolli-graf { display: block; width: 100%; height: 90px; margin: 0 0 14px; overflow: visible; }
+.crolli-graf-box { position: relative; margin: 0 0 14px; }
+.crolli-graf { display: block; width: 100%; height: 90px; overflow: visible; animation: cg-svanisce 9s linear infinite; }
 .crolli-graf path { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
 .crolli-graf .cg-base { stroke: var(--linea-forte); stroke-width: 1.5; stroke-dasharray: 4 5; }
-.crolli-graf .cg-giu, .crolli-graf .cg-su { stroke-width: 3; stroke-dasharray: 100; stroke-dashoffset: 100; }
-.crolli-graf .cg-giu { stroke: var(--rosso); animation: cg-giu 9s ease-in infinite; }
-.crolli-graf .cg-su { stroke: #17a362; animation: cg-su 9s ease-in-out infinite; }
-.crolli-graf .cg-fondo { fill: var(--rosso); opacity: 0; transform-box: fill-box; transform-origin: center; animation: cg-fondo 9s ease infinite; }
-@keyframes cg-giu { 0% { stroke-dashoffset: 100; opacity: 1; } 18%, 90% { stroke-dashoffset: 0; opacity: 1; } 97%, 100% { stroke-dashoffset: 0; opacity: 0; } }
-@keyframes cg-su { 0%, 20% { stroke-dashoffset: 100; opacity: 1; } 75%, 90% { stroke-dashoffset: 0; opacity: 1; } 97%, 100% { stroke-dashoffset: 0; opacity: 0; } }
-@keyframes cg-fondo { 0%, 16% { opacity: 0; transform: scale(0); } 19% { opacity: 1; transform: scale(1.5); } 24%, 90% { opacity: 1; transform: scale(1); } 97%, 100% { opacity: 0; } }
+.crolli-graf .cg-giu, .crolli-graf .cg-su { stroke-width: 3; }
+.crolli-graf .cg-giu { stroke: var(--rosso); } .crolli-graf .cg-su { stroke: #17a362; }
+/* la linea si scopre da sinistra a destra: una tendina del colore del riquadro si ritira (veloce sul calo rosso, piano sulla risalita verde) */
+.crolli-graf-box::after { content: ""; position: absolute; top: -6px; bottom: -6px; left: -4px; right: -4px; background: var(--pannello); transform-origin: right center; animation: cg-tendina 9s linear infinite; }
+@keyframes cg-tendina { 0% { transform: scaleX(1); } 18% { transform: scaleX(.69); animation-timing-function: ease-in-out; } 75%, 100% { transform: scaleX(0); } }
+@keyframes cg-svanisce { 0%, 90% { opacity: 1; } 97%, 100% { opacity: 0; } }
 @media (max-width: 600px) { .crolli-graf { height: 70px; } }
-@media (prefers-reduced-motion: reduce) { .crolli-graf path, .crolli-graf circle { animation: none; stroke-dashoffset: 0; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .crolli-graf, .crolli-graf-box::after { animation: none; } .crolli-graf-box::after { display: none; } }
 /* slogan cliccabili: "Sopra ogni crollo" in rosso */
 .hero-pub .tris a { color: inherit; text-decoration: none; white-space: nowrap; cursor: pointer; }
 .hero-pub .tris a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
@@ -1693,11 +1693,11 @@ body.pub.buio .hero-pub h1 .chiave { background: none; --base: #8ff0bf; }
       <div class="crolli" id="crolli" data-robot-umore="determinato" data-robot="Perdere fa parte del gioco: <b>conta come ti rialzi</b>.">
         <h3>Sopra ogni crollo</h3>
         <p class="crolli-sotto">Ogni anno ha avuto il suo crollo: <strong>stop loss uno dopo l'altro</strong> che hanno fatto scendere il conto. Il bot non ha cambiato le regole e <strong>ogni anno si è ripreso</strong>, chiudendo in positivo.</p>
-        <svg class="crolli-graf" viewBox="0 0 600 120" preserveAspectRatio="none" aria-hidden="true">
+        <div class="crolli-graf-box"><svg class="crolli-graf" viewBox="0 0 600 120" preserveAspectRatio="none" aria-hidden="true">
           <path class="cg-base" d="M0 42H600"/>
-          <path class="cg-giu" pathLength="100" d="M0 42 L22 36 L40 47 L58 40 L80 58 L98 52 L118 74 L136 69 L156 92 L172 86 L188 104"/>
-          <path class="cg-su" pathLength="100" d="M188 104 L210 94 L226 99 L250 82 L268 88 L292 70 L312 76 L336 58 L356 63 L382 46 L402 52 L428 36 L448 41 L476 26 L496 31 L522 18 L544 22 L572 10 L600 6"/>
-        </svg>
+          <path class="cg-giu" d="M0 42 L22 36 L40 47 L58 40 L80 58 L98 52 L118 74 L136 69 L156 92 L172 86 L188 104"/>
+          <path class="cg-su" d="M188 104 L210 94 L226 99 L250 82 L268 88 L292 70 L312 76 L336 58 L356 63 L382 46 L402 52 L428 36 L448 41 L476 26 L496 31 L522 18 L544 22 L572 10 L600 6"/>
+        </svg></div>
         <div class="crolli-anni" id="crolli-anni"></div>
       </div>
       <div class="lavoro" data-robot-umore="fiero" data-robot="Prima di diventare attivo ho superato <b>più esami di quanti immagini</b>.">
@@ -3928,7 +3928,8 @@ dash.calc('strategie', {
     if (attesa > 0) { clearTimeout(tRit); tRit = setTimeout(presto, attesa + 5); return; }
     giro = requestAnimationFrame(() => { ultimoAgg = performance.now(); aggiorna(); });
   };
-  corpo.addEventListener('click', (e) => { e.stopPropagation(); fum.classList.contains('vede') ? chiudi() : apri(); });
+  // clic col mouse o col dito: niente cornice di "selezionato" attorno al robottino (resta solo per chi usa la tastiera)
+  corpo.addEventListener('click', (e) => { e.stopPropagation(); fum.classList.contains('vede') ? chiudi() : apri(); if (e.detail) corpo.blur(); });
   corpo.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fum.classList.contains('vede') ? chiudi() : apri(); } });
   addEventListener('scroll', () => {
     if (apertoA !== null && Math.abs(scrollY - apertoA) > 8) chiudi();
