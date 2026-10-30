@@ -1470,6 +1470,13 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
 .d-lista .riga { opacity: 0; animation: lav-riga 4.4s ease-out infinite; } .d-lista .r2 { animation-delay: .5s; } .d-lista .r3 { animation-delay: 1s; } .d-lista .r4 { animation-delay: 1.5s; }
 @keyframes lav-riga { 0% { opacity: 0; translate: -4px 0; } 10%, 80% { opacity: 1; translate: 0 0; } 92%, 100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .lavoro .dis * { animation: none !important; opacity: 1 !important; } .d-imbuto .g, .d-imbuto .x, .d-imbuto .brilla { display: none; } }
+/* numeri importanti: finito di salire, un piccolo salto con un bagliore */
+#h-anni-lista b, #tx-netto, #lav-sei { display: inline-block; }
+.bt-tiles .v[data-k="saldo_fine"], #lav-sei { transform-origin: left center; }
+#h-saldo { transform-origin: left center; } #h-anni-lista b { transform-origin: left center; } #tx-netto { transform-origin: left center; }
+.salta { animation: num-salta .75s cubic-bezier(.3, 1.5, .5, 1); }
+@keyframes num-salta { 0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(227, 178, 60, 0)); } 35% { transform: scale(1.16); filter: drop-shadow(0 0 9px rgba(227, 178, 60, .75)); } 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(227, 178, 60, 0)); } }
+@media (prefers-reduced-motion: reduce) { .salta { animation-name: num-luce; } @keyframes num-luce { 35% { filter: drop-shadow(0 0 9px rgba(227, 178, 60, .75)); } } }
 </style>
 </head>
 <body class="pub">
@@ -1601,7 +1608,7 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
             <g class="brilla"><path d="M74 78l1.4 2.6 2.6 1.4-2.6 1.4L74 86l-1.4-2.6-2.6-1.4 2.6-1.4Z"/></g>
           </svg>
           <div class="lav-imb-testo">
-            <p class="lav-imb-num"><b><span id="lav-idee">100</span>+</b> idee provate,<br class="a-capo-tel"> solo <b class="oro">6</b> tenute</p>
+            <p class="lav-imb-num"><b><span id="lav-idee">100</span>+</b> idee provate,<br class="a-capo-tel"> solo <b class="oro" id="lav-sei">6</b> tenute</p>
             <p>Se un'idea peggiorava <strong>anche un solo anno</strong>, restava fuori.</p>
           </div>
         </div>
@@ -2436,6 +2443,16 @@ dash.calc('strategie', {
       el.textContent = f === 'calo_max' ? (el.classList.contains('v') ? '−' : '') + pct(v) : f === 'pct_tp' ? pct(v) : f === 'rendimento' ? (Math.abs(v) >= 10 ? (v > 0 ? '+' : '') + num(v * 100, 0) + '%' : pctS(v)) : f === 'R' ? rS(v)
         : f === 'euro' ? eurS(v) + (el.classList.contains('v') ? '' : ' dai trade') : f.startsWith('saldo') ? eur(v) : num(v);
     });
+    // "Saldo a fine anno": quando cambia (anno nuovo) fa un piccolo salto appena è sullo schermo
+    root.querySelectorAll('.bt-tiles .v[data-k="saldo_fine"]').forEach((el) => {
+      if (el.textContent === '—' || el.dataset.saltoVal === el.textContent) return;
+      el.dataset.saltoVal = el.textContent; el._salta = true;
+      if (!window.__ossSalto) window.__ossSalto = 'IntersectionObserver' in window ? new IntersectionObserver((L) => L.forEach((x) => {
+        const e = x.target; if (!x.isIntersecting || !e._salta) return;
+        e._salta = false; e.classList.remove('salta'); void e.offsetWidth; e.classList.add('salta');
+      }), { threshold: 1 }) : null;
+      if (window.__ossSalto) { window.__ossSalto.unobserve(el); window.__ossSalto.observe(el); }
+    });
 
     if (tutti) disegnaBarreAnni(anni); else disegnaBarre(M.data, anno);
     root.querySelector('#mesi-grafico h3').textContent = tutti ? 'Risultato di ogni anno' : 'Risultato di ogni mese del ' + anno;
@@ -2847,6 +2864,8 @@ dash.calc('strategie', {
     if (x.isIntersecting) return;
     membri(x.target).forEach((e) => { const c = e._conta; if (c && c.stato !== 'attesa') { c.giro++; c.stato = 'attesa'; e.textContent = c.fmt(c.da); } });
   }), { threshold: 0 }) : null;
+  // numeri che, appena finiscono di salire, si ingrandiscono per un attimo
+  const SALTA = '#h-saldo, #h-anni-lista b, #tx-netto, #lav-sei';
   function avviaConta(e) {
     const c = e._conta; if (!c || c.stato !== 'attesa') return;
     c.stato = 'corre';
@@ -2856,7 +2875,7 @@ dash.calc('strategie', {
       if (c.giro !== giro) return;                       // è uscito dallo schermo: si ferma
       const k = Math.min(1, (t - t0) / durata), f = 1 - Math.pow(1 - k, 2);
       e.textContent = c.fmt(c.da + (c.v - c.da) * f);
-      if (k < 1) requestAnimationFrame(passo); else { c.stato = 'fatto'; e.textContent = c.fmt(c.v); if (e.closest('.confronto')) { e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); } }
+      if (k < 1) requestAnimationFrame(passo); else { c.stato = 'fatto'; e.textContent = c.fmt(c.v); const cl = e.closest('.confronto') ? 'pop' : e.matches(SALTA) ? 'salta' : ''; if (cl) { e.classList.remove(cl); void e.offsetWidth; e.classList.add(cl); } }
     };
     requestAnimationFrame(passo);
   }
@@ -2879,7 +2898,7 @@ dash.calc('strategie', {
   }
   // il lavoro dietro il bot (Chi sono): i numeri salgono insieme quando la griglia arriva sullo schermo
   { const g = $('.lavoro'), it = (v) => new Intl.NumberFormat('it-IT', { maximumFractionDigits: 0, useGrouping: 'always' }).format(Math.round(v));
-    if (g) { conta($('#lav-idee'), 100, it, 1600, 0, g); conta($('#lav-candele'), 398841, it, 2600, 0, g); conta($('#lav-comb'), 20000, (v) => it(v) + '+', 2200, 0, g);
+    if (g) { conta($('#lav-idee'), 100, it, 1600, 0, g); conta($('#lav-sei'), 6, it, 2300, 0, g); conta($('#lav-candele'), 398841, it, 2600, 0, g); conta($('#lav-comb'), 20000, (v) => it(v) + '+', 2200, 0, g);
       conta($('#lav-trade'), 1396, it, 1800, 0, g); } }
   // conto con le tasse italiane (26% sui guadagni dell'anno, messe da parte il 1° gennaio; perdite recuperabili per 4 anni).
   // Trade del backtest: guadagno già calcolato in quel conto (campo "et"); trade nuovi del bot: stessa percentuale sul saldo netto.
