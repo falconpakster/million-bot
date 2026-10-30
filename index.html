@@ -1500,15 +1500,6 @@ body.pub.buio .hero-pub h1 { --base: #f2f5ff; --luce: #fff1bf; --bagliore: rgba(
 .crolli-anni { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
 .crollo-a { display: flex; flex-direction: column; gap: 4px; border: 1px solid var(--linea); border-radius: 14px; padding: 12px; background: var(--pannello-2); }
 .ca-anno { font-weight: 600; font-size: 14px; color: var(--inchiostro); } .ca-anno small { font-weight: 400; color: var(--grigio-2); font-size: 11px; }
-.ca-v { width: 100%; height: 40px; overflow: visible; }
-.ca-v path { fill: none; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 60; stroke-dashoffset: 60; }
-.ca-v .ca-giu { stroke: var(--rosso); animation: ca-traccia 3.6s ease-in infinite; animation-delay: calc(var(--k) * .25s); }
-.ca-v .ca-su { stroke: #17a362; animation: ca-traccia-su 3.6s ease-out infinite; animation-delay: calc(var(--k) * .25s); }
-.ca-v circle { fill: var(--rosso); opacity: 0; animation: ca-punto 3.6s ease infinite; animation-delay: calc(var(--k) * .25s); }
-@keyframes ca-traccia { 0% { stroke-dashoffset: 60; } 25%, 90% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
-@keyframes ca-traccia-su { 0%, 28% { stroke-dashoffset: 60; } 58%, 90% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
-@keyframes ca-punto { 0%, 22% { opacity: 0; transform: scale(0); } 28% { opacity: 1; transform: scale(1.5); } 36%, 90% { opacity: 1; transform: scale(1); } 100% { opacity: 0; } }
-.ca-v circle { transform-box: fill-box; transform-origin: center; }
 .ca-calo, .ca-fine { font-family: var(--serif); font-weight: 600; font-size: 18px; line-height: 1.15; white-space: nowrap; }
 .ca-calo { color: var(--rosso); } .ca-fine { color: #0b7a45; }
 .ca-calo small, .ca-fine small { display: block; font-family: var(--sans); font-weight: 400; font-size: 11.5px; color: var(--grigio); }
@@ -1516,12 +1507,52 @@ body.pub.buio .hero-pub h1 { --base: #f2f5ff; --luce: #fff1bf; --bagliore: rgba(
 @media (max-width: 600px) {
   .crolli { padding: 18px 16px; }
   .crolli-anni { grid-template-columns: 1fr; gap: 6px; }
-  .crollo-a { display: grid; grid-template-columns: 50px 54px 1fr 1fr; align-items: center; gap: 10px; padding: 8px 12px; }
-  .ca-anno small { display: block; } .ca-v { height: 32px; } .ca-calo, .ca-fine { font-size: 16.5px; } }
-@media (prefers-reduced-motion: reduce) { .ca-v path, .ca-v circle { animation: none; stroke-dashoffset: 0; opacity: 1; } }
+  .crollo-a { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 12px; padding: 8px 12px; }
+  .ca-calo, .ca-fine { font-size: 16.5px; } .ca-calo small, .ca-fine small { white-space: normal; } }
+/* il grafico sopra gli anni: il conto scende in rosso, poi risale piano piano in verde e supera il punto di partenza */
+.crolli-graf { display: block; width: 100%; height: 90px; margin: 0 0 14px; overflow: visible; }
+.crolli-graf path { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.crolli-graf .cg-base { stroke: var(--linea-forte); stroke-width: 1.5; stroke-dasharray: 4 5; }
+.crolli-graf .cg-giu, .crolli-graf .cg-su { stroke-width: 3; stroke-dasharray: 100; stroke-dashoffset: 100; }
+.crolli-graf .cg-giu { stroke: var(--rosso); animation: cg-giu 9s ease-in infinite; }
+.crolli-graf .cg-su { stroke: #17a362; animation: cg-su 9s ease-in-out infinite; }
+.crolli-graf .cg-fondo { fill: var(--rosso); opacity: 0; transform-box: fill-box; transform-origin: center; animation: cg-fondo 9s ease infinite; }
+@keyframes cg-giu { 0% { stroke-dashoffset: 100; opacity: 1; } 18%, 90% { stroke-dashoffset: 0; opacity: 1; } 97%, 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes cg-su { 0%, 20% { stroke-dashoffset: 100; opacity: 1; } 75%, 90% { stroke-dashoffset: 0; opacity: 1; } 97%, 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes cg-fondo { 0%, 16% { opacity: 0; transform: scale(0); } 19% { opacity: 1; transform: scale(1.5); } 24%, 90% { opacity: 1; transform: scale(1); } 97%, 100% { opacity: 0; } }
+@media (max-width: 600px) { .crolli-graf { height: 70px; } }
+@media (prefers-reduced-motion: reduce) { .crolli-graf path, .crolli-graf circle { animation: none; stroke-dashoffset: 0; opacity: 1; } }
+/* slogan cliccabili: "Sopra ogni crollo" in rosso */
+.hero-pub .tris a { color: inherit; text-decoration: none; white-space: nowrap; cursor: pointer; }
+.hero-pub .tris a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.hero-pub .tris .tris-media:hover { text-decoration-color: rgba(15, 122, 71, .5); }
+.hero-pub .tris .tris-crollo { background: linear-gradient(100deg, #d64b3f, #b8352b 55%, #92251d); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero-pub .tris .tris-crollo:hover { text-decoration-color: rgba(200, 68, 58, .5); }
+body.pub.buio .hero-pub .tris .tris-crollo { background: linear-gradient(100deg, #ffb3a8, #ff7d6e 55%, #f25c4c); -webkit-background-clip: text; background-clip: text; }
+/* "Sopra ogni media" (Perché è diverso): media annua del bot contro i mercati più famosi */
+.medie { margin-top: 16px; background: var(--pannello); border: 1px solid var(--linea); border-radius: var(--raggio); padding: 22px 24px; box-shadow: var(--ombra); scroll-margin-top: 90px; }
+.crolli { scroll-margin-top: 90px; }
+.medie h3 { font-family: var(--serif); font-weight: 600; font-size: 21px; margin: 0 0 6px; }
+.medie-sotto { color: #3c4e43; font-size: 15px; margin: 0 0 16px; max-width: 72ch; }
+.medie-barre { display: grid; gap: 10px; }
+.mb-riga { display: grid; grid-template-columns: 170px 1fr 70px; align-items: center; gap: 12px; }
+.mb-nome { font-size: 14px; color: var(--inchiostro); }
+.mb-barra { height: 14px; border-radius: 999px; background: var(--pannello-2); overflow: hidden; }
+.mb-barra i { display: block; height: 100%; width: calc(var(--w, 0) * 100%); border-radius: 999px; background: #9fb3a8; transform: scaleX(0); transform-origin: left; transition: transform 1.4s cubic-bezier(.2, .8, .2, 1); }
+.medie.cresce .mb-barra i { transform: scaleX(1); }
+.mb-riga:nth-child(2) .mb-barra i { transition-delay: .15s; } .mb-riga:nth-child(3) .mb-barra i { transition-delay: .25s; } .mb-riga:nth-child(4) .mb-barra i { transition-delay: .35s; } .mb-riga:nth-child(5) .mb-barra i { transition-delay: .45s; }
+.mb-riga > b { font-family: var(--serif); font-weight: 600; font-size: 18px; text-align: right; color: #55655b; }
+.mb-bot .mb-nome { font-weight: 600; } .mb-bot .mb-barra { height: 18px; }
+.mb-bot .mb-barra i { background: linear-gradient(90deg, #17a362, #0f7a47 60%, #e3b23c); }
+.mb-bot > b { color: #0b7a45; font-size: 22px; }
+.medie-nota { margin: 14px 0 0; font-size: 12.5px; color: var(--grigio); }
+@media (max-width: 600px) { .medie { padding: 18px 16px; } .mb-riga { grid-template-columns: 1fr 78px; gap: 4px 10px; } .mb-bot > b { font-size: 20px; } .mb-nome { grid-column: 1 / -1; font-size: 13.5px; } .mb-barra { grid-column: 1; } .mb-riga > b { grid-column: 2; grid-row: 2; } }
+@media (prefers-reduced-motion: reduce) { .mb-barra i { transition: none; transform: none; } }
 /* i tre numeri in cima: righe fisse (prima, quando tornavano a zero fuori schermo, stavano tutti su una riga e la pagina sotto si spostava di 60px) */
 .confronto { display: grid; grid-template-columns: repeat(3, max-content); }
 @media (max-width: 600px) { .confronto { grid-template-columns: repeat(2, max-content); } }
+/* "Sopra ogni media. / Sopra ogni crollo.": sul telefono sempre una sotto l'altra, sul computer sulla stessa riga */
+@media (max-width: 600px) { .hero-pub .tris > * { display: block; width: fit-content; } }
 </style>
 </head>
 <body class="pub">
@@ -1583,7 +1614,7 @@ body.pub.buio .hero-pub h1 { --base: #f2f5ff; --luce: #fff1bf; --bagliore: rgba(
     <section class="hero-pub">
       <div>
         <h1>Il bot che ha vinto<br><span class="chiave">ogni anno</span> dal<br class="a-capo-tel"> 2020.</h1>
-        <p class="tris oro"><span>Sopra ogni media.</span> <span>Sopra ogni crollo.</span></p>
+        <p class="tris oro"><a class="tris-media" href="#medie" data-vai-a="medie">Sopra ogni media.</a> <a class="tris-crollo" href="#crolli" data-vai-a="crolli">Sopra ogni crollo.</a></p>
         <div class="confronto" data-robot-umore="fiero" data-robot="Io non mi vanto: <b>lascio parlare i numeri</b>.">
           <div><span>Media annua</span><b id="h-titolo-num">—</b></div>
           <div><span>Capitale moltiplicato</span><b id="h-c-bot">—</b></div>
@@ -1640,9 +1671,26 @@ body.pub.buio .hero-pub h1 { --base: #f2f5ff; --luce: #fff1bf; --bagliore: rgba(
         <div class="pregio"><b>24/7</b><h3>Sempre al lavoro</h3><p>Controlla il mercato <strong>ogni 15 minuti</strong>, giorno e notte.</p></div>
         <div class="pregio"><b>Sul conto</b><h3>Verificato sul conto</h3><p>Ogni trade reale è <strong>confrontato con il backtest</strong>.</p></div>
       </div>
-      <div class="crolli" data-robot-umore="determinato" data-robot="Perdere fa parte del gioco: <b>conta come ti rialzi</b>.">
+      <div class="medie" id="medie" data-robot-umore="fiero" data-robot="Bitcoin, oro, Borsa americana e giapponese: <b>li ho superati tutti</b>, anno dopo anno.">
+        <h3>Sopra ogni media</h3>
+        <p class="medie-sotto">Quanto è cresciuto <strong>in media ogni anno</strong>, dal 2020 a oggi, chi ha comprato e tenuto i mercati più famosi. E quanto è cresciuto Million Bot.</p>
+        <div class="medie-barre" id="medie-barre">
+          <div class="mb-riga mb-bot"><span class="mb-nome">Million Bot</span><span class="mb-barra"><i style="--w:1"></i></span><b id="media-bot">—</b></div>
+          <div class="mb-riga"><span class="mb-nome">Bitcoin</span><span class="mb-barra"><i data-v="42.9"></i></span><b>+43%</b></div>
+          <div class="mb-riga"><span class="mb-nome">Giappone 225</span><span class="mb-barra"><i data-v="15.5"></i></span><b>+16%</b></div>
+          <div class="mb-riga"><span class="mb-nome">Oro</span><span class="mb-barra"><i data-v="15.4"></i></span><b>+15%</b></div>
+          <div class="mb-riga"><span class="mb-nome">S&amp;P 500 (Borsa USA)</span><span class="mb-barra"><i data-v="13.6"></i></span><b>+14%</b></div>
+        </div>
+        <p class="medie-nota">Media annua composta dal 1° gennaio 2020 a fine ottobre 2026. Million Bot: backtest con i guadagni reinvestiti. Gli altri: solo il prezzo, comprato e tenuto, senza dividendi.</p>
+      </div>
+      <div class="crolli" id="crolli" data-robot-umore="determinato" data-robot="Perdere fa parte del gioco: <b>conta come ti rialzi</b>.">
         <h3>Sopra ogni crollo</h3>
         <p class="crolli-sotto">Ogni anno ha avuto il suo crollo: <strong>stop loss uno dopo l'altro</strong> che hanno fatto scendere il conto. Il bot non ha cambiato le regole e <strong>ogni anno si è ripreso</strong>, chiudendo in positivo.</p>
+        <svg class="crolli-graf" viewBox="0 0 600 120" preserveAspectRatio="none" aria-hidden="true">
+          <path class="cg-base" d="M0 42H600"/>
+          <path class="cg-giu" pathLength="100" d="M0 42 L22 36 L40 47 L58 40 L80 58 L98 52 L118 74 L136 69 L156 92 L172 86 L188 104"/>
+          <path class="cg-su" pathLength="100" d="M188 104 L210 94 L226 99 L250 82 L268 88 L292 70 L312 76 L336 58 L356 63 L382 46 L402 52 L428 36 L448 41 L476 26 L496 31 L522 18 L544 22 L572 10 L600 6"/>
+        </svg>
         <div class="crolli-anni" id="crolli-anni"></div>
       </div>
       <div class="lavoro" data-robot-umore="fiero" data-robot="Prima di diventare attivo ho superato <b>più esami di quanti immagini</b>.">
@@ -3012,6 +3060,9 @@ dash.calc('strategie', {
     // media annua, capitale moltiplicato e anni in positivo partono insieme quando il riquadro è sullo schermo
     const riq = $('.confronto');
     conta($('#h-titolo-num'), media, (v) => '+' + num(v, 0) + '%', 3000, 0, riq);
+    // "Sopra ogni media": la barra del bot è la più lunga, le altre in proporzione
+    { const mb = $('#media-bot'); if (mb) { mb.textContent = '+' + num(media, 0) + '%';
+        $$('#medie-barre i[data-v]').forEach((i) => i.style.setProperty('--w', Math.max(0.012, Number(i.dataset.v) / media).toFixed(4))); } }
     conta($('#h-c-bot'), molt, (v) => '×' + num(v, 0), 3500, 1, riq);
     conta($('#h-saldo'), t.saldo_finale, (v) => euroIntero(v), 4000, 1000);
     $('#h-calo').textContent = '−' + num(t.calo_max * 100, 0) + '%';
@@ -3025,10 +3076,7 @@ dash.calc('strategie', {
       { const cb = $('#crolli-anni');
         if (cb) cb.replaceChildren(...A.data.map((r, k) => {
           const d = el('div', 'crollo-a'); d.style.setProperty('--k', k);
-          const giu = Math.min(1, r.calo_max / 0.4), su = Math.min(1, Math.log10(1 + Math.max(0, r.rendimento)) / Math.log10(11));
-          const y0 = 14, yb = 14 + 22 * giu, yf = Math.max(3, y0 - 11 * su);
           d.innerHTML = `<span class="ca-anno">${r.anno}</span>`
-            + `<svg class="ca-v" viewBox="0 0 64 40" aria-hidden="true"><path class="ca-giu" d="M4 ${y0} L30 ${yb.toFixed(1)}"/><path class="ca-su" d="M30 ${yb.toFixed(1)} L60 ${yf.toFixed(1)}"/><circle cx="30" cy="${yb.toFixed(1)}" r="3"/></svg>`
             + `<span class="ca-calo">▼ −${num(r.calo_max * 100, 0)}%<small>${r.max_sl_fila} SL di fila</small></span>`
             + `<span class="ca-fine">▲ ${pctS(r.rendimento * 100, 0)}<small>${k === A.data.length - 1 ? 'finora' : 'a fine anno'}</small></span>`;
           return d;
@@ -3137,6 +3185,14 @@ dash.calc('strategie', {
   function vai(p) { mostraPannello(p); $('#schede').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
   $$('.scheda').forEach((b) => b.addEventListener('click', () => mostraPannello(b.dataset.pannello)));
   $$('[data-vai]').forEach((b) => b.addEventListener('click', () => vai(b.dataset.vai)));
+  // "Sopra ogni media" / "Sopra ogni crollo": aprono "Perché è diverso" e scorrono al loro riquadro
+  $$('[data-vai-a]').forEach((b) => b.addEventListener('click', (ev) => {
+    ev.preventDefault(); mostraPannello('perche');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const t = document.getElementById(b.dataset.vaiA), sc = $('#schede'); if (!t) return;
+      window.scrollTo({ top: Math.max(0, scrollY + t.getBoundingClientRect().top - ((sc ? sc.offsetHeight + 8 : 0) + 14)), behavior: 'smooth' });
+    }));
+  }));
   // menu delle sezioni nel riquadro in alto (telefono): si apre col pulsante a tre righe, si chiude scegliendo una sezione o toccando fuori
   const bMenu = $('#b-menu'), mTel = $('#menu-tel');
   const menuTel = (si) => { mTel.hidden = !si; bMenu.setAttribute('aria-expanded', String(si)); bMenu.classList.toggle('attivo', si); };
@@ -3437,6 +3493,8 @@ dash.calc('strategie', {
   // ================================================================== meteo di Ugento: il robottino si veste e lo sfondo cambia
   // (dati Open-Meteo scaricati dal bot ogni 20 minuti; ?meteo=freddo, caldo, sole, pioggia, temporale, neve, nebbia, notte, nuvole, fresco per provarlo)
   // le animazioni di una parte della pagina si fermano quando quella parte non è sullo schermo (il sito resta uguale, ma più leggero)
+  if ('IntersectionObserver' in window) { const m = $('.medie'); if (m) new IntersectionObserver((L) => L.forEach((e) => m.classList.toggle('cresce', e.isIntersecting)), { threshold: 0.4 }).observe(m); }
+  else { const m = $('.medie'); if (m) m.classList.add('cresce'); }
   // titolo in cima: ogni lettera in un suo span, così un'onda la ingrandisce una alla volta (le parole non si spezzano)
   { const h = $('.hero-pub h1');
     if (h && !h.dataset.onda) {
@@ -3459,7 +3517,7 @@ dash.calc('strategie', {
     } }
   if ('IntersectionObserver' in window) {
     const ossAnim = new IntersectionObserver((L) => L.forEach((x) => x.target.classList.toggle('fermo-anim', !x.isIntersecting)), { rootMargin: '120px 0px' });
-    ['#h-anni-lista', '.confronto', '.finale', '.lavoro', '.crolli', '.hero-pub h1', '.scorri', '.vetrina', '#curva-bt', '.tris', '.conto-demo', '#mesi-grafico'].forEach((q) => document.querySelectorAll(q).forEach((e) => ossAnim.observe(e)));
+    ['#h-anni-lista', '.confronto', '.finale', '.lavoro', '.medie', '.crolli', '.hero-pub h1', '.scorri', '.vetrina', '#curva-bt', '.tris', '.conto-demo', '#mesi-grafico'].forEach((q) => document.querySelectorAll(q).forEach((e) => ossAnim.observe(e)));
   }
   const cielo = el('div', 'cielo'); cielo.setAttribute('aria-hidden', 'true');
   cielo.append(el('i', 'c1'), el('i', 'c2'), el('i', 'c3'), el('i', 'c4')); document.body.prepend(cielo);
