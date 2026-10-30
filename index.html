@@ -1481,24 +1481,17 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
 /* il fumetto di benvenuto si vede solo quando il robottino è al suo posto in cima; se vola via, sparisce */
 .guida.grande .fumetto { transition: opacity .35s ease, transform .35s ease, visibility 0s; transform-origin: left center; }
 body.robot-via .guida.grande .fumetto { opacity: 0; transform: scale(.85) translateX(-8px); visibility: hidden; pointer-events: none; transition: opacity .3s ease, transform .3s ease, visibility 0s .3s; }
-/* titolo in cima: sventola come una bandiera. Ogni lettera sale e scende piano, un po' dopo quella prima (l'onda va da sinistra a destra),
-   e in cima all'onda si ingrandisce e una striscia di luce le passa DENTRO (riflesso nel colore della lettera, niente alone) */
-.hero-pub h1 { --base: var(--inchiostro); --luce: #d9a52a; --luce-2: #f6dc8c; }
-body.pub.buio .hero-pub h1 { --base: #f2f5ff; --luce: #ffe7a6; --luce-2: #fffaf0; }
+/* titolo in cima: un'onda calma passa sulle lettere, una alla volta: si alzano, si ingrandiscono e diventano dorate (solo il colore, niente alone) */
+.hero-pub h1 { --base: var(--inchiostro); --luce: #c9960f; }
+body.pub.buio .hero-pub h1 { --base: #f2f5ff; --luce: #ffd96a; }
 .hero-pub h1 .parola { white-space: nowrap; }
-.hero-pub h1 .l { display: inline-block; transform-origin: 50% 80%; will-change: transform;
-  background: linear-gradient(105deg, var(--base) 0%, var(--base) 38%, var(--luce) 46%, var(--luce-2) 50%, var(--luce) 54%, var(--base) 62%, var(--base) 100%);
-  background-size: 400% 100%; background-position: 100% 0; -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none;
-  animation: bandiera 6s ease-in-out infinite, luce-lettera 6s ease-in-out infinite;
-  animation-delay: calc(var(--i) * 160ms - 8s); }
-/* l'alone chiaro che rende leggibile il titolo sugli sfondi: ora attorno a tutta la scritta */
-body.pub .hero-pub h1 { text-shadow: none; filter: drop-shadow(0 0 2px var(--alone)) drop-shadow(0 0 6px var(--alone-2)); }
-@keyframes bandiera {
-  0%, 100% { transform: translateY(.035em) scale(.99) rotate(1.2deg); }
-  50% { transform: translateY(-.075em) scale(1.1) rotate(-1.2deg); } }
-@keyframes luce-lettera {
-  0%, 32% { background-position: 100% 0; }
-  68%, 100% { background-position: 0% 0; } }
+.hero-pub h1 .l { display: inline-block; transform-origin: 50% 85%; color: var(--base); animation: onda-titolo 8s ease-in-out infinite; animation-delay: calc(1.4s + var(--i) * 85ms); will-change: transform; }
+@keyframes onda-titolo {
+  0% { transform: none; color: var(--base); }
+  4.5% { transform: translateY(-.04em) scale(1.06); }
+  9% { transform: translateY(-.08em) scale(1.12); color: var(--luce); }
+  14% { transform: translateY(-.02em) scale(1.02); }
+  18%, 100% { transform: none; color: var(--base); } }
 @media (prefers-reduced-motion: reduce) { .hero-pub h1 .l { animation: none; } }
 /* "Sopra ogni crollo" (Perché è diverso): ogni anno il suo calo e la sua ripresa */
 .crolli { margin-top: 16px; background: var(--pannello); border: 1px solid var(--linea); border-radius: var(--raggio); padding: 22px 24px; box-shadow: var(--ombra); }
@@ -1560,6 +1553,9 @@ body.pub.buio .hero-pub .tris .tris-crollo { background: linear-gradient(100deg,
 @media (max-width: 600px) { .confronto { grid-template-columns: repeat(2, max-content); } }
 /* "Sopra ogni media. / Sopra ogni crollo.": sul telefono sempre una sotto l'altra, sul computer sulla stessa riga */
 @media (max-width: 600px) { .hero-pub .tris > * { display: block; width: fit-content; } }
+/* "ogni anno" nel titolo: in verde, senza la sottolineatura gialla */
+body.pub .hero-pub h1 .chiave { background: none; padding: 0; margin: 0; --base: #0f7a47; }
+body.pub.buio .hero-pub h1 .chiave { background: none; --base: #8ff0bf; }
 </style>
 </head>
 <body class="pub">
