@@ -1566,7 +1566,7 @@ body.pub.buio .hero-pub h1 .chiave { background: none; --base: #8ff0bf; }
 .r-braccio-giu :is(.acc-bandiera, .acc-cuoricino, .acc-secchiello, .acc-uovo, .acc-ventaglio, .acc-zucca) { display: none !important; }
 .compagno.braccio-giu .r-braccio-d { animation: none; transform: rotate(103deg); opacity: 0; transition: transform .55s ease-in-out, opacity 0s linear .55s; }
 .compagno.braccio-giu .r-braccio-giu { opacity: 1; transition: opacity 0s linear .55s; }
-.compagno.braccio-sale .r-braccio-d { animation: none; transform: rotate(0); transition: transform .55s ease-in-out; }
+.compagno.braccio-sale .r-braccio-d { animation: none; transform: rotate(0); transition: transform .5s ease-in-out; }
 /* sotto "Risultato di ogni anno": da dove vengono i numeri, una riga semplice */
 .mg-fonte { margin: -4px 0 10px; font-size: 13px; color: var(--grigio); }
 /* Halloween, nella scenetta in fondo: anche lì sbatte gli occhi e diventano rossi (gli occhi continuano a guardarsi intorno) */
@@ -3948,10 +3948,10 @@ dash.calc('strategie', {
     setInterval(() => {
       if (!br) return;
       const ora = performance.now();
-      if (fase === 'su' && ora - t0 > 9000 && tranquillo() && getComputedStyle(br).animationName === 'saluta') { c.classList.add('braccio-giu'); fase = 'giu'; t0 = ora; }
-      else if (fase === 'giu' && (ora - t0 > 6000 || !tranquillo())) {
+      if (fase === 'su' && ora - t0 > 4300 && tranquillo() && getComputedStyle(br).animationName === 'saluta') { c.classList.add('braccio-giu'); fase = 'giu'; t0 = ora; }
+      else if (fase === 'giu' && (ora - t0 > 5000 || !tranquillo())) {
         c.classList.replace('braccio-giu', 'braccio-sale'); fase = 'sale';
-        setTimeout(() => { c.classList.remove('braccio-sale'); fase = 'su'; t0 = performance.now(); }, 650);
+        setTimeout(() => { c.classList.remove('braccio-sale'); fase = 'su'; t0 = performance.now(); }, 550);
       }
     }, 500); }
   // clic col mouse o col dito: niente cornice di "selezionato" attorno al robottino (resta solo per chi usa la tastiera)
