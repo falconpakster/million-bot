@@ -1491,15 +1491,6 @@ body.robot-via .guida.grande .fumetto { opacity: 0; transform: scale(.85) transl
   13% { transform: translateY(-.01em) scale(1.01); }
   16%, 100% { transform: none; } }
 @media (prefers-reduced-motion: reduce) { .hero-pub h1 .l { animation: none; } }
-/* "Sopra ogni crollo": la prova, il 2022 (Bitcoin giù, il bot su) */
-.hero-pub .tris { margin-bottom: 10px; }
-.crollo { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin: 0 0 20px; padding: 8px 12px 8px 14px; border: 1px solid var(--linea-forte); border-radius: 14px; background: rgba(255, 255, 255, .82); font: inherit; font-size: 14px; color: var(--inchiostro); text-align: left; cursor: pointer; box-shadow: 0 4px 14px rgba(16, 36, 26, .06); }
-.crollo:hover { border-color: rgba(15, 122, 71, .45); }
-.crollo .cr-tit { flex-basis: 100%; font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--grigio); }
-.crollo .cr-v b { font-family: var(--serif); font-weight: 600; font-size: 17px; margin-left: 2px; }
-.crollo .cr-btc b { color: var(--rosso); } .crollo .cr-bot b { color: #0b7a45; }
-.crollo .cr-vai { font-size: 20px; line-height: 1; color: var(--grigio-2); margin-left: auto; }
-body.pub.buio .crollo { background: rgba(255, 255, 255, .92); }
 </style>
 </head>
 <body class="pub">
@@ -1562,8 +1553,7 @@ body.pub.buio .crollo { background: rgba(255, 255, 255, .92); }
       <div>
         <h1>Il bot che ha vinto<br><span class="chiave">ogni anno</span> dal<br class="a-capo-tel"> 2020.</h1>
         <p class="tris oro"><span>Sopra ogni media.</span> <span>Sopra ogni crollo.</span></p>
-        <button type="button" class="crollo" id="b-crollo" aria-label="Il 2022: Bitcoin è crollato del 64%, Million Bot ha chiuso in guadagno. Tocca per vedere il 2022"><span class="cr-tit">Il crollo del 2022</span><span class="cr-v cr-btc">Bitcoin <b>▼ −64%</b></span><span class="cr-v cr-bot">Million Bot <b><span aria-hidden="true">▲ </span><span id="crollo-bot">—</span></b></span><span class="cr-vai" aria-hidden="true">›</span></button>
-        <div class="confronto" data-robot-umore="determinato" data-robot="Questi numeri non arrivano senza perdite: nel 2021 ho preso anche <b>20 stop loss di fila</b>. Non ho cambiato le regole e sono ripartito.">
+        <div class="confronto" data-robot-umore="determinato" data-robot="Ogni anno ho avuto il mio crollo: stop loss di fila, <b>fino a 20</b>, e il conto giù anche di un terzo. E ogni anno mi sono ripreso: <b>sopra ogni crollo</b>.">
           <div><span>Media annua</span><b id="h-titolo-num">—</b></div>
           <div><span>Capitale moltiplicato</span><b id="h-c-bot">—</b></div>
           <div><span>Anni in positivo</span><b id="h-anni">—</b></div>
@@ -2983,7 +2973,6 @@ dash.calc('strategie', {
       conta($('#h-anni'), pos, (v) => Math.round(v) + ' su ' + nA, 2200, 0, riq);
       // le caselle si creano una volta (per gli stessi anni) e poi si aggiornano: così il conteggio non si perde
       const box = $('#h-anni-lista'), kA = A.data.map((r) => r.anno).join(',');
-      { const r22 = A.data.find((r) => Number(r.anno) === 2022), e = $('#crollo-bot'); if (r22 && e) e.textContent = pctS(r22.rendimento * 100, 0); }   // "Sopra ogni crollo": il 2022 del bot
       box.style.setProperty('--n', A.data.length);
       const vmax = Math.max(...A.data.map((r) => Math.abs(r.rendimento)), 1e-9);
       const durata = (r) => 1200 + 3800 * Math.abs(r.rendimento) / vmax;      // la più alta circa 5 secondi
@@ -3388,8 +3377,6 @@ dash.calc('strategie', {
   // ================================================================== meteo di Ugento: il robottino si veste e lo sfondo cambia
   // (dati Open-Meteo scaricati dal bot ogni 20 minuti; ?meteo=freddo, caldo, sole, pioggia, temporale, neve, nebbia, notte, nuvole, fresco per provarlo)
   // le animazioni di una parte della pagina si fermano quando quella parte non è sullo schermo (il sito resta uguale, ma più leggero)
-  // "Il crollo del 2022": apre il 2022 come le caselle degli anni
-  { const b = $('#b-crollo'); if (b) b.addEventListener('click', () => { const d = [...document.querySelectorAll('#h-anni-lista button')].find((x) => /2022/.test(x.textContent)); if (d) d.click(); }); }
   // titolo in cima: ogni lettera in un suo span, così un'onda la ingrandisce una alla volta (le parole non si spezzano)
   { const h = $('.hero-pub h1');
     if (h && !h.dataset.onda) {
