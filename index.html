@@ -1183,6 +1183,9 @@ body.pub.festa-natale .testata-in { border-color: rgba(246, 214, 128, .55); }
 .menu .menu-demo .punto { width: 7px; height: 7px; }
 /* titolo iniziale più grande sul computer */
 @media (min-width: 901px) { .hero-pub { grid-template-columns: 1.15fr .85fr; gap: 36px; } .hero-pub h1 { font-size: clamp(44px, 5vw, 64px); } }
+/* titolo della sezione conto demo: la pillola rossa */
+.conto-demo h2.demo-titolo { margin: 0 0 14px; font: inherit; }
+.demo-titolo .btn-demo-mini { cursor: default; }
 </style>
 </head>
 <body class="pub">
@@ -1273,7 +1276,7 @@ body.pub.festa-natale .testata-in { border-color: rgba(246, 214, 128, .55); }
     <section class="pannello" data-p="risultati" aria-label="Risultati" data-robot-umore="spiega" data-robot="Qui c'è tutto: <b>ogni trade</b>, anche quelli andati male. Usa i pulsanti per vedere il resto.">
       <div id="posto-pub"></div>
       <section class="conto-demo solo-pub" id="conto-demo" aria-label="Conto demo attivo" data-robot-umore="vigile" data-robot="Questo è il bot <b>dal vivo</b>, trade dopo trade: controllalo anche tu.">
-        <h2 class="bt-sez"><span class="punto rosso"></span> Conto demo attivo</h2>
+        <h2 class="demo-titolo"><span class="btn-demo-mini"><span class="punto rosso"></span>Conto demo attivo</span></h2>
         <div class="demo-striscia" id="demo-striscia" hidden></div>
         <div class="demo-perche">
           <div><h3>Perché parte adesso</h3><p>Fino a ottobre 2026 ho costruito e ricontrollato le strategie sui prezzi del passato. Il <strong>26 ottobre 2026</strong> il bot è stato pronto ed è partito dal vivo: per questo il conto inizia da quel giorno.</p></div>
