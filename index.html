@@ -1183,9 +1183,15 @@ body.pub.festa-natale .testata-in { border-color: rgba(246, 214, 128, .55); }
 .menu .menu-demo .punto { width: 7px; height: 7px; }
 /* titolo iniziale più grande sul computer */
 @media (min-width: 901px) { .hero-pub { grid-template-columns: 1.15fr .85fr; gap: 36px; } .hero-pub h1 { font-size: clamp(44px, 5vw, 64px); } }
-/* titolo della sezione conto demo: la pillola rossa */
-.conto-demo h2.demo-titolo { margin: 0 0 14px; font: inherit; }
-.demo-titolo .btn-demo-mini { cursor: default; }
+/* titolo della sezione conto demo: "attivo" in rosso che si illumina e pallino con l'onda, come una diretta */
+.demo-live { position: relative; display: inline-flex; width: 12px; height: 12px; align-items: center; justify-content: center; }
+.demo-live .punto { width: 10px; height: 10px; }
+.demo-live::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #e0362c; animation: onda-live 1.8s ease-out infinite; }
+@keyframes onda-live { from { transform: scale(.8); opacity: .9; } to { transform: scale(2.8); opacity: 0; } }
+.demo-attivo { color: #c62a20; animation: brilla-rosso 1.8s ease-in-out infinite; }
+@keyframes brilla-rosso { 0%, 100% { text-shadow: 0 0 0 rgba(224, 54, 44, 0); } 50% { text-shadow: 0 0 12px rgba(224, 54, 44, .55), 0 0 2px rgba(224, 54, 44, .35); } }
+body.pub.buio .demo-attivo { color: #ff6b5f; }
+@media (prefers-reduced-motion: reduce) { .demo-live::after, .demo-attivo { animation-duration: 3.6s; } }
 /* titolo iniziale sul telefono: un po' più grande, ma sempre su due righe */
 @media (max-width: 600px) { .hero-pub h1 { font-size: min(40px, calc((100vw - 32px) * .104)); } }
 </style>
@@ -1278,7 +1284,7 @@ body.pub.festa-natale .testata-in { border-color: rgba(246, 214, 128, .55); }
     <section class="pannello" data-p="risultati" aria-label="Risultati" data-robot-umore="spiega" data-robot="Qui c'è tutto: <b>ogni trade</b>, anche quelli andati male. Usa i pulsanti per vedere il resto.">
       <div id="posto-pub"></div>
       <section class="conto-demo solo-pub" id="conto-demo" aria-label="Conto demo attivo" data-robot-umore="vigile" data-robot="Questo è il bot <b>dal vivo</b>, trade dopo trade: controllalo anche tu.">
-        <h2 class="demo-titolo"><span class="btn-demo-mini"><span class="punto rosso"></span>Conto demo attivo</span></h2>
+        <h2 class="bt-sez demo-titolo"><span class="demo-live"><span class="punto rosso"></span></span><span>Conto demo <span class="demo-attivo">attivo</span></span></h2>
         <div class="demo-striscia" id="demo-striscia" hidden></div>
         <div class="demo-perche">
           <div><h3>Perché parte adesso</h3><p>Fino a ottobre 2026 ho costruito e ricontrollato le strategie sui prezzi del passato. Il <strong>26 ottobre 2026</strong> il bot è stato pronto ed è partito dal vivo: per questo il conto inizia da quel giorno.</p></div>
