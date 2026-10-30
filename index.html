@@ -1177,8 +1177,9 @@ body.pub.festa-natale .testata-in { border-color: rgba(246, 214, 128, .55); }
   .hero-pub { gap: 14px; padding-top: 16px; }
   .guida.grande .fumetto { font-size: 15px; line-height: 1.38; padding: 9px 13px; border-radius: 14px; }
   .guida.grande .festa-frase { margin-top: 3px; }
-  .guida.grande { gap: 10px; margin-bottom: 16px; }   /* più respiro tra il fumetto e "Conto demo attivo" */
+  .guida.grande { gap: 10px; }
 }
+.hero-pub .confronto + .btn-demo-mini { margin: 14px 0 6px; }   /* "Conto demo attivo" sotto il riquadro dei numeri */
 </style>
 </head>
 <body class="pub">
@@ -1230,7 +1231,6 @@ body.pub.festa-natale .testata-in { border-color: rgba(246, 214, 128, .55); }
   <main class="pagina" id="inizio">
     <section class="hero-pub">
       <div>
-        <button class="btn-demo-mini" type="button" data-demo><span class="punto rosso"></span>Conto demo attivo</button>
         <h1>Il bot che ha vinto<br><span class="chiave">ogni anno</span> dal 2020.</h1>
         <p class="tris oro"><span>Sopra ogni media.</span> <span>Sopra ogni anno.</span></p>
         <div class="confronto" data-robot-umore="determinato" data-robot="Questi numeri non arrivano senza perdite: nel 2021 ho preso anche <b>20 stop loss di fila</b>. Non ho cambiato le regole e sono ripartito.">
@@ -1238,6 +1238,7 @@ body.pub.festa-natale .testata-in { border-color: rgba(246, 214, 128, .55); }
           <div><span>Capitale moltiplicato</span><b id="h-c-bot">—</b></div>
           <div><span>Anni in positivo</span><b id="h-anni">—</b></div>
         </div>
+        <button class="btn-demo-mini" type="button" data-demo><span class="punto rosso"></span>Conto demo attivo</button>
         <p class="sotto"><mark>5 strategie su Bitcoin</mark> + <mark>1 sul Giappone 225</mark>, <mark>ottimizzate e ricontrollate</mark> anno per anno.</p>
         <div class="azioni">
           <button class="scorri" type="button" data-vai="risultati">
