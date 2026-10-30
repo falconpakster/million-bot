@@ -1491,6 +1491,32 @@ body.robot-via .guida.grande .fumetto { opacity: 0; transform: scale(.85) transl
   13% { transform: translateY(-.01em) scale(1.01); }
   16%, 100% { transform: none; } }
 @media (prefers-reduced-motion: reduce) { .hero-pub h1 .l { animation: none; } }
+/* "Sopra ogni crollo" (Perché è diverso): ogni anno il suo calo e la sua ripresa */
+.crolli { margin-top: 16px; background: var(--pannello); border: 1px solid var(--linea); border-radius: var(--raggio); padding: 22px 24px; box-shadow: var(--ombra); }
+.crolli h3 { font-family: var(--serif); font-weight: 600; font-size: 21px; margin: 0 0 6px; }
+.crolli-sotto { color: #3c4e43; font-size: 15px; margin: 0 0 16px; max-width: 72ch; }
+.crolli-anni { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+.crollo-a { display: flex; flex-direction: column; gap: 4px; border: 1px solid var(--linea); border-radius: 14px; padding: 12px; background: var(--pannello-2); }
+.ca-anno { font-weight: 600; font-size: 14px; color: var(--inchiostro); } .ca-anno small { font-weight: 400; color: var(--grigio-2); font-size: 11px; }
+.ca-v { width: 100%; height: 40px; overflow: visible; }
+.ca-v path { fill: none; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 60; stroke-dashoffset: 60; }
+.ca-v .ca-giu { stroke: var(--rosso); animation: ca-traccia 3.6s ease-in infinite; animation-delay: calc(var(--k) * .25s); }
+.ca-v .ca-su { stroke: #17a362; animation: ca-traccia-su 3.6s ease-out infinite; animation-delay: calc(var(--k) * .25s); }
+.ca-v circle { fill: var(--rosso); opacity: 0; animation: ca-punto 3.6s ease infinite; animation-delay: calc(var(--k) * .25s); }
+@keyframes ca-traccia { 0% { stroke-dashoffset: 60; } 25%, 90% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes ca-traccia-su { 0%, 28% { stroke-dashoffset: 60; } 58%, 90% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes ca-punto { 0%, 22% { opacity: 0; transform: scale(0); } 28% { opacity: 1; transform: scale(1.5); } 36%, 90% { opacity: 1; transform: scale(1); } 100% { opacity: 0; } }
+.ca-v circle { transform-box: fill-box; transform-origin: center; }
+.ca-calo, .ca-fine { font-family: var(--serif); font-weight: 600; font-size: 18px; line-height: 1.15; white-space: nowrap; }
+.ca-calo { color: var(--rosso); } .ca-fine { color: #0b7a45; }
+.ca-calo small, .ca-fine small { display: block; font-family: var(--sans); font-weight: 400; font-size: 11.5px; color: var(--grigio); }
+@media (max-width: 1000px) { .crolli-anni { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 600px) {
+  .crolli { padding: 18px 16px; }
+  .crolli-anni { grid-template-columns: 1fr; gap: 6px; }
+  .crollo-a { display: grid; grid-template-columns: 50px 54px 1fr 1fr; align-items: center; gap: 10px; padding: 8px 12px; }
+  .ca-anno small { display: block; } .ca-v { height: 32px; } .ca-calo, .ca-fine { font-size: 16.5px; } }
+@media (prefers-reduced-motion: reduce) { .ca-v path, .ca-v circle { animation: none; stroke-dashoffset: 0; opacity: 1; } }
 </style>
 </head>
 <body class="pub">
@@ -1553,7 +1579,7 @@ body.robot-via .guida.grande .fumetto { opacity: 0; transform: scale(.85) transl
       <div>
         <h1>Il bot che ha vinto<br><span class="chiave">ogni anno</span> dal<br class="a-capo-tel"> 2020.</h1>
         <p class="tris oro"><span>Sopra ogni media.</span> <span>Sopra ogni crollo.</span></p>
-        <div class="confronto" data-robot-umore="determinato" data-robot="Ogni anno ho avuto il mio crollo: stop loss di fila, <b>fino a 20</b>, e il conto giù anche di un terzo. E ogni anno mi sono ripreso: <b>sopra ogni crollo</b>.">
+        <div class="confronto" data-robot-umore="fiero" data-robot="Io non mi vanto: <b>lascio parlare i numeri</b>.">
           <div><span>Media annua</span><b id="h-titolo-num">—</b></div>
           <div><span>Capitale moltiplicato</span><b id="h-c-bot">—</b></div>
           <div><span>Anni in positivo</span><b id="h-anni">—</b></div>
@@ -1608,6 +1634,11 @@ body.robot-via .guida.grande .fumetto { opacity: 0; transform: scale(.85) transl
         <div class="pregio"><b>1 : 3</b><h3>Guadagno triplo del rischio</h3><p>Un trade vincente <strong>recupera tre perdenti</strong>.</p></div>
         <div class="pregio"><b>24/7</b><h3>Sempre al lavoro</h3><p>Controlla il mercato <strong>ogni 15 minuti</strong>, giorno e notte.</p></div>
         <div class="pregio"><b>Sul conto</b><h3>Verificato sul conto</h3><p>Ogni trade reale è <strong>confrontato con il backtest</strong>.</p></div>
+      </div>
+      <div class="crolli" data-robot-umore="determinato" data-robot="Perdere fa parte del gioco: <b>conta come ti rialzi</b>.">
+        <h3>Sopra ogni crollo</h3>
+        <p class="crolli-sotto">Ogni anno ha avuto il suo crollo: <strong>stop loss uno dopo l'altro</strong> che hanno fatto scendere il conto. Il bot non ha cambiato le regole e <strong>ogni anno si è ripreso</strong>, chiudendo in positivo.</p>
+        <div class="crolli-anni" id="crolli-anni"></div>
       </div>
       <div class="lavoro" data-robot-umore="fiero" data-robot="Prima di diventare attivo ho superato <b>più esami di quanti immagini</b>.">
         <h3>Il lavoro dietro Million Bot</h3>
@@ -2973,6 +3004,18 @@ dash.calc('strategie', {
       conta($('#h-anni'), pos, (v) => Math.round(v) + ' su ' + nA, 2200, 0, riq);
       // le caselle si creano una volta (per gli stessi anni) e poi si aggiornano: così il conteggio non si perde
       const box = $('#h-anni-lista'), kA = A.data.map((r) => r.anno).join(',');
+      // "Sopra ogni crollo" (Perché è diverso): per ogni anno il calo più forte e come ha chiuso
+      { const cb = $('#crolli-anni');
+        if (cb) cb.replaceChildren(...A.data.map((r, k) => {
+          const d = el('div', 'crollo-a'); d.style.setProperty('--k', k);
+          const giu = Math.min(1, r.calo_max / 0.4), su = Math.min(1, Math.log10(1 + Math.max(0, r.rendimento)) / Math.log10(11));
+          const y0 = 14, yb = 14 + 22 * giu, yf = Math.max(3, y0 - 11 * su);
+          d.innerHTML = `<span class="ca-anno">${r.anno}</span>`
+            + `<svg class="ca-v" viewBox="0 0 64 40" aria-hidden="true"><path class="ca-giu" d="M4 ${y0} L30 ${yb.toFixed(1)}"/><path class="ca-su" d="M30 ${yb.toFixed(1)} L60 ${yf.toFixed(1)}"/><circle cx="30" cy="${yb.toFixed(1)}" r="3"/></svg>`
+            + `<span class="ca-calo">▼ −${num(r.calo_max * 100, 0)}%<small>${r.max_sl_fila} SL di fila</small></span>`
+            + `<span class="ca-fine">▲ ${pctS(r.rendimento * 100, 0)}<small>${k === A.data.length - 1 ? 'finora' : 'a fine anno'}</small></span>`;
+          return d;
+        })); }
       box.style.setProperty('--n', A.data.length);
       const vmax = Math.max(...A.data.map((r) => Math.abs(r.rendimento)), 1e-9);
       const durata = (r) => 1200 + 3800 * Math.abs(r.rendimento) / vmax;      // la più alta circa 5 secondi
@@ -3399,7 +3442,7 @@ dash.calc('strategie', {
     } }
   if ('IntersectionObserver' in window) {
     const ossAnim = new IntersectionObserver((L) => L.forEach((x) => x.target.classList.toggle('fermo-anim', !x.isIntersecting)), { rootMargin: '120px 0px' });
-    ['#h-anni-lista', '.confronto', '.finale', '.lavoro', '.hero-pub h1', '.scorri', '.vetrina', '#curva-bt', '.tris', '.conto-demo', '#mesi-grafico'].forEach((q) => document.querySelectorAll(q).forEach((e) => ossAnim.observe(e)));
+    ['#h-anni-lista', '.confronto', '.finale', '.lavoro', '.crolli', '.hero-pub h1', '.scorri', '.vetrina', '#curva-bt', '.tris', '.conto-demo', '#mesi-grafico'].forEach((q) => document.querySelectorAll(q).forEach((e) => ossAnim.observe(e)));
   }
   const cielo = el('div', 'cielo'); cielo.setAttribute('aria-hidden', 'true');
   cielo.append(el('i', 'c1'), el('i', 'c2'), el('i', 'c3'), el('i', 'c4')); document.body.prepend(cielo);
@@ -3621,7 +3664,7 @@ dash.calc('strategie', {
     ['#anno .bt-tabs', 'Parti dal <b>complessivo</b>, poi scegli un anno e guarda <b>com’è andato mese per mese</b>.', 'spiega'],
     // il grafico cambia: nel complessivo mostra gli anni, con un anno scelto i suoi mesi
     ['#mesi-grafico', () => dash.params().anno === 'tutti' || !dash.params().anno
-      ? ['Ogni barra è un anno, e <b>sono tutte sopra lo zero</b>. Toccane una per vedere i suoi mesi.', 'fiero']
+      ? ['Questi numeri non arrivano senza perdite: nel 2021 ho preso anche <b>20 stop loss di fila</b>. Non ho cambiato le regole e sono ripartito.', 'determinato']
       : ['I mesi rossi ci sono e <b>non li nascondo</b>: fanno parte del gioco.', 'sincero']],
   ];
   // messaggi già letti (anche ricaricando la pagina nella stessa visita): lì il robottino non saluta più, ma se lo clicchi parla lo stesso
