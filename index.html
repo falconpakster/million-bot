@@ -1327,6 +1327,70 @@ body.stagione-autunno .scena .sc-st-autunno, body.stagione-inverno .scena .sc-st
 @keyframes s-ape { 0% { transform: translate(0, 0); } 25% { transform: translate(-30px, 14px); } 50% { transform: translate(10px, 30px); } 75% { transform: translate(34px, 6px); } 100% { transform: translate(0, 0); } }
 .s-caldo { animation: s-caldo 2.4s ease-in-out infinite; }
 @keyframes s-caldo { 0% { transform: translateY(6px); opacity: 0; } 50% { opacity: .6; } 100% { transform: translateY(-12px); opacity: 0; } }
+/* ---- il robottino gioca con la scenetta del riquadro finale (30/10/2026): faccia, sguardo, corpo e braccio diversi per ogni tema */
+.compagno.a-fine .r-viso { transform-box: view-box; transition: transform .4s ease; }
+@keyframes fine-guarda-sx { 0%, 100% { transform: translate(-4px, 0); } 50% { transform: translate(-3px, 1px); } }
+@keyframes fine-guarda-dx { 0%, 100% { transform: translate(4px, 0); } 50% { transform: translate(3px, 1px); } }
+@keyframes fine-guarda-su { 0%, 100% { transform: translate(0, -3px); } 50% { transform: translate(2px, -4px); } }
+@keyframes fine-segue { 0%, 100% { transform: translate(-4px, -1px); } 50% { transform: translate(4px, 1px); } }
+@keyframes fine-sxdx { 0%, 40% { transform: translate(-4px, 0); } 50%, 90% { transform: translate(4px, 0); } 100% { transform: translate(-4px, 0); } }
+@keyframes fine-hop { 0%, 52% { transform: translateY(0) scale(1); } 58% { transform: translateY(2px) scale(1.04, .96); } 66% { transform: translateY(-8px) scale(.98, 1.03); } 76%, 100% { transform: translateY(0) scale(1); } }
+@keyframes fine-sobbalzo { 0%, 78%, 100% { transform: translateY(0) rotate(0); } 82% { transform: translateY(-11px) rotate(-4deg) scale(1.05); } 88% { transform: translateY(0) rotate(2deg); } 92% { transform: translateX(-1px); } 95% { transform: translateX(1px); } }
+@keyframes fine-ballo { 0%, 100% { transform: rotate(-8deg) translateY(0); } 25% { transform: rotate(0) translateY(-6px); } 50% { transform: rotate(8deg) translateY(0); } 75% { transform: rotate(0) translateY(-6px); } }
+@keyframes fine-galleggia { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(5px) rotate(3deg); } }
+@keyframes fine-battito { 0%, 40%, 100% { transform: scale(1); } 10% { transform: scale(1.07); } 20% { transform: scale(1); } 30% { transform: scale(1.05); } }
+@keyframes fine-dondola { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+@keyframes fine-vento { 0%, 20%, 100% { transform: rotate(0); } 45% { transform: rotate(7deg) translateX(3px); } 70% { transform: rotate(-2deg); } }
+@keyframes fine-brr { 0%, 84%, 100% { transform: translateX(0); } 86%, 90%, 94% { transform: translateX(-1.6px); } 88%, 92%, 96% { transform: translateX(1.6px); } }
+@keyframes fine-stupore { 0%, 45%, 100% { transform: translateY(0) scale(1); } 55% { transform: translateY(-6px) scale(1.07); } 70% { transform: translateY(0) scale(1); } }
+@keyframes fine-saluta { 0%, 100% { transform: rotate(4deg); } 50% { transform: rotate(-26deg); } }
+@keyframes fine-prende { 0%, 40%, 100% { transform: rotate(0); } 55%, 70% { transform: rotate(-48deg); } }
+@keyframes fine-brindisi { 0%, 35%, 100% { transform: rotate(0); } 50%, 75% { transform: rotate(-42deg); } 60% { transform: rotate(-36deg); } }
+@keyframes fine-saluto { 0%, 15% { transform: rotate(0); } 30%, 85% { transform: rotate(-58deg); } 100% { transform: rotate(0); } }
+/* scena normale: guarda il grafico e le monete, saltella quando la moneta cade sulla pila */
+body:not([class*="festa-"]):not([class*="stagione-"]) .compagno.a-fine .c-corpo { animation: fine-hop 2.8s ease-in-out infinite; }
+body:not([class*="festa-"]):not([class*="stagione-"]) .compagno.a-fine .r-viso { animation: fine-sxdx 5.6s ease-in-out infinite; }
+/* Halloween: tiene d'occhio pipistrelli e fantasma e ogni tanto fa un salto dallo spavento */
+body.festa-halloween .compagno.a-fine .c-corpo { animation: fine-sobbalzo 4.2s ease-in-out infinite; }
+/* Natale: saluta "oh oh oh" e saltella nella slitta */
+body.festa-natale .compagno.a-fine .c-corpo { animation: fine-hop 1.6s ease-in-out infinite; }
+body.festa-natale:not(.m-ombrello) .compagno.a-fine .r-braccio-d { animation: fine-saluta .8s ease-in-out infinite; }
+/* Befana: guarda in su le calze e allunga la mano per prendere le caramelle che cadono */
+body.festa-befana .compagno.a-fine .r-viso { animation: fine-guarda-su 3.6s ease-in-out infinite; }
+body.festa-befana:not(.m-ombrello) .compagno.a-fine .r-braccio-d { animation: fine-prende 3.6s ease-in-out infinite; }
+/* Carnevale: balla tra i coriandoli */
+body.festa-carnevale .compagno.a-fine .c-corpo { animation: fine-ballo 1.3s ease-in-out infinite; }
+body.festa-carnevale:not(.m-ombrello) .compagno.a-fine .r-braccio-d { animation: fine-saluta .65s ease-in-out infinite; }
+/* Capodanno: occhiali da sole, salta a ogni fuoco d'artificio e alza il braccio per il brindisi */
+body.festa-capodanno .compagno.a-fine .c-corpo { animation: fine-stupore 2.8s ease-in-out infinite; }
+body.festa-capodanno:not(.m-ombrello) .compagno.a-fine .r-braccio-d { animation: fine-brindisi 3.2s ease-in-out infinite; }
+/* 25 aprile e 2 giugno: guarda le Frecce Tricolori e fa il saluto */
+body.festa-italia .compagno.a-fine .r-viso { animation: fine-guarda-su 3s ease-in-out infinite; }
+body.festa-italia:not(.m-ombrello) .compagno.a-fine .r-braccio-d { animation: fine-saluto 6s ease-in-out infinite; }
+/* Ferragosto: galleggia sulle onde con il salvagente */
+body.festa-ferragosto .compagno.a-fine .c-corpo { animation: fine-galleggia 3s ease-in-out infinite; }
+/* Pasqua: guarda il coniglio e saltella come lui */
+body.festa-pasqua .compagno.a-fine .r-viso { animation: fine-guarda-dx 3s ease-in-out infinite; }
+body.festa-pasqua .compagno.a-fine .c-corpo { animation: fine-hop 1.8s ease-in-out infinite; }
+/* San Valentino: il cuore batte */
+body.festa-sanvalentino .compagno.a-fine .c-corpo { animation: fine-battito 1.3s ease-in-out infinite; }
+/* Festa della donna: dondola con i rami di mimosa */
+body.festa-donna .compagno.a-fine .c-corpo { transform-origin: 50% 100%; animation: fine-dondola 4s ease-in-out infinite; }
+/* autunno: segue le foglie con lo sguardo, il vento lo spinge, prova a prenderne una */
+body.stagione-autunno .compagno.a-fine .r-viso { animation: fine-segue 3.2s ease-in-out infinite; }
+body.stagione-autunno .compagno.a-fine .c-corpo { transform-origin: 50% 100%; animation: fine-vento 4s ease-in-out infinite; }
+body.stagione-autunno:not(.m-ombrello) .compagno.a-fine .r-braccio-d { animation: fine-prende 6s ease-in-out infinite; }
+/* inverno: saluta il pupazzo di neve (che saluta anche lui) e ogni tanto trema dal freddo */
+body.stagione-inverno .compagno.a-fine .r-viso { animation: fine-guarda-dx 3.2s ease-in-out infinite; }
+body.stagione-inverno:not(.m-ombrello) .compagno.a-fine .r-braccio-d { animation: fine-saluta 1.6s ease-in-out infinite; }
+body.stagione-inverno .compagno.a-fine .c-corpo { animation: fine-brr 3.6s linear infinite; }
+/* primavera: segue l'ape con gli occhi e dondola tra i fiori */
+body.stagione-primavera .compagno.a-fine .c-corpo { transform-origin: 50% 100%; animation: fine-dondola 3.4s ease-in-out infinite; }
+/* estate: occhiali da sole, guarda il sole e se la gode */
+body.stagione-estate .compagno.a-fine .r-viso { animation: fine-guarda-sx 4s ease-in-out infinite; }
+body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; animation: fine-dondola 5s ease-in-out infinite; }
+.compagno.a-fine.in-volo .c-corpo { animation: none; }
+@media (prefers-reduced-motion: reduce) { .compagno.a-fine .c-corpo, .compagno.a-fine .r-braccio-d, .compagno.a-fine .r-viso { animation-duration: 8s !important; } }
 </style>
 </head>
 <body class="pub">
@@ -3198,6 +3262,10 @@ dash.calc('strategie', {
       if (costume.some((c) => ['uovo', 'bandiera', 'zucca', 'cuoricino', 'secchiello'].includes(c))) a = a.filter((x) => x !== 'ventaglio');             // la mano sinistra è occupata
       if (festa) b.classList.add('festa-' + festa.nome);
       else b.classList.add('stagione-' + stagioneOggi());   // nei giorni senza festa: sfondo e scenetta della stagione
+      // nel riquadro finale il robottino fa la faccia giusta per la sua scenetta
+      const pf = document.querySelector('.finale .robot-posto');
+      if (pf) pf.dataset.robotUmore = ({ halloween: 'vigile', natale: 'felice', befana: 'curioso', carnevale: 'felice', capodanno: 'wow', italia: 'fiero', ferragosto: 'felice',
+        pasqua: 'curioso', sanvalentino: 'felice', donna: 'sincero', autunno: 'curioso', inverno: 'base', primavera: 'vigile', estate: 'wow' })[festa ? festa.nome : stagioneOggi()] || 'felice';
       b.classList.add(...a.map((x) => 'm-' + x));
     };
     if (!m) { if (frase) frase.textContent = ''; veste([]); return; }
@@ -3503,6 +3571,7 @@ dash.calc('strategie', {
       corpo.tabIndex = msg ? 0 : -1;
       c.classList.toggle('parla', msg);
       c.classList.toggle('a-inizio', !!p.posto && !!s.closest('.hero-pub'));   // al suo posto iniziale, in cima alla pagina
+      c.classList.toggle('a-fine', !!p.posto && !!s.closest('.finale'));      // nel riquadro finale: gioca con la scenetta
       // arrivato: saluta con la mano per dire "ho qualcosa da dirti"
       if (msg && !letti.has(s.dataset.robot)) tChiama = setTimeout(() => c.classList.add('chiama'), lento.matches ? 600 : 1000);
     }
