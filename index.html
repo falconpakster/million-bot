@@ -1471,7 +1471,8 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
 @keyframes lav-riga { 0% { opacity: 0; translate: -4px 0; } 10%, 80% { opacity: 1; translate: 0 0; } 92%, 100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .lavoro .dis * { animation: none !important; opacity: 1 !important; } .d-imbuto .g, .d-imbuto .x, .d-imbuto .brilla { display: none; } }
 /* numeri importanti: finito di salire, un piccolo salto con un bagliore */
-#h-anni-lista b, #tx-netto, #lav-sei { display: inline-block; }
+#h-anni-lista b, #tx-netto, #lav-sei, #lav-idee { display: inline-block; }
+#lav-idee, #lav-candele, #lav-comb, #lav-trade { transform-origin: left center; }
 .bt-tiles .v[data-k="saldo_fine"], #lav-sei { transform-origin: left center; }
 #h-saldo { transform-origin: left center; } #h-anni-lista b { transform-origin: left center; } #tx-netto { transform-origin: left center; }
 .salta { animation: num-salta .6s ease-in-out; }
@@ -1480,18 +1481,24 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
 /* il fumetto di benvenuto si vede solo quando il robottino è al suo posto in cima; se vola via, sparisce */
 .guida.grande .fumetto { transition: opacity .35s ease, transform .35s ease, visibility 0s; transform-origin: left center; }
 body.robot-via .guida.grande .fumetto { opacity: 0; transform: scale(.85) translateX(-8px); visibility: hidden; pointer-events: none; transition: opacity .3s ease, transform .3s ease, visibility 0s .3s; }
-/* titolo in cima: un'onda morbida passa sulle lettere e le ingrandisce una alla volta */
+/* titolo in cima: sventola come una bandiera. Ogni lettera sale e scende piano, un po' dopo quella prima (l'onda va da sinistra a destra),
+   e in cima all'onda si ingrandisce e una striscia di luce le passa DENTRO (riflesso nel colore della lettera, niente alone) */
+.hero-pub h1 { --base: var(--inchiostro); --luce: #d9a52a; --luce-2: #f6dc8c; }
+body.pub.buio .hero-pub h1 { --base: #f2f5ff; --luce: #ffe7a6; --luce-2: #fffaf0; }
 .hero-pub h1 .parola { white-space: nowrap; }
-.hero-pub h1 .l { display: inline-block; transform-origin: 50% 85%; animation: onda-titolo 8s ease-in-out infinite; animation-delay: calc(1.4s + var(--i) * 85ms); will-change: transform; }
-/* onda calma: la lettera si alza piano, si accende di luce dorata e torna giù */
-.hero-pub h1 { --base: var(--inchiostro); --luce: #b8860f; --bagliore: rgba(240, 196, 84, .95); }
-body.pub.buio .hero-pub h1 { --base: #f2f5ff; --luce: #fff1bf; --bagliore: rgba(244, 210, 122, .9); }
-@keyframes onda-titolo {
-  0% { transform: none; color: var(--base); text-shadow: 0 0 2px var(--alone, #fff), 0 0 7px var(--alone, #fff), 0 0 16px var(--alone-2, #fff); }
-  4.5% { transform: translateY(-.04em) scale(1.06); }
-  9% { transform: translateY(-.08em) scale(1.12); color: var(--luce); text-shadow: 0 0 2px var(--alone, #fff), 0 0 7px var(--alone, #fff), 0 0 12px var(--bagliore), 0 0 22px var(--bagliore); }
-  14% { transform: translateY(-.02em) scale(1.02); }
-  18%, 100% { transform: none; color: var(--base); text-shadow: 0 0 2px var(--alone, #fff), 0 0 7px var(--alone, #fff), 0 0 16px var(--alone-2, #fff); } }
+.hero-pub h1 .l { display: inline-block; transform-origin: 50% 80%; will-change: transform;
+  background: linear-gradient(105deg, var(--base) 0%, var(--base) 38%, var(--luce) 46%, var(--luce-2) 50%, var(--luce) 54%, var(--base) 62%, var(--base) 100%);
+  background-size: 400% 100%; background-position: 100% 0; -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none;
+  animation: bandiera 6s ease-in-out infinite, luce-lettera 6s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 160ms - 8s); }
+/* l'alone chiaro che rende leggibile il titolo sugli sfondi: ora attorno a tutta la scritta */
+body.pub .hero-pub h1 { text-shadow: none; filter: drop-shadow(0 0 2px var(--alone)) drop-shadow(0 0 6px var(--alone-2)); }
+@keyframes bandiera {
+  0%, 100% { transform: translateY(.035em) scale(.99) rotate(1.2deg); }
+  50% { transform: translateY(-.075em) scale(1.1) rotate(-1.2deg); } }
+@keyframes luce-lettera {
+  0%, 32% { background-position: 100% 0; }
+  68%, 100% { background-position: 0% 0; } }
 @media (prefers-reduced-motion: reduce) { .hero-pub h1 .l { animation: none; } }
 /* "Sopra ogni crollo" (Perché è diverso): ogni anno il suo calo e la sua ripresa */
 .crolli { margin-top: 16px; background: var(--pannello); border: 1px solid var(--linea); border-radius: var(--raggio); padding: 22px 24px; box-shadow: var(--ombra); }
@@ -2975,7 +2982,7 @@ dash.calc('strategie', {
     });
   }), { threshold: 0 }) : null;
   // numeri che, appena finiscono di salire, si ingrandiscono per un attimo
-  const SALTA = '#h-saldo, #h-anni-lista b, #tx-netto, #lav-sei';
+  const SALTA = '#h-saldo, #h-anni-lista b, #tx-netto, #lav-sei, #lav-idee, #lav-candele, #lav-comb, #lav-trade';
   function avviaConta(e) {
     const c = e._conta; if (!c || c.stato !== 'attesa') return;
     c.stato = 'corre';
