@@ -1498,7 +1498,7 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
     <button type="button" class="sg-chiudi" id="sg-chiudi" aria-label="Chiudi il grafico">✕</button>
   </div>
   <div class="curva" id="sg-curva"></div>
-  <p class="sg-nota">Tocca o trascina il dito sulla linea (o passa il mouse) per vedere il saldo di ogni giorno. Risultati simulati da gennaio 2020, non garantiti per il futuro.</p>
+  <p class="sg-nota">Tocca o trascina il dito sulla linea (o passa il mouse) per vedere il saldo di ogni giorno. Risultati del backtest da gennaio 2020, non garantiti per il futuro.</p>
  </div>
 </div>
 
@@ -1556,7 +1556,7 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
       </div>
     </section>
     <div class="anni-striscia" id="h-anni-lista" data-robot-umore="felice" data-robot="Tutti gli anni in positivo! <b>Tocca un anno</b> per vederlo da vicino." aria-label="Rendimento di ogni anno: tocca un anno per vederlo"></div>
-    <p class="nota-cifre" id="h-nota-num">Risultati simulati da gennaio 2020, con costi e limiti reali del broker. Calo massimo: <span id="h-calo">—</span>. Non garantiti per il futuro.</p>
+    <p class="nota-cifre" id="h-nota-num">Backtest da gennaio 2020: le regole del bot sui prezzi passati, con costi e limiti reali del broker. Calo massimo: <span id="h-calo">—</span>. Non garantiti per il futuro.</p>
 
     <nav class="schede" id="schede" aria-label="Sezioni">
       <button type="button" class="scheda" data-pannello="risultati">Risultati</button>
@@ -1573,7 +1573,7 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
         <div class="demo-striscia" id="demo-striscia" hidden></div>
         <div class="demo-perche">
           <div><h3>Perché parte il 26 ottobre 2026</h3><p>Fino a ottobre 2026 ho costruito e ricontrollato le strategie sui prezzi del passato. Quel giorno il bot, dopo centinaia e centinaia di test e modifiche, era pronto ed è diventato attivo: per questo il conto inizia da lì.</p></div>
-          <div><h3>Perché un conto demo</h3><p>Prima di usare soldi veri voglio la prova che <strong>sul conto il bot fa gli stessi trade della simulazione</strong>, con prezzi, spread ed esecuzioni reali. Il conto demo usa gli stessi prezzi del conto reale, ma senza rischiare capitale. Quando i risultati del conto demo confermeranno la simulazione passerò al conto reale, e lo annuncerò su TikTok e Instagram.</p></div>
+          <div><h3>Perché un conto demo</h3><p>Prima di usare soldi veri voglio la prova che <strong>sul conto il bot fa gli stessi trade del backtest</strong>, con prezzi, spread ed esecuzioni reali. Il conto demo usa gli stessi prezzi del conto reale, ma senza rischiare capitale. Quando i risultati del conto demo confermeranno il backtest passerò al conto reale, e lo annuncerò su TikTok e Instagram.</p></div>
         </div>
         <p class="demo-link"><a class="btn btn-vuoto" id="b-myfxbook" href="" target="_blank" rel="noopener">Verifica il conto su Myfxbook ↗</a><span id="myfxbook-presto" hidden>Il collegamento al conto su <strong>Myfxbook</strong>, per verificarlo in modo indipendente, arriverà a breve.</span></p>
       </section>
@@ -1586,7 +1586,7 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
         <div class="pregio"><b>Costi veri</b><h3>Numeri realistici</h3><p><strong>Spread, costi overnight e limiti di lotti</strong> del broker inclusi.</p></div>
         <div class="pregio"><b>1 : 3</b><h3>Guadagno triplo del rischio</h3><p>Un trade vincente <strong>recupera tre perdenti</strong>.</p></div>
         <div class="pregio"><b>24/7</b><h3>Sempre al lavoro</h3><p>Controlla il mercato <strong>ogni 15 minuti</strong>, giorno e notte.</p></div>
-        <div class="pregio"><b>Sul conto</b><h3>Verificato sul conto</h3><p>Ogni trade reale è <strong>confrontato con la simulazione</strong>.</p></div>
+        <div class="pregio"><b>Sul conto</b><h3>Verificato sul conto</h3><p>Ogni trade reale è <strong>confrontato con il backtest</strong>.</p></div>
       </div>
       <div class="lavoro" data-robot-umore="fiero" data-robot="Prima di diventare attivo ho superato <b>più esami di quanti immagini</b>.">
         <h3>Il lavoro dietro Million Bot</h3>
@@ -1628,7 +1628,7 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
               <g class="riga r3"><path class="tr" d="M19 42h18"/><path class="si" d="M41 42l2.5 2.5 4.5-5"/></g>
               <g class="riga r4"><path class="tr" d="M19 50h12"/><path class="no" d="M41.5 47.5l4 4M45.5 47.5l-4 4"/></g>
             </svg>
-            <b id="lav-trade">1.396</b><p>trade simulati dal 2020, tutti sul sito, anche quelli in perdita</p>
+            <b id="lav-trade">1.396</b><p>trade del backtest dal 2020, tutti sul sito, anche quelli in perdita</p>
           </div>
           <div class="lav">
             <svg class="dis d-spunta" viewBox="0 0 64 64" aria-hidden="true">
@@ -1636,7 +1636,7 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
               <path class="linea bot" d="M6 50l10-8 8 5 10-14 8 6 16-20"/>
               <g class="ok"><circle cx="48" cy="46" r="10"/><path d="M43.5 46.2l3.2 3.2 6-6.4"/></g>
             </svg>
-            <b>Stessi trade</b><p>della simulazione, quando il bot ha rifatto da solo tutto dal 2020</p>
+            <b>Stessi trade</b><p>del backtest: il bot ha ripercorso da solo ogni candela dal 2020</p>
           </div>
         </div>
       </div>
@@ -1687,7 +1687,8 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
     <section class="pannello" data-p="domande" aria-label="Domande" data-robot-umore="curioso" data-robot="Non trovi la tua domanda? <b>Scrivi a Samuel</b> su Telegram, risponde lui." hidden>
       <div class="faq">
         <details><summary>I guadagni sono garantiti?</summary><p><strong>No.</strong> Ci sono mesi negativi e periodi di perdite. Si può perdere anche tutto il capitale.</p></details>
-        <details><summary>I risultati sono reali?</summary><p>Sono una <strong>simulazione</strong> sui prezzi reali, da gennaio 2020 a oggi, che si aggiorna ogni giorno con le regole del bot. Dal 26 ottobre 2026 il bot <strong>è attivo</strong> su un conto demo e i suoi trade entrano nei risultati.</p></details>
+        <details><summary>I risultati sono reali?</summary><p>Sono un <strong>backtest</strong>: le regole del bot applicate ai prezzi reali da gennaio 2020, aggiornato ogni giorno. Dal 26 ottobre 2026 il bot <strong>è attivo</strong> su un conto demo e i suoi trade entrano nei risultati.</p></details>
+        <details><summary>Backtest, prova del bot e conto demo: che differenza c'è?</summary><p><strong>Backtest</strong>: le regole applicate ai prezzi passati dal 2020, sono i risultati che vedi. <strong>Prova del bot</strong>: il bot ha ripercorso da solo ogni candela dal 2020, come se fosse acceso, e ha trovato gli stessi trade del backtest. <strong>Conto demo</strong>: dal 26 ottobre 2026 il bot opera sui prezzi veri del broker, senza rischiare soldi.</p></details>
         <details><summary>Quanto rischia per operazione?</summary><p>Da circa l'<strong>1,5% a circa il 5%</strong> del conto, sempre con lo stop loss. Il guadagno possibile è <strong>3 volte il rischio</strong>.</p></details>
         <details><summary>Posso usare Million Bot anch'io?</summary><p><strong>Non ancora.</strong> Lo annuncerò su TikTok e Instagram.</p></details>
       </div>
@@ -1719,7 +1720,7 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
     </section>
 
     <footer class="piede">
-      <div class="rischio">I CFD sono strumenti complessi con un alto rischio di perdere denaro a causa della leva: tra il 74% e l'89% dei conti al dettaglio perde denaro con i CFD. Risultati in gran parte simulati; i risultati passati non garantiscono quelli futuri. Non è una consulenza finanziaria.</div>
+      <div class="rischio">I CFD sono strumenti complessi con un alto rischio di perdere denaro a causa della leva: tra il 74% e l'89% dei conti al dettaglio perde denaro con i CFD. Risultati in gran parte da backtest; i risultati passati non garantiscono quelli futuri. Non è una consulenza finanziaria.</div>
       <div class="righe"><span>© 2026 Samuel Cavalera · Million Bot · Road to 1 Million</span><span><a href="https://t.me/Samu7740" target="_blank" rel="noopener">Telegram</a> · <a href="https://www.tiktok.com/@_roadto1milion_" target="_blank" rel="noopener">TikTok</a> · <a href="https://www.instagram.com/_roadto1milion_/" target="_blank" rel="noopener">Instagram</a></span></div>
     </footer>
   </main>
@@ -1785,7 +1786,7 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
 
   <section class="bt-card" id="andamento">
     <div class="bt-graf-head"><h2>Saldo nel tempo</h2><span class="bt-sub" id="curva-nota"></span></div>
-    <p class="bt-sub solo-pub">Simulazione con 1.000 € iniziali a gennaio 2020 e i guadagni reinvestiti, con i limiti reali del broker. Scala logaritmica: ogni riga vale 10 volte la precedente.</p>
+    <p class="bt-sub solo-pub">Backtest con 1.000 € iniziali a gennaio 2020 e i guadagni reinvestiti, con i limiti reali del broker. Scala logaritmica: ogni riga vale 10 volte la precedente.</p>
     <div class="curva" id="curva-bt"></div>
   </section>
 
@@ -1879,11 +1880,11 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
 
   <details class="come" id="calcolo">
     <summary>Come è calcolato</summary>
-    <p class="solo-pub">È una simulazione sui prezzi passati di Bitcoin a 15 minuti con le stesse regole del bot, gli spread e gli swap reali di XM e i guadagni reinvestiti, su un conto in euro con i limiti veri di XM: al massimo 80 lotti per ordine su Bitcoin, quindi quando il conto cresce il rischio di ogni trade scende. Parte da 1.000 € il 1° gennaio 2020 (da gennaio a fine marzo 2020 i prezzi di Bitcoin sono quelli del contratto BTCUSD di Bybit, perché BTCUSDT è nato a fine marzo 2020). Si aggiorna ogni giorno fino a oggi con le stesse regole: dal 26 ottobre 2026 entrano anche i trade chiusi dal bot sul conto demo, calcolati allo stesso modo.</p>
+    <p class="solo-pub">È un backtest: le stesse regole del bot applicate ai prezzi passati di Bitcoin a 15 minuti, con gli spread e gli swap reali di XM e i guadagni reinvestiti, su un conto in euro con i limiti veri di XM: al massimo 80 lotti per ordine su Bitcoin, quindi quando il conto cresce il rischio di ogni trade scende. Parte da 1.000 € il 1° gennaio 2020 (da gennaio a fine marzo 2020 i prezzi di Bitcoin sono quelli del contratto BTCUSD di Bybit, perché BTCUSDT è nato a fine marzo 2020). Si aggiorna ogni giorno fino a oggi con le stesse regole: dal 26 ottobre 2026 entrano anche i trade chiusi dal bot sul conto demo, calcolati allo stesso modo.</p>
     <p class="solo-pub modo-j">Con il Giappone 225 si aggiungono i suoi trade sui prezzi XM, con spread di 7 punti e swap reale, sullo stesso saldo.</p>
     <p class="solo-priv">Rischi sul saldo del momento: doppia rottura 5,07%, seconda correzione 2,03%, continuazione dopo SL 2,03%, prima candela 2,03%, ritest della trend line 1,52%<span class="modo-j">, Giappone 225 prima candela 2,03%</span>. Lotti come il bot: rischio diviso per stop più spread, arrotondati per eccesso se il rischio resta entro il 20% in più, altrimenti per difetto, minimo 0,01, massimo 80 per ordine (Giappone 225: da 0,1 a 11.940), un solo ordine per trade, esposizione massima 50 volte il saldo, al massimo 6 posizioni insieme. Conto in euro con i cambi EUR/USD e EUR/JPY del giorno. Spread 15 $, swap reale di XM (long 0,043% e short 0,029% a notte). Dati Bybit BTCUSDT a 15 minuti, orari italiani.<span class="modo-j"> Giappone 225: prezzi XM, spread 7 punti, swap long −4,74 e short −1 punti a notte.</span> Dal 1° gennaio 2020 a oggi, aggiornato ogni giorno: dal 26 ottobre 2026 con i trade chiusi dal bot sul conto demo (e, quando il bot non ha operato, con quelli delle stesse regole), esiti sui prezzi di riferimento. Da gennaio a fine marzo 2020 Bitcoin è il contratto BTCUSD di Bybit (BTCUSDT è nato a fine marzo 2020).</p>
     <p class="solo-priv">Il massimo per ordine si raggiunge dal 2025 (doppia rottura da circa 600.000 € di saldo): da lì il rischio reale della doppia rottura scende in media al 2,3–2,9%.</p>
-    <p>I risultati passati, e ancora di più quelli simulati, non garantiscono risultati futuri. Il trading con leva può far perdere tutto il capitale. Questa pagina non è un consiglio di investimento.</p>
+    <p>I risultati passati, e ancora di più quelli di un backtest, non garantiscono risultati futuri. Il trading con leva può far perdere tutto il capitale. Questa pagina non è un consiglio di investimento.</p>
   </details>
 </div>
 
@@ -2980,7 +2981,7 @@ dash.calc('strategie', {
       });
     }
     const box = $('#h-curva');
-    if (box.offsetParent) curva(box, c.pts, { altezza: 230, chiave: c.k, piccolo: true, lineare: true, etichetta: 'Saldo simulato da 1.000 € nel 2020 a oggi' });
+    if (box.offsetParent) curva(box, c.pts, { altezza: 230, chiave: c.k, piccolo: true, lineare: true, etichetta: 'Saldo del backtest da 1.000 € nel 2020 a oggi' });
   }
   // grafico della pagina iniziale ingrandito in una finestra
   const sg = $('#schermo-grafico'), sgFin = sg.querySelector('.sg-finestra');
@@ -2991,7 +2992,7 @@ dash.calc('strategie', {
     const TOT = dash.data('totale'); $('#sg-saldo').textContent = TOT.status === 'ok' ? euroIntero(TOT.data[0].saldo_finale) : $('#h-saldo').textContent;
     box.querySelectorAll('svg').forEach((x) => x.remove());
     const H = Math.max(220, box.clientHeight);
-    curva(box, c.pts, { altezza: H, chiave: c.k + 'g', blocca: true, lineare: true, etichetta: 'Saldo simulato da 1.000 € nel 2020 a oggi, ingrandito' });
+    curva(box, c.pts, { altezza: H, chiave: c.k + 'g', blocca: true, lineare: true, etichetta: 'Saldo del backtest da 1.000 € nel 2020 a oggi, ingrandito' });
   }
   function apriGrafico() {
     if (!puntiBt()) return;
@@ -3296,7 +3297,7 @@ dash.calc('strategie', {
     window.PUB = true; body.classList.add('pub');
     $('#v-login').hidden = true; $('#pub').hidden = false;
     $('#posto-pub').append(blocco);
-    $('#mesi').after($('#conto-demo'));        // il conto demo dopo i trade dell'anno
+    $('#calcolo').after($('#conto-demo'));     // il conto demo dopo i trade dell'anno e il loro "Come è calcolato"
   }
   async function entra(bytes, salva) {
     CHIAVE = await crypto.subtle.importKey('raw', bytes, 'AES-GCM', false, ['decrypt']);
@@ -3515,7 +3516,7 @@ dash.calc('strategie', {
     voce('Trade chiusi', num(dopo.length) + ' (' + num(tp) + ' vinti)');
     voce('Calo massimo', '−' + num(calo * 100, 0) + '%');
     $('#calc-avviso').hidden = scritto >= MIN_EURO;
-    $('#calc-nota').textContent = `Simulazione con le regole del bot da gennaio 2020 a oggi, aggiornata ogni giorno; dal 26 ottobre 2026 con i trade chiusi dal bot sul conto demo. Ultimo trade chiuso il ${giornoIt(ultimo)}. Nel periodo il capitale è sceso al massimo del ${num(calo * 100, 1)}% dal suo punto più alto prima di risalire.`;
+    $('#calc-nota').textContent = `Backtest con le regole del bot da gennaio 2020 a oggi, aggiornata ogni giorno; dal 26 ottobre 2026 con i trade chiusi dal bot sul conto demo. Ultimo trade chiuso il ${giornoIt(ultimo)}. Nel periodo il capitale è sceso al massimo del ${num(calo * 100, 1)}% dal suo punto più alto prima di risalire.`;
     const g = $('#calc-graf');
     if (pts.length > 1 && g.offsetParent) curva(g, pts, { altezza: 280, chiave: calc.chiave + da + cap });
   }
