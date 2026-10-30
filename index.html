@@ -1477,6 +1477,9 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
 .salta { animation: num-salta .75s cubic-bezier(.3, 1.5, .5, 1); }
 @keyframes num-salta { 0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(227, 178, 60, 0)); } 35% { transform: scale(1.16); filter: drop-shadow(0 0 9px rgba(227, 178, 60, .75)); } 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(227, 178, 60, 0)); } }
 @media (prefers-reduced-motion: reduce) { .salta { animation-name: num-luce; } @keyframes num-luce { 35% { filter: drop-shadow(0 0 9px rgba(227, 178, 60, .75)); } } }
+/* il fumetto di benvenuto si vede solo quando il robottino è al suo posto in cima; se vola via, sparisce */
+.guida.grande .fumetto { transition: opacity .35s ease, transform .35s ease, visibility 0s; transform-origin: left center; }
+body.robot-via .guida.grande .fumetto { opacity: 0; transform: scale(.85) translateX(-8px); visibility: hidden; pointer-events: none; transition: opacity .3s ease, transform .3s ease, visibility 0s .3s; }
 </style>
 </head>
 <body class="pub">
@@ -3730,7 +3733,7 @@ dash.calc('strategie', {
   function aggiorna() {
     giro = 0;
     const L = bersagli();
-    if (!L.length) { c.hidden = true; return; }
+    if (!L.length) { c.hidden = true; document.body.classList.remove('robot-via'); return; }
     c.hidden = false;
     const s = scegli(L), p = posizione(s), cambia = s !== attuale;
     if (cambia) {
@@ -3751,6 +3754,7 @@ dash.calc('strategie', {
       corpo.tabIndex = msg ? 0 : -1;
       c.classList.toggle('parla', msg);
       c.classList.toggle('a-inizio', !!p.posto && !!s.closest('.hero-pub'));   // al suo posto iniziale, in cima alla pagina
+      document.body.classList.toggle('robot-via', !c.classList.contains('a-inizio'));   // il fumetto "Ciao, sono Million Bot" c'è solo quando lui è lì
       c.classList.toggle('a-fine', !!p.posto && !!s.closest('.finale'));      // nel riquadro finale: gioca con la scenetta
       // arrivato: saluta con la mano per dire "ho qualcosa da dirti"
       if (msg && !letti.has(s.dataset.robot)) tChiama = setTimeout(() => c.classList.add('chiama'), lento.matches ? 600 : 1000);
