@@ -1519,6 +1519,9 @@ body.pub.buio .hero-pub h1 { --base: #f2f5ff; --luce: #fff1bf; --bagliore: rgba(
   .crollo-a { display: grid; grid-template-columns: 50px 54px 1fr 1fr; align-items: center; gap: 10px; padding: 8px 12px; }
   .ca-anno small { display: block; } .ca-v { height: 32px; } .ca-calo, .ca-fine { font-size: 16.5px; } }
 @media (prefers-reduced-motion: reduce) { .ca-v path, .ca-v circle { animation: none; stroke-dashoffset: 0; opacity: 1; } }
+/* i tre numeri in cima: righe fisse (prima, quando tornavano a zero fuori schermo, stavano tutti su una riga e la pagina sotto si spostava di 60px) */
+.confronto { display: grid; grid-template-columns: repeat(3, max-content); }
+@media (max-width: 600px) { .confronto { grid-template-columns: repeat(2, max-content); } }
 </style>
 </head>
 <body class="pub">
@@ -2907,9 +2910,21 @@ dash.calc('strategie', {
   const ossGruppo = 'IntersectionObserver' in window ? new IntersectionObserver((L) => L.forEach((x) => {
     if (x.isIntersecting) membri(x.target).forEach(avviaConta);
   }), { threshold: 0.6 }) : null;
+  // un numero già arrivato in fondo riparte da zero solo se è rimasto fuori dallo schermo per almeno 15 secondi dalla fine:
+  // se torni prima, lo trovi fermo al suo valore
+  const RIPARTE_DOPO = 15000;
+  const azzera = (e) => { const c = e._conta; if (c && c.stato !== 'attesa') { c.giro++; c.stato = 'attesa'; e.textContent = c.fmt(c.da); } };
   const ossFuori = 'IntersectionObserver' in window ? new IntersectionObserver((L) => L.forEach((x) => {
+    const M = membri(x.target);
+    M.forEach((e) => { if (e._conta) e._conta.fuori = !x.isIntersecting; });
     if (x.isIntersecting) return;
-    membri(x.target).forEach((e) => { const c = e._conta; if (c && c.stato !== 'attesa') { c.giro++; c.stato = 'attesa'; e.textContent = c.fmt(c.da); } });
+    M.forEach((e) => {
+      const c = e._conta; if (!c || c.stato === 'attesa') return;
+      if (c.stato === 'corre') { azzera(e); return; }                 // uscito a metà conteggio: riparte la prossima volta
+      const manca = RIPARTE_DOPO - (performance.now() - (c.fineT || 0));
+      if (manca <= 0) { azzera(e); return; }
+      clearTimeout(c.tAzzera); c.tAzzera = setTimeout(() => { if (c.fuori) azzera(e); }, manca);
+    });
   }), { threshold: 0 }) : null;
   // numeri che, appena finiscono di salire, si ingrandiscono per un attimo
   const SALTA = '#h-saldo, #h-anni-lista b, #tx-netto, #lav-sei';
@@ -2922,7 +2937,7 @@ dash.calc('strategie', {
       if (c.giro !== giro) return;                       // è uscito dallo schermo: si ferma
       const k = Math.min(1, (t - t0) / durata), f = 1 - Math.pow(1 - k, 2);
       e.textContent = c.fmt(c.da + (c.v - c.da) * f);
-      if (k < 1) requestAnimationFrame(passo); else { c.stato = 'fatto'; e.textContent = c.fmt(c.v); const cl = e.closest('.confronto') ? 'pop' : e.matches(SALTA) ? 'salta' : ''; if (cl) { e.classList.remove(cl); void e.offsetWidth; e.classList.add(cl); } }
+      if (k < 1) requestAnimationFrame(passo); else { c.stato = 'fatto'; c.fineT = performance.now(); e.textContent = c.fmt(c.v); const cl = e.closest('.confronto') ? 'pop' : e.matches(SALTA) ? 'salta' : ''; if (cl) { e.classList.remove(cl); void e.offsetWidth; e.classList.add(cl); } }
     };
     requestAnimationFrame(passo);
   }
