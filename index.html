@@ -1560,6 +1560,14 @@ body.pub.buio .hero-pub h1 .chiave { background: none; --base: #8ff0bf; }
 .lav-griglia { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 @media (max-width: 860px) { .lav-griglia { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .lav > b { white-space: normal; } }
+/* braccio destro: ogni tanto lo abbassa lungo il fianco, poi lo rialza e saluta (non quando tiene in mano gelato, mimosa o ombrello) */
+:where(body:not(.m-gelato):not(.m-mimosa):not(.m-ombrello)) .r-braccio-d { animation: braccio-riposo 16s ease-in-out infinite; }
+@keyframes braccio-riposo {
+  0%, 30% { transform: rotate(0); }
+  6% { transform: rotate(-12deg); } 11% { transform: rotate(5deg); } 16% { transform: rotate(-8deg); } 21% { transform: rotate(0); }
+  37%, 68% { transform: rotate(103deg); }
+  72% { transform: rotate(96deg); } 75% { transform: rotate(103deg); }
+  83%, 100% { transform: rotate(0); } }
 </style>
 </head>
 <body class="pub">
