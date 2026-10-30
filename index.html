@@ -2845,7 +2845,12 @@ dash.calc('strategie', {
         d.addEventListener('click', () => {
           mostraPannello('risultati'); dash.setParams({ anno: r.anno });
           // scorre fino agli anni: in alto restano le schede e subito sotto la riga degli anni, con l'anno scelto
-          requestAnimationFrame(() => requestAnimationFrame(() => { const t = $('#posto-pub .bt-tabs') || $('.bt-tabs'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }));
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            const t = $('#posto-pub .bt-tabs') || $('.bt-tabs'), sc = $('#schede'); if (!t) return;
+            // la barra delle sezioni resta attaccata in alto (8px): la riga degli anni si ferma 10px sotto di lei
+            const sopra = (sc ? sc.offsetHeight + 8 : 0) + 10;
+            window.scrollTo({ top: Math.max(0, window.scrollY + t.getBoundingClientRect().top - sopra), behavior: 'smooth' });
+          }));
         });
         const d0 = c.pts[0].d, nota = k === 0 && d0.getMonth() > 0 ? ' (da ' + d0.toLocaleDateString('it-IT', { month: 'long' }) + ')' : k === A.data.length - 1 ? ' (fino a oggi)' : '';
         const s = el('span', '', String(r.anno)); if (nota) s.append(el('small', '', nota));
