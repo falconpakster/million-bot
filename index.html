@@ -1474,9 +1474,9 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
 #h-anni-lista b, #tx-netto, #lav-sei { display: inline-block; }
 .bt-tiles .v[data-k="saldo_fine"], #lav-sei { transform-origin: left center; }
 #h-saldo { transform-origin: left center; } #h-anni-lista b { transform-origin: left center; } #tx-netto { transform-origin: left center; }
-.salta { animation: num-salta .75s cubic-bezier(.3, 1.5, .5, 1); }
-@keyframes num-salta { 0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(227, 178, 60, 0)); } 35% { transform: scale(1.16); filter: drop-shadow(0 0 9px rgba(227, 178, 60, .75)); } 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(227, 178, 60, 0)); } }
-@media (prefers-reduced-motion: reduce) { .salta { animation-name: num-luce; } @keyframes num-luce { 35% { filter: drop-shadow(0 0 9px rgba(227, 178, 60, .75)); } } }
+.salta { animation: num-salta .6s ease-in-out; }
+@keyframes num-salta { 0% { transform: scale(1); } 35% { transform: scale(1.1); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .salta { animation: none; } }
 /* il fumetto di benvenuto si vede solo quando il robottino è al suo posto in cima; se vola via, sparisce */
 .guida.grande .fumetto { transition: opacity .35s ease, transform .35s ease, visibility 0s; transform-origin: left center; }
 body.robot-via .guida.grande .fumetto { opacity: 0; transform: scale(.85) translateX(-8px); visibility: hidden; pointer-events: none; transition: opacity .3s ease, transform .3s ease, visibility 0s .3s; }
@@ -1617,7 +1617,7 @@ body.pub.buio .hero-pub h1 { --base: #f2f5ff; --luce: #fff1bf; --bagliore: rgba(
 
     <section class="pannello" data-p="risultati" aria-label="Risultati" data-robot-umore="spiega" data-robot="Qui c'è tutto: <b>ogni trade</b>, anche quelli andati male. Usa i pulsanti per vedere il resto.">
       <div id="posto-pub"></div>
-      <section class="conto-demo solo-pub" id="conto-demo" aria-label="Conto demo attivo" data-robot-umore="vigile" data-robot="Questo è il mio conto <b>attivo</b>, trade dopo trade: controllalo anche tu.">
+      <section class="conto-demo solo-pub" id="conto-demo" aria-label="Conto demo attivo" data-robot-umore="vigile" data-robot="Questo è il primo conto demo dove <b>mi sto mettendo alla prova</b>: controllalo anche tu.">
         <h2 class="bt-sez demo-titolo"><span>Conto demo attivo</span><svg class="mini-candele" viewBox="0 0 29 22" aria-hidden="true"><g class="mc mc1"><path d="M4 10 V21" stroke="#1f9d5c" stroke-width="1.4" stroke-linecap="round"/><rect x="1.7999999999999998" y="12.5" width="4.4" height="6.0" rx="1" fill="#1f9d5c"/></g><g class="mc mc2"><path d="M11 8 V17.5" stroke="#e0453a" stroke-width="1.4" stroke-linecap="round"/><rect x="8.8" y="10" width="4.4" height="5" rx="1" fill="#e0453a"/></g><g class="mc mc3"><path d="M18 5 V16" stroke="#1f9d5c" stroke-width="1.4" stroke-linecap="round"/><rect x="15.8" y="7" width="4.4" height="7" rx="1" fill="#1f9d5c"/></g><g class="mc mc4"><path d="M25 1 V11.5" stroke="#1f9d5c" stroke-width="1.4" stroke-linecap="round"/><rect x="22.8" y="2.5" width="4.4" height="7.0" rx="1" fill="#1f9d5c"/></g></svg></h2>
         <div class="demo-striscia" id="demo-striscia" hidden></div>
         <div class="demo-perche">
