@@ -1198,6 +1198,29 @@ body.pub.festa-natale .testata-in { border-color: rgba(246, 214, 128, .55); }
 .compagno.in-volo .r-mantello { animation-duration: .8s; }
 .compagno.scorre .robot .r-mantello { animation-play-state: running !important; }   /* il mantello sventola anche mentre scorri */
 @media (prefers-reduced-motion: reduce) { .r-mantello { animation-duration: 5s; } }
+/* "Cos'è un bot di trading" e confronto con il trading a mano (in "Come funziona") */
+.cosbot { display: grid; grid-template-columns: .9fr 1.1fr; gap: 16px; margin-bottom: 16px; align-items: start; }
+.cosbot-def, .cosbot-vs { background: var(--pannello); border: 1px solid var(--linea); border-radius: var(--raggio); padding: 22px 24px; }
+.cosbot h3 { font-family: var(--serif); font-weight: 600; font-size: 19.5px; margin: 0 0 10px; }
+.cosbot-def p { color: #3c4e43; font-size: 15px; margin: 0; line-height: 1.55; }
+.cosbot-def .cosbot-nota { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--linea); font-size: 14px; color: var(--grigio); }
+.vs-riga { display: grid; grid-template-columns: 92px 1fr 1fr; gap: 10px; padding: 9px 0; border-top: 1px solid var(--linea); align-items: start; font-size: 14.5px; }
+.vs-riga.vs-testa { border-top: 0; padding-top: 0; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+.vs-voce { font-weight: 600; color: var(--inchiostro); }
+.vs-mano { color: var(--grigio); }
+.vs-bot { color: var(--inchiostro); font-weight: 500; }
+.vs-riga:not(.vs-testa) .vs-mano, .vs-riga:not(.vs-testa) .vs-bot { display: grid; grid-template-columns: 18px 1fr; gap: 6px; }
+.vs-riga:not(.vs-testa) .vs-mano::before, .vs-riga:not(.vs-testa) .vs-bot::before { content: ""; width: 15px; height: 15px; margin-top: 2px; border-radius: 50%; }
+.vs-riga:not(.vs-testa) .vs-mano::before { background: var(--rosso) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M5 5l6 6M11 5l-6 6' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") center/10px no-repeat; opacity: .85; }
+.vs-riga:not(.vs-testa) .vs-bot::before { background: var(--verde-vivo, var(--verde)) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.2l2.6 2.5L12 5.4' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/11px no-repeat; }
+.vs-testa .vs-mano { color: #b42d24; } .vs-testa .vs-bot { color: var(--verde); }
+@media (max-width: 860px) { .cosbot { grid-template-columns: 1fr; } }
+@media (max-width: 600px) {
+  .cosbot-def, .cosbot-vs { padding: 18px; }
+  .vs-riga { grid-template-columns: 1fr 1fr; gap: 4px 10px; }
+  .vs-riga .vs-voce { grid-column: 1 / -1; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--grigio-2); }
+  .vs-riga.vs-testa .vs-voce { display: none; }
+}
 </style>
 </head>
 <body class="pub">
@@ -1310,6 +1333,14 @@ body.pub.festa-natale .testata-in { border-color: rgba(246, 214, 128, .55); }
     </section>
 
     <section class="pannello" data-p="come" aria-label="Come funziona" data-robot-umore="sveglio" data-robot="Anche mentre dormi, io guardo il mercato. <b>Io non dormo mai!</b>" hidden>
+      <div class="cosbot" data-robot-umore="fiero" data-robot="Io non ho paura e non ho fretta: <b>seguo le regole</b>, sempre.">
+        <div class="cosbot-def"><h3>Cos'è un bot di trading?</h3><p>Un programma che <strong>compra e vende al posto tuo</strong> seguendo regole precise, decise prima. Legge i grafici, apre il trade, mette stop loss e take profit e lo chiude da solo, <strong>senza che tu stia davanti allo schermo</strong>.</p>
+          <p class="cosbot-nota">Un bot non fa miracoli: <strong>è bravo quanto le sue regole</strong>. Per questo quelle di Million Bot sono provate anno per anno e i risultati sono tutti qui.</p></div>
+        <div class="cosbot-vs"><h3>A mano o con un bot?</h3>
+          <div class="vs-riga vs-testa"><span class="vs-voce"></span><span class="vs-mano">A mano</span><span class="vs-bot">Con un bot</span></div>
+          <div class="vs-riga"><span class="vs-voce">Emozioni</span><span class="vs-mano">Paura e avidità cambiano le scelte</span><span class="vs-bot">Segue le stesse regole, sempre</span></div><div class="vs-riga"><span class="vs-voce">Tempo</span><span class="vs-mano">Ore davanti ai grafici</span><span class="vs-bot">Lavora da solo, anche di notte</span></div><div class="vs-riga"><span class="vs-voce">Occasioni</span><span class="vs-mano">Perse mentre dormi o lavori</span><span class="vs-bot">Nessuna persa</span></div><div class="vs-riga"><span class="vs-voce">Disciplina</span><span class="vs-mano">Stop spostati, trade di “vendetta”</span><span class="vs-bot">Stop e rischio non si toccano</span></div><div class="vs-riga"><span class="vs-voce">Prove</span><span class="vs-mano">Non sai se il metodo funziona</span><span class="vs-bot">Regole provate su anni di prezzi veri</span></div>
+        </div>
+      </div>
       <div class="passi">
         <div class="passo"><h3>Legge il mercato</h3><p><strong>Ogni 15 minuti</strong>, giorno e notte.</p></div>
         <div class="passo"><h3>Aspetta il momento</h3><p>Entra solo con <strong>tutte le condizioni</strong> allineate.</p></div>
