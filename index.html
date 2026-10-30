@@ -1409,6 +1409,67 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
 @media (min-width: 861px) { .menu-tel { display: none !important; } }
 /* anni scelti dal grafico iniziale: la riga degli anni si ferma subito sotto le schede */
 .bt-tabs { scroll-margin-top: 84px; }
+
+/* ---------------- il lavoro dietro Million Bot (sezione Chi sono) */
+.lavoro { margin-top: 26px; background: var(--pannello); border: 1px solid var(--linea); border-radius: var(--raggio); padding: 22px 24px; box-shadow: var(--ombra); }
+.lavoro h3 { font-family: var(--serif); font-weight: 600; font-size: 21px; margin: 0 0 6px; }
+.lav-sotto { color: #3c4e43; font-size: 15px; margin: 0 0 16px; max-width: 70ch; }
+.lav-imbuto { display: flex; align-items: center; gap: 18px; padding: 14px 16px; border-radius: 14px; background: var(--menta); margin-bottom: 14px; }
+.lav-imbuto .d-imbuto { flex: 0 0 120px; width: 120px; height: 92px; }
+.lav-imb-num { font-size: 17px; line-height: 1.25; margin: 0 0 6px; color: var(--inchiostro); }
+.lav-imb-num b { font-family: var(--serif); font-size: 30px; font-weight: 600; color: var(--bosco); }
+.lav-imb-num b.oro { color: #b8860b; }
+.lav-imb-num .freccia { color: var(--grigio-2); margin: 0 4px; }
+.lav-imb-testo > p:last-child { margin: 0; font-size: 14.5px; color: #3c4e43; }
+.lav-griglia { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.lav { border: 1px solid var(--linea); border-radius: 14px; padding: 14px; background: var(--pannello-2); }
+.lav .dis { display: block; width: 64px; height: 64px; margin: -4px 0 6px -4px; }
+.lav > b { display: block; font-family: var(--serif); font-size: 24px; font-weight: 600; line-height: 1.1; color: var(--bosco); }
+.lav > p { margin: 4px 0 0; font-size: 13.5px; color: #3c4e43; line-height: 1.4; }
+@media (max-width: 860px) { .lav-griglia { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .lavoro { padding: 18px 16px; } .lav-imbuto { gap: 12px; padding: 12px; } .lav-imbuto .d-imbuto { flex-basis: 78px; width: 78px; height: 62px; } .lav-imb-num { font-size: 15.5px; } .lav-imb-num b { font-size: 23px; } .lav-imb-testo > p:last-child { font-size: 13.5px; } .lav > b { font-size: 20px; white-space: nowrap; } .lav { padding: 12px; } .lav > p { font-size: 13px; } }
+/* disegnini */
+.d-imbuto .imb { fill: #fff; stroke: var(--bosco); stroke-width: 2.4; stroke-linejoin: round; }
+.d-imbuto .imb-riflesso { stroke: rgba(23, 163, 98, .45); stroke-width: 3; stroke-linecap: round; }
+.d-imbuto .g { fill: var(--verde-vivo); animation: lav-cade 3.6s ease-in infinite; opacity: 0; }
+.d-imbuto .g2, .d-imbuto .g4 { fill: #8fa79a; } .d-imbuto .g6 { fill: #c8443a; }
+.d-imbuto .g1 { animation-delay: 0s; } .d-imbuto .g2 { animation-delay: .6s; } .d-imbuto .g3 { animation-delay: 1.2s; } .d-imbuto .g4 { animation-delay: 1.8s; } .d-imbuto .g5 { animation-delay: 2.4s; } .d-imbuto .g6 { animation-delay: 3s; }
+@keyframes lav-cade { 0% { transform: translateY(-6px); opacity: 0; } 12% { opacity: 1; } 55% { transform: translateY(34px); opacity: 1; } 70%, 100% { transform: translateY(44px); opacity: 0; } }
+.d-imbuto .x { stroke: #c8443a; stroke-width: 2.4; stroke-linecap: round; fill: none; opacity: 0; animation: lav-via 3.6s ease-out infinite; }
+.d-imbuto .x2 { animation-delay: 1.8s; }
+@keyframes lav-via { 0%, 30% { opacity: 0; translate: 0 0; } 40% { opacity: 1; } 70% { opacity: 1; translate: var(--dx, -10px) -12px; } 85%, 100% { opacity: 0; translate: var(--dx, -10px) -16px; } }
+.d-imbuto .x2 { --dx: 10px; }
+.d-imbuto .moneta circle { fill: #e3b23c; stroke: #a87a14; stroke-width: 1.6; }
+.d-imbuto .moneta path { fill: none; stroke: #7a5608; stroke-width: 1.4; stroke-linecap: round; }
+.d-imbuto .moneta { animation: lav-moneta 3.6s cubic-bezier(.3, 1.4, .5, 1) infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes lav-moneta { 0%, 50% { transform: translateY(-12px) scale(.4); opacity: 0; } 62% { opacity: 1; } 75%, 92% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(0) scale(1); opacity: 0; } }
+.d-imbuto .brilla path { fill: #f4d27a; }
+.d-imbuto .brilla { opacity: 0; animation: lav-brilla 3.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes lav-brilla { 0%, 72% { opacity: 0; transform: scale(.2) rotate(0); } 80% { opacity: 1; transform: scale(1.1) rotate(45deg); } 90%, 100% { opacity: 0; transform: scale(.4) rotate(90deg); } }
+.d-lente .cand path { stroke-width: 2; }
+.d-lente .cand .su { stroke: #17a362; fill: #17a362; } .d-lente .cand .giu { stroke: #c8443a; fill: #c8443a; }
+.d-lente .lente circle { fill: rgba(255, 255, 255, .55); stroke: var(--bosco); stroke-width: 3; }
+.d-lente .lente path { stroke: var(--bosco); stroke-width: 5; stroke-linecap: round; }
+.d-lente .lente { animation: lav-lente 4s ease-in-out infinite; }
+@keyframes lav-lente { 0%, 100% { transform: translate(14px, 26px); } 25% { transform: translate(26px, 22px); } 50% { transform: translate(38px, 30px); } 75% { transform: translate(48px, 22px); } }
+.d-ingr .ingr path { fill: var(--bosco); } .d-ingr .ingr circle { fill: var(--pannello-2); }
+.d-ingr .i2 path { fill: #e3b23c; }
+.d-ingr .ingr { transform-box: fill-box; transform-origin: center; }
+.d-ingr .i1 { animation: lav-gira 6s linear infinite; } .d-ingr .i2 { animation: lav-gira 4s linear infinite reverse; }
+@keyframes lav-gira { to { transform: rotate(360deg); } }
+.d-spunta .linea { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 80; }
+.d-spunta .sim { stroke: #b9c9bf; stroke-width: 6; animation: lav-traccia 4s ease-in-out infinite; }
+.d-spunta .bot { stroke: #17a362; animation: lav-traccia 4s ease-in-out .35s infinite; }
+@keyframes lav-traccia { 0% { stroke-dashoffset: 80; } 45%, 92% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+.d-spunta .ok circle { fill: var(--bosco); } .d-spunta .ok path { fill: none; stroke: #f4d27a; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.d-spunta .ok { transform-box: fill-box; transform-origin: center; animation: lav-ok 4s cubic-bezier(.3, 1.6, .5, 1) infinite; }
+@keyframes lav-ok { 0%, 50% { transform: scale(0); } 62%, 92% { transform: scale(1); } 100% { transform: scale(0); } }
+.d-lista .foglio { fill: #fff; stroke: var(--bosco); stroke-width: 2.4; } .d-lista .clip { fill: #e3b23c; stroke: #a87a14; stroke-width: 1.4; }
+.d-lista .tr { stroke: #b9c9bf; stroke-width: 3; stroke-linecap: round; }
+.d-lista .si { fill: none; stroke: #17a362; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; } .d-lista .no { stroke: #c8443a; stroke-width: 3; stroke-linecap: round; }
+.d-lista .riga { opacity: 0; animation: lav-riga 4.4s ease-out infinite; } .d-lista .r2 { animation-delay: .5s; } .d-lista .r3 { animation-delay: 1s; } .d-lista .r4 { animation-delay: 1.5s; }
+@keyframes lav-riga { 0% { opacity: 0; translate: -4px 0; } 10%, 80% { opacity: 1; translate: 0 0; } 92%, 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .lavoro .dis * { animation: none !important; opacity: 1 !important; } .d-imbuto .g, .d-imbuto .x, .d-imbuto .brilla { display: none; } }
 </style>
 </head>
 <body class="pub">
@@ -1511,7 +1572,7 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
         <h2 class="bt-sez demo-titolo"><span>Conto demo attivo</span><svg class="mini-candele" viewBox="0 0 29 22" aria-hidden="true"><g class="mc mc1"><path d="M4 10 V21" stroke="#1f9d5c" stroke-width="1.4" stroke-linecap="round"/><rect x="1.7999999999999998" y="12.5" width="4.4" height="6.0" rx="1" fill="#1f9d5c"/></g><g class="mc mc2"><path d="M11 8 V17.5" stroke="#e0453a" stroke-width="1.4" stroke-linecap="round"/><rect x="8.8" y="10" width="4.4" height="5" rx="1" fill="#e0453a"/></g><g class="mc mc3"><path d="M18 5 V16" stroke="#1f9d5c" stroke-width="1.4" stroke-linecap="round"/><rect x="15.8" y="7" width="4.4" height="7" rx="1" fill="#1f9d5c"/></g><g class="mc mc4"><path d="M25 1 V11.5" stroke="#1f9d5c" stroke-width="1.4" stroke-linecap="round"/><rect x="22.8" y="2.5" width="4.4" height="7.0" rx="1" fill="#1f9d5c"/></g></svg></h2>
         <div class="demo-striscia" id="demo-striscia" hidden></div>
         <div class="demo-perche">
-          <div><h3>Perché parte il 26 ottobre 2026</h3><p>Fino a ottobre 2026 ho costruito e ricontrollato le strategie sui prezzi del passato. Quel giorno il bot era pronto ed è diventato attivo: per questo il conto inizia da lì.</p></div>
+          <div><h3>Perché parte il 26 ottobre 2026</h3><p>Fino a ottobre 2026 ho costruito e ricontrollato le strategie sui prezzi del passato. Quel giorno il bot, dopo centinaia e centinaia di test e modifiche, era pronto ed è diventato attivo: per questo il conto inizia da lì.</p></div>
           <div><h3>Perché un conto demo</h3><p>Prima di usare soldi veri voglio la prova che <strong>sul conto il bot fa gli stessi trade della simulazione</strong>, con prezzi, spread ed esecuzioni reali. Il conto demo usa gli stessi prezzi del conto reale, ma senza rischiare capitale. Quando i risultati del conto demo confermeranno la simulazione passerò al conto reale, e lo annuncerò su TikTok e Instagram.</p></div>
         </div>
         <p class="demo-link"><a class="btn btn-vuoto" id="b-myfxbook" href="" target="_blank" rel="noopener">Verifica il conto su Myfxbook ↗</a><span id="myfxbook-presto" hidden>Il collegamento al conto su <strong>Myfxbook</strong>, per verificarlo in modo indipendente, arriverà a breve.</span></p>
@@ -1521,11 +1582,63 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
     <section class="pannello scuro" data-p="perche" aria-label="Perché è diverso" data-robot-umore="fiero" data-robot="Ecco cosa mi rende <b>diverso dagli altri bot</b>." hidden>
       <div class="pregi">
         <div class="pregio"><b>5 + 1</b><h3>Strategie combinate</h3><p>5 su <strong>Bitcoin</strong>, 1 sul <strong>Giappone 225</strong>: lavorano in momenti diversi.</p></div>
-        <div class="pregio"><b>Tutti gli anni</b><h3>Ottimizzato e ricontrollato</h3><p>Entra solo ciò che <strong>funziona in ogni anno</strong>. Decine di idee scartate.</p></div>
+        <div class="pregio"><b>Tutti gli anni</b><h3>Ottimizzato e ricontrollato</h3><p>Entra solo ciò che <strong>funziona in ogni anno</strong>.</p></div>
         <div class="pregio"><b>Costi veri</b><h3>Numeri realistici</h3><p><strong>Spread, costi overnight e limiti di lotti</strong> del broker inclusi.</p></div>
         <div class="pregio"><b>1 : 3</b><h3>Guadagno triplo del rischio</h3><p>Un trade vincente <strong>recupera tre perdenti</strong>.</p></div>
         <div class="pregio"><b>24/7</b><h3>Sempre al lavoro</h3><p>Controlla il mercato <strong>ogni 15 minuti</strong>, giorno e notte.</p></div>
-        <div class="pregio"><b>Dal vivo</b><h3>Verificato sul conto</h3><p>Ogni trade reale è <strong>confrontato con la simulazione</strong>.</p></div>
+        <div class="pregio"><b>Sul conto</b><h3>Verificato sul conto</h3><p>Ogni trade reale è <strong>confrontato con la simulazione</strong>.</p></div>
+      </div>
+      <div class="lavoro" data-robot-umore="fiero" data-robot="Prima di diventare attivo ho superato <b>più esami di quanti immagini</b>.">
+        <h3>Il lavoro dietro Million Bot</h3>
+        <p class="lav-sotto">Prima di diventare attivo, ogni regola è stata provata, cambiata e riprovata sui prezzi dal 2020 in poi.</p>
+        <div class="lav-imbuto">
+          <svg class="dis d-imbuto" viewBox="0 0 120 92" aria-hidden="true">
+            <g class="gocce"><circle class="g g1" cx="38" cy="0" r="4"/><circle class="g g2" cx="56" cy="0" r="4"/><circle class="g g3" cx="74" cy="0" r="4"/><circle class="g g4" cx="88" cy="0" r="4"/><circle class="g g5" cx="47" cy="0" r="4"/><circle class="g g6" cx="66" cy="0" r="4"/></g>
+            <g class="via"><path class="x x1" d="M-3-3l6 6M3-3l-6 6" transform="translate(30 24)"/><path class="x x2" d="M-3-3l6 6M3-3l-6 6" transform="translate(92 24)"/></g>
+            <path class="imb" d="M18 26h84l-31 32v14H49V58Z"/>
+            <path class="imb-riflesso" d="M27 31h20"/>
+            <g class="moneta"><circle cx="60" cy="80" r="6.5"/><path d="M60 76.6v6.8M57.6 78.2c.6-1 4.2-1.2 4.6.4.5 1.9-4.8 1.3-4.6 3.4.2 1.5 4 1.4 4.8.3" /></g>
+            <g class="brilla"><path d="M74 78l1.4 2.6 2.6 1.4-2.6 1.4L74 86l-1.4-2.6-2.6-1.4 2.6-1.4Z"/></g>
+          </svg>
+          <div class="lav-imb-testo">
+            <p class="lav-imb-num"><b><span id="lav-idee">100</span>+</b> idee provate,<br class="a-capo-tel"> solo <b class="oro">6</b> tenute</p>
+            <p>Se un'idea peggiorava <strong>anche un solo anno</strong>, restava fuori.</p>
+          </div>
+        </div>
+        <div class="lav-griglia" id="lav-griglia">
+          <div class="lav">
+            <svg class="dis d-lente" viewBox="0 0 64 64" aria-hidden="true">
+              <g class="cand"><path class="su" d="M12 22v26M8 28h8v14H8z"/><path class="giu" d="M24 16v24M20 20h8v14h-8z"/><path class="su" d="M36 20v28M32 26h8v16h-8z"/><path class="giu" d="M48 12v26M44 16h8v16h-8z"/></g>
+              <g class="lente"><circle cx="0" cy="0" r="10"/><path d="M7 7l9 9"/></g>
+            </svg>
+            <b id="lav-candele">398.841</b><p>candele da 15 minuti studiate, dal 2020</p>
+          </div>
+          <div class="lav">
+            <svg class="dis d-ingr" viewBox="0 0 64 64" aria-hidden="true">
+              <g class="ingr i1"><path d="M37.8 34.5 L41.1 35.3 L41.1 38.7 L37.8 39.5 L36.4 43.3 L38.4 46.1 L36.3 48.7 L33.2 47.1 L29.7 49.1 L29.5 52.6 L26.1 53.2 L24.8 50.0 L20.8 49.3 L18.4 51.8 L15.5 50.1 L16.5 46.8 L13.9 43.7 L10.4 44.1 L9.3 40.9 L12.2 39.0 L12.2 35.0 L9.3 33.1 L10.4 29.9 L13.9 30.3 L16.5 27.2 L15.5 23.9 L18.4 22.2 L20.8 24.7 L24.8 24.0 L26.1 20.8 L29.5 21.4 L29.7 24.9 L33.2 26.9 L36.3 25.3 L38.4 27.9 L36.4 30.7Z"/><circle cx="25" cy="37" r="4.2"/></g>
+              <g class="ingr i2"><path d="M53.7 17.2 L56.7 17.8 L56.7 21.2 L53.7 21.8 L51.8 25.0 L52.8 27.9 L49.9 29.6 L47.9 27.3 L44.1 27.3 L42.1 29.6 L39.2 27.9 L40.2 25.0 L38.3 21.8 L35.3 21.2 L35.3 17.8 L38.3 17.2 L40.2 14.0 L39.2 11.1 L42.1 9.4 L44.1 11.7 L47.9 11.7 L49.9 9.4 L52.8 11.1 L51.8 14.0Z"/><circle cx="46" cy="19.5" r="2.8"/></g>
+            </svg>
+            <b id="lav-comb">20.000+</b><p>combinazioni di regole e rischi messe alla prova</p>
+          </div>
+          <div class="lav">
+            <svg class="dis d-lista" viewBox="0 0 64 64" aria-hidden="true">
+              <rect class="foglio" x="12" y="9" width="40" height="49" rx="5"/><rect class="clip" x="23" y="5" width="18" height="8" rx="3"/>
+              <g class="riga r1"><path class="tr" d="M19 22h18"/><path class="si" d="M41 22l2.5 2.5 4.5-5"/></g>
+              <g class="riga r2"><path class="tr" d="M19 32h18"/><path class="no" d="M41.5 29.5l5 5M46.5 29.5l-5 5"/></g>
+              <g class="riga r3"><path class="tr" d="M19 42h18"/><path class="si" d="M41 42l2.5 2.5 4.5-5"/></g>
+              <g class="riga r4"><path class="tr" d="M19 50h12"/><path class="no" d="M41.5 47.5l4 4M45.5 47.5l-4 4"/></g>
+            </svg>
+            <b id="lav-trade">1.396</b><p>trade simulati dal 2020, tutti sul sito, anche quelli in perdita</p>
+          </div>
+          <div class="lav">
+            <svg class="dis d-spunta" viewBox="0 0 64 64" aria-hidden="true">
+              <path class="linea sim" d="M6 50l10-8 8 5 10-14 8 6 16-20"/>
+              <path class="linea bot" d="M6 50l10-8 8 5 10-14 8 6 16-20"/>
+              <g class="ok"><circle cx="48" cy="46" r="10"/><path d="M43.5 46.2l3.2 3.2 6-6.4"/></g>
+            </svg>
+            <b>Stessi trade</b><p>della simulazione, quando il bot ha rifatto da solo tutto dal 2020</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -2763,6 +2876,10 @@ dash.calc('strategie', {
       if ([...gruppo._membri].some((m) => m !== e && m._conta && m._conta.stato !== 'attesa')) avviaConta(e);
     } else { ossNum.observe(e); ossFuori.observe(e); }
   }
+  // il lavoro dietro il bot (Chi sono): i numeri salgono insieme quando la griglia arriva sullo schermo
+  { const g = $('.lavoro'), it = (v) => new Intl.NumberFormat('it-IT', { maximumFractionDigits: 0, useGrouping: 'always' }).format(Math.round(v));
+    if (g) { conta($('#lav-idee'), 100, it, 1600, 0, g); conta($('#lav-candele'), 398841, it, 2600, 0, g); conta($('#lav-comb'), 20000, (v) => it(v) + '+', 2200, 0, g);
+      conta($('#lav-trade'), 1396, it, 1800, 0, g); } }
   // conto con le tasse italiane (26% sui guadagni dell'anno, messe da parte il 1° gennaio; perdite recuperabili per 4 anni).
   // Trade del backtest: guadagno già calcolato in quel conto (campo "et"); trade nuovi del bot: stessa percentuale sul saldo netto.
   function riempiTasse() {
@@ -3228,7 +3345,7 @@ dash.calc('strategie', {
   // le animazioni di una parte della pagina si fermano quando quella parte non è sullo schermo (il sito resta uguale, ma più leggero)
   if ('IntersectionObserver' in window) {
     const ossAnim = new IntersectionObserver((L) => L.forEach((x) => x.target.classList.toggle('fermo-anim', !x.isIntersecting)), { rootMargin: '120px 0px' });
-    ['#h-anni-lista', '.confronto', '.finale', '.scorri', '.vetrina', '#curva-bt', '.tris', '.conto-demo', '#mesi-grafico'].forEach((q) => document.querySelectorAll(q).forEach((e) => ossAnim.observe(e)));
+    ['#h-anni-lista', '.confronto', '.finale', '.lavoro', '.scorri', '.vetrina', '#curva-bt', '.tris', '.conto-demo', '#mesi-grafico'].forEach((q) => document.querySelectorAll(q).forEach((e) => ossAnim.observe(e)));
   }
   const cielo = el('div', 'cielo'); cielo.setAttribute('aria-hidden', 'true');
   cielo.append(el('i', 'c1'), el('i', 'c2'), el('i', 'c3'), el('i', 'c4')); document.body.prepend(cielo);
