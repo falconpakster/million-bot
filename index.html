@@ -1482,14 +1482,16 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
 body.robot-via .guida.grande .fumetto { opacity: 0; transform: scale(.85) translateX(-8px); visibility: hidden; pointer-events: none; transition: opacity .3s ease, transform .3s ease, visibility 0s .3s; }
 /* titolo in cima: un'onda morbida passa sulle lettere e le ingrandisce una alla volta */
 .hero-pub h1 .parola { white-space: nowrap; }
-.hero-pub h1 .l { display: inline-block; transform-origin: 50% 85%; animation: onda-titolo 6.5s cubic-bezier(.45, 0, .3, 1) infinite; animation-delay: calc(1.4s + var(--i) * 60ms); will-change: transform; }
+.hero-pub h1 .l { display: inline-block; transform-origin: 50% 85%; animation: onda-titolo 8s ease-in-out infinite; animation-delay: calc(1.4s + var(--i) * 85ms); will-change: transform; }
+/* onda calma: la lettera si alza piano, si accende di luce dorata e torna giù */
+.hero-pub h1 { --base: var(--inchiostro); --luce: #b8860f; --bagliore: rgba(240, 196, 84, .95); }
+body.pub.buio .hero-pub h1 { --base: #f2f5ff; --luce: #fff1bf; --bagliore: rgba(244, 210, 122, .9); }
 @keyframes onda-titolo {
-  0% { transform: none; }
-  3% { transform: translateY(-.05em) scale(1.08) skewX(-3deg); }
-  6% { transform: translateY(-.12em) scale(1.21) skewX(-5deg); }
-  9.5% { transform: translateY(.03em) scale(.97) skewX(2deg); }
-  13% { transform: translateY(-.01em) scale(1.01); }
-  16%, 100% { transform: none; } }
+  0% { transform: none; color: var(--base); text-shadow: 0 0 2px var(--alone, #fff), 0 0 7px var(--alone, #fff), 0 0 16px var(--alone-2, #fff); }
+  4.5% { transform: translateY(-.04em) scale(1.06); }
+  9% { transform: translateY(-.08em) scale(1.12); color: var(--luce); text-shadow: 0 0 2px var(--alone, #fff), 0 0 7px var(--alone, #fff), 0 0 12px var(--bagliore), 0 0 22px var(--bagliore); }
+  14% { transform: translateY(-.02em) scale(1.02); }
+  18%, 100% { transform: none; color: var(--base); text-shadow: 0 0 2px var(--alone, #fff), 0 0 7px var(--alone, #fff), 0 0 16px var(--alone-2, #fff); } }
 @media (prefers-reduced-motion: reduce) { .hero-pub h1 .l { animation: none; } }
 /* "Sopra ogni crollo" (Perché è diverso): ogni anno il suo calo e la sua ripresa */
 .crolli { margin-top: 16px; background: var(--pannello); border: 1px solid var(--linea); border-radius: var(--raggio); padding: 22px 24px; box-shadow: var(--ombra); }
