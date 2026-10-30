@@ -1480,6 +1480,17 @@ body.stagione-estate .compagno.a-fine .c-corpo { transform-origin: 50% 100%; ani
 /* il fumetto di benvenuto si vede solo quando il robottino è al suo posto in cima; se vola via, sparisce */
 .guida.grande .fumetto { transition: opacity .35s ease, transform .35s ease, visibility 0s; transform-origin: left center; }
 body.robot-via .guida.grande .fumetto { opacity: 0; transform: scale(.85) translateX(-8px); visibility: hidden; pointer-events: none; transition: opacity .3s ease, transform .3s ease, visibility 0s .3s; }
+/* titolo in cima: un'onda morbida passa sulle lettere e le ingrandisce una alla volta */
+.hero-pub h1 .parola { white-space: nowrap; }
+.hero-pub h1 .l { display: inline-block; transform-origin: 50% 85%; animation: onda-titolo 6.5s cubic-bezier(.45, 0, .3, 1) infinite; animation-delay: calc(1.4s + var(--i) * 60ms); will-change: transform; }
+@keyframes onda-titolo {
+  0% { transform: none; }
+  3% { transform: translateY(-.05em) scale(1.08) skewX(-3deg); }
+  6% { transform: translateY(-.12em) scale(1.21) skewX(-5deg); }
+  9.5% { transform: translateY(.03em) scale(.97) skewX(2deg); }
+  13% { transform: translateY(-.01em) scale(1.01); }
+  16%, 100% { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .hero-pub h1 .l { animation: none; } }
 </style>
 </head>
 <body class="pub">
@@ -3366,9 +3377,29 @@ dash.calc('strategie', {
   // ================================================================== meteo di Ugento: il robottino si veste e lo sfondo cambia
   // (dati Open-Meteo scaricati dal bot ogni 20 minuti; ?meteo=freddo, caldo, sole, pioggia, temporale, neve, nebbia, notte, nuvole, fresco per provarlo)
   // le animazioni di una parte della pagina si fermano quando quella parte non è sullo schermo (il sito resta uguale, ma più leggero)
+  // titolo in cima: ogni lettera in un suo span, così un'onda la ingrandisce una alla volta (le parole non si spezzano)
+  { const h = $('.hero-pub h1');
+    if (h && !h.dataset.onda) {
+      h.dataset.onda = '1'; const t = h.cloneNode(true); t.querySelectorAll('br').forEach((b) => b.replaceWith(' ')); h.setAttribute('aria-label', t.textContent.replace(/\s+/g, ' ').trim());
+      let i = 0;
+      const dividi = (nodo) => [...nodo.childNodes].forEach((n) => {
+        if (n.nodeType === 1) { if (n.tagName !== 'BR') dividi(n); n.setAttribute('aria-hidden', 'true'); return; }
+        if (n.nodeType !== 3) return;
+        const f = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach((w) => {
+          if (!w) return;
+          if (/^\s+$/.test(w)) { f.append(document.createTextNode(w)); return; }
+          const p = document.createElement('span'); p.className = 'parola'; p.setAttribute('aria-hidden', 'true');
+          [...w].forEach((ch) => { const l = document.createElement('span'); l.className = 'l'; l.textContent = ch; l.style.setProperty('--i', i++); p.append(l); });
+          f.append(p);
+        });
+        n.replaceWith(f);
+      });
+      dividi(h);
+    } }
   if ('IntersectionObserver' in window) {
     const ossAnim = new IntersectionObserver((L) => L.forEach((x) => x.target.classList.toggle('fermo-anim', !x.isIntersecting)), { rootMargin: '120px 0px' });
-    ['#h-anni-lista', '.confronto', '.finale', '.lavoro', '.scorri', '.vetrina', '#curva-bt', '.tris', '.conto-demo', '#mesi-grafico'].forEach((q) => document.querySelectorAll(q).forEach((e) => ossAnim.observe(e)));
+    ['#h-anni-lista', '.confronto', '.finale', '.lavoro', '.hero-pub h1', '.scorri', '.vetrina', '#curva-bt', '.tris', '.conto-demo', '#mesi-grafico'].forEach((q) => document.querySelectorAll(q).forEach((e) => ossAnim.observe(e)));
   }
   const cielo = el('div', 'cielo'); cielo.setAttribute('aria-hidden', 'true');
   cielo.append(el('i', 'c1'), el('i', 'c2'), el('i', 'c3'), el('i', 'c4')); document.body.prepend(cielo);
