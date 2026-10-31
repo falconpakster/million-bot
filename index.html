@@ -1732,22 +1732,6 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
         </svg></div>
         <div class="crolli-anni" id="crolli-anni"></div>
       </div>
-      <div class="rischiosc" id="rischio-scelta" data-robot-umore="fiero" data-robot="Il rischio lo scegli <b>tu</b>: più basso, calo più basso.">
-        <h3>Il calo dipende da quanto rischi</h3>
-        <p class="rs-sotto">Il <strong id="rs-mio">−38%</strong> è il calo massimo che il bot ha avuto con i rischi che ho scelto io. Li ho scelti proprio per questo: era un calo che sentivo di poter <strong>affrontare senza farmi prendere dal panico</strong>. Con rischi più bassi si scende meno, con rischi più alti si scende di più: <strong>decide ognuno quanto riesce a sopportare</strong>.</p>
-        <div class="rs-scelte" role="group" aria-label="Quanto rischiare">
-          <button type="button" class="rs-b" data-f="0.25" aria-pressed="false">Un quarto</button>
-          <button type="button" class="rs-b" data-f="0.5" aria-pressed="false">Metà</button>
-          <button type="button" class="rs-b" data-f="1" aria-pressed="true">Come i miei</button>
-          <button type="button" class="rs-b" data-f="1.5" aria-pressed="false">+50%</button>
-          <button type="button" class="rs-b" data-f="2" aria-pressed="false">Il doppio</button>
-        </div>
-        <div class="rs-ris">
-          <div class="rs-calo"><small>Calo massimo</small><b id="rs-calo">−38%</b><span class="rs-barra" aria-hidden="true"><i id="rs-barra"></i></span></div>
-          <div class="rs-fine"><small>1.000 € dal 2020 diventano</small><b id="rs-fine">circa 5,4 mln €</b></div>
-        </div>
-        <p class="rs-nota">Backtest dal 2020 al <span id="rs-data">22 ottobre 2026</span> (dal 26 ottobre con i trade del bot): gli stessi trade, con tutti i rischi moltiplicati per lo stesso numero. Raddoppiando i rischi il calo quasi raddoppia, il guadagno no (anche per i limiti di lotti del broker). Non è un consiglio: i risultati passati non garantiscono quelli futuri.</p>
-      </div>
       <div class="lavoro" data-robot-umore="fiero" data-robot="Prima di diventare attivo ho superato <b>più esami di quanti immagini</b>.">
         <h3>Il lavoro dietro Million Bot</h3>
         <p class="lav-sotto">Prima di diventare attivo, ogni regola è stata provata, cambiata e riprovata sui prezzi dal 2020 in poi.</p>
@@ -2038,6 +2022,23 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     <p class="bt-sub solo-pub">Ogni riga è un trade chiuso nell'anno scelto: il giorno di chiusura, se ha preso il TP o lo SL, quanto ha fatto guadagnare o perdere in % del saldo. In alto l'ultimo trade.</p>
   </header>
   <section class="bt-mesi" id="mesi"></section>
+
+    <div class="rischiosc solo-pub" id="rischio-scelta" data-robot-umore="fiero" data-robot="Il rischio lo scegli <b>tu</b>: più basso, calo più basso.">
+      <h3>Il calo dipende da quanto rischi</h3>
+      <p class="rs-sotto">Il <strong id="rs-mio">−38%</strong> è il calo massimo che il bot ha avuto con i rischi che ho scelto io. Li ho scelti proprio per questo: era un calo che sentivo di poter <strong>affrontare senza farmi prendere dal panico</strong>. Con rischi più bassi si scende meno, con rischi più alti si scende di più: <strong>decide ognuno quanto riesce a sopportare</strong>.</p>
+      <div class="rs-scelte" role="group" aria-label="Quanto rischiare">
+        <button type="button" class="rs-b" data-f="0.25" aria-pressed="false">Un quarto</button>
+        <button type="button" class="rs-b" data-f="0.5" aria-pressed="false">Metà</button>
+        <button type="button" class="rs-b" data-f="1" aria-pressed="true">Come i miei</button>
+        <button type="button" class="rs-b" data-f="1.5" aria-pressed="false">+50%</button>
+        <button type="button" class="rs-b" data-f="2" aria-pressed="false">Il doppio</button>
+      </div>
+      <div class="rs-ris">
+        <div class="rs-calo"><small>Calo massimo</small><b id="rs-calo">−38%</b><span class="rs-barra" aria-hidden="true"><i id="rs-barra"></i></span></div>
+        <div class="rs-fine"><small>1.000 € dal 2020 diventano</small><b id="rs-fine">circa 5,4 mln €</b></div>
+      </div>
+      <p class="rs-nota">Backtest dal 2020 al <span id="rs-data">22 ottobre 2026</span> (dal 26 ottobre con i trade del bot): gli stessi trade, con tutti i rischi moltiplicati per lo stesso numero. Raddoppiando i rischi il calo quasi raddoppia, il guadagno no (anche per i limiti di lotti del broker). Non è un consiglio: i risultati passati non garantiscono quelli futuri.</p>
+    </div>
 
   <details class="come" id="calcolo">
     <summary>Come è calcolato</summary>
