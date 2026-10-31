@@ -1746,7 +1746,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
           <div class="rs-calo"><small>Calo massimo</small><b id="rs-calo">−38%</b><span class="rs-barra" aria-hidden="true"><i id="rs-barra"></i></span></div>
           <div class="rs-fine"><small>1.000 € dal 2020 diventano</small><b id="rs-fine">circa 5,4 mln €</b></div>
         </div>
-        <p class="rs-nota">Backtest dal 2020 al 22 ottobre 2026: gli stessi trade, con tutti i rischi moltiplicati per lo stesso numero. Raddoppiando i rischi il calo quasi raddoppia, il guadagno no (anche per i limiti di lotti del broker). Non è un consiglio: i risultati passati non garantiscono quelli futuri.</p>
+        <p class="rs-nota">Backtest dal 2020 al <span id="rs-data">22 ottobre 2026</span> (dal 26 ottobre con i trade del bot): gli stessi trade, con tutti i rischi moltiplicati per lo stesso numero. Raddoppiando i rischi il calo quasi raddoppia, il guadagno no (anche per i limiti di lotti del broker). Non è un consiglio: i risultati passati non garantiscono quelli futuri.</p>
       </div>
       <div class="lavoro" data-robot-umore="fiero" data-robot="Prima di diventare attivo ho superato <b>più esami di quanti immagini</b>.">
         <h3>Il lavoro dietro Million Bot</h3>
@@ -3266,14 +3266,37 @@ dash.calc('strategie', {
   mTel.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => menuTel(false)));
   document.addEventListener('click', (e) => { if (!mTel.hidden && !mTel.contains(e.target)) menuTel(false); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !mTel.hidden) { menuTel(false); bMenu.focus(); } });
-  // "Il calo dipende da quanto rischi": risultati del backtest (dal 2020 al 22/10/2026) con tutti i rischi moltiplicati per lo stesso numero
-  { const RS = { '0.25': [12, 'circa 17 mila €'], '0.5': [22, 'circa 204 mila €'], '1': [38, 'circa 5,4 mln €'], '1.5': [54, 'circa 9 mln €'], '2': [68, 'circa 10 mln €'] };
-    const bs = $$('.rs-b'); if (bs.length) bs.forEach((b) => b.addEventListener('click', () => {
-      const r = RS[b.dataset.f]; if (!r) return;
-      bs.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-      $('#rs-calo').textContent = '−' + r[0] + '%'; $('#rs-fine').textContent = r[1];
-      $('#rs-barra').style.width = r[0] + '%';
-    })); }
+  // "Il calo dipende da quanto rischi": backtest (dal 2020 al 22/10/2026, trade 1-1396) con tutti i rischi moltiplicati per lo stesso numero.
+  // RS_BASE = per ogni moltiplicatore [saldo finale, picco, calo massimo] a fine backtest (si rifanno con ricerca/rischi_scala_base.py se il backtest cambia);
+  // poi si continua con i trade nuovi (id > RS_ULT) usando la stessa percentuale di rischio di ognuno, moltiplicata. Così arriva fino a oggi come i grafici.
+  { const RS_BASE = {"0.25": [16878.28, 16878.28, 0.12358], "0.5": [204190.42, 204190.42, 0.22093], "1": [5368902.54, 5368902.54, 0.38175], "1.5": [9022318.05, 9022318.05, 0.53967], "2": [10033575.65, 10033575.65, 0.68157]}, RS_ULT = 1396;
+    const bs = $$('.rs-b'); let rsF = '1';
+    const eur = (v) => v >= 1e6 ? 'circa ' + num(v / 1e6, 1) + ' mln €' : 'circa ' + num(Math.round(v / 1000), 0) + ' mila €';
+    function rsAggiorna() {
+      if (!bs.length || modo !== 'j') return;
+      const T = dash.data('trade'); if (T.status !== 'ok' || !T.data.length) return;
+      const righe = T.data.map((r) => ({ id: Number(r.id), c: String(r.chiusura), R: Number(r.R), euro: Number(r.euro), saldo: Number(r.saldo) }))
+        .sort((a, b) => (a.c < b.c ? -1 : a.c > b.c ? 1 : a.id - b.id));
+      const fatti = {}; let ultimo = '';
+      for (const k in RS_BASE) fatti[k] = { s: RS_BASE[k][0], p: RS_BASE[k][1], c: RS_BASE[k][2] };
+      righe.forEach((r, i) => {
+        ultimo = r.c.slice(0, 10);
+        if (r.id <= RS_ULT || i === 0) return;
+        const prima = righe[i - 1].saldo; if (!r.R || !(prima > 0)) return;
+        const w = r.euro / (prima * r.R);                     // rischio di quel trade, in frazione del saldo
+        for (const k in fatti) { const x = fatti[k]; x.s *= Math.max(0, 1 + Number(k) * w * r.R); x.p = Math.max(x.p, x.s); x.c = Math.max(x.c, 1 - x.s / x.p); }
+      });
+      const x = fatti[rsF]; if (!x) return;
+      const pc = Math.round(x.c * 100);
+      $('#rs-calo').textContent = '−' + pc + '%'; $('#rs-fine').textContent = eur(x.s); $('#rs-barra').style.width = pc + '%';
+      $('#rs-mio').textContent = '−' + Math.round(fatti['1'].c * 100) + '%';
+      if (ultimo) $('#rs-data').textContent = giornoIt(ultimo);
+    }
+    bs.forEach((b) => b.addEventListener('click', () => {
+      rsF = b.dataset.f; bs.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      rsAggiorna();
+    }));
+    dash.onData(rsAggiorna); }
   mostraPannello('risultati');
   const bMesi = el('button', 'btn btn-vuoto solo-pub', 'Mostra tutti i trade dell’anno'); bMesi.type = 'button'; bMesi.id = 'b-mesi';
   bMesi.setAttribute('aria-expanded', 'false');
