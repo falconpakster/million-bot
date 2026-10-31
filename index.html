@@ -1565,6 +1565,10 @@ body.pub.buio .hero-pub h1 .chiave { background: none; --base: #8ff0bf; }
 /* Halloween, nella scenetta in fondo: anche lì sbatte gli occhi e diventano rossi (gli occhi continuano a guardarsi intorno) */
 body.festa-halloween .compagno.a-fine .v-vigile .r-scruta :is(ellipse, circle) { transform-box: fill-box; transform-origin: center; animation: sbatti-paura 7s infinite; }
 body.festa-halloween .compagno.a-fine .v-vigile .r-scruta ellipse { animation: sbatti-paura 7s infinite, occhi-rossi 7s infinite; }
+/* pulsante "Verifica il conto su Myfxbook": sta sul cielo, quindi niente alone sul testo (lo sfocava) e colori chiari sullo sfondo scuro */
+body.pub .demo-link .btn { text-shadow: none; background: rgba(255, 255, 255, .78); }
+body.pub.buio .demo-link .btn { color: #f2f5ff; border-color: rgba(230, 236, 250, .5); background: rgba(9, 16, 40, .45); }
+body.pub.buio .demo-link .btn:hover { background: rgba(230, 236, 250, .14); }
 </style>
 </head>
 <body class="pub">
