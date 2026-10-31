@@ -3193,9 +3193,19 @@ dash.calc('strategie', {
     pannello = p;
     $$('.pannello').forEach((x) => { x.hidden = x.dataset.p !== p; });
     $$('.scheda').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.pannello === p)));
+    // la scheda scelta resta ben visibile nella barra (che su telefono scorre di lato)
+    const barra = $('#schede'), att = $('.scheda[aria-pressed="true"]');
+    if (barra && att) barra.scrollTo({ left: Math.max(0, att.offsetLeft - (barra.clientWidth - att.offsetWidth) / 2), behavior: 'smooth' });
     if (p === 'risultati') requestAnimationFrame(() => dash.giro());
   }
-  function vai(p) { mostraPannello(p); $('#schede').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  // sceglie la sezione e scorre in modo che la barra delle schede resti in alto e subito sotto ci sia l'inizio della sezione
+  function vai(p) {
+    mostraPannello(p);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const sc = $('#schede'), pan = $('.pannello[data-p="' + p + '"]'); if (!sc || !pan) return;
+      window.scrollTo({ top: Math.max(0, scrollY + pan.getBoundingClientRect().top - (sc.offsetHeight + 8 + 14)), behavior: 'smooth' });
+    }));
+  }
   $$('.scheda').forEach((b) => b.addEventListener('click', () => mostraPannello(b.dataset.pannello)));
   $$('[data-vai]').forEach((b) => b.addEventListener('click', () => vai(b.dataset.vai)));
   // "Sopra ogni media" / "Sopra ogni crollo": aprono "Perché è diverso" e scorrono al loro riquadro
